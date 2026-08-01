@@ -1,0 +1,254 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Products ────────────────────────────────────────────
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          Int              @id @default(autoincrement())
+  name        String
+  slug        String           @unique
+  description String?   @db.Text
+  basePrice   Float
+  imageUrl    String?
+  categoryId  Int
+  category    Category         @relation(fields: [categoryId], references: [id])
+  active      Boolean          @default(true)
+  featured    Boolean          @default(false)
+  manufacturer    String?
+  safetyWarnings  String?   @db.Text
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  variants    ProductVariant[]
+  orderItems  OrderItem[]
+  reviews     Review[]
+  wishlist    WishlistItem[]
+
+  @@index([categoryId])
+  @@index([active])
+  @@map("products")
+}
+
+model ProductVariant {
+  id         Int       @id @default(autoincrement())
+  productId  Int
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size       String?
+  color      String?
+  colorHex   String?
+  sku        String    @unique
+  stockQty   Int       @default(0)
+  priceOverride Float?
+  imageUrl   String?
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  orderItems OrderItem[]
+
+  @@index([productId])
+  @@map("product_variants")
+}
+
+// ─── Customers & Orders ──────────────────────────────────
+
+model Customer {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String?
+  password  String?
+  phone     String?
+  isGuest   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  addresses Address[]
+  orders    Order[]
+  reviews   Review[]
+  wishlist  WishlistItem[]
+
+  @@map("customers")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement())
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  label      String   @default("default")
+  firstName  String
+  lastName   String
+  street     String
+  street2    String?
+  city       String
+  state      String?
+  postalCode String
+  country    String   @default("DE")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  orders     Order[]
+
+  @@index([customerId])
+  @@map("addresses")
+}
+
+model Order {
+  id            Int         @id @default(autoincrement())
+  orderNumber   String      @unique
+  customerId    Int?
+  customer      Customer?   @relation(fields: [customerId], references: [id])
+  addressId     Int?
+  address       Address?    @relation(fields: [addressId], references: [id])
+  status        String      @default("PENDING")
+  subtotal      Float
+  shippingCost  Float       @default(0)
+  vatRate       Float
+  vatAmount     Float
+  total         Float
+  currency      String      @default("EUR")
+  guestEmail    String?
+  guestName     String?
+  guestPhone    String?
+  paymentMethod String?
+  paymentId     String?
+  shippingName  String?
+  shippingStreet String?
+  shippingCity  String?
+  shippingPostal String?
+  shippingCountry String?
+  notes         String?   @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  items         OrderItem[]
+  invoice       Invoice?
+  creditNotes   CreditNote[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([orderNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id              Int            @id @default(autoincrement())
+  orderId         Int
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId       Int
+  product         Product        @relation(fields: [productId], references: [id])
+  variantId       Int?
+  productVariant  ProductVariant? @relation(fields: [variantId], references: [id])
+  productName     String
+  variantLabel    String?
+  qty             Int
+  unitPrice       Float
+  createdAt       DateTime       @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+// ─── Invoices & Credit Notes ─────────────────────────────
+
+model Invoice {
+  id            Int      @id @default(autoincrement())
+  orderId       Int      @unique
+  order         Order    @relation(fields: [orderId], references: [id])
+  invoiceNumber String   @unique
+  pdfPath       String?
+  issuedAt      DateTime @default(now())
+
+  @@map("invoices")
+}
+
+model CreditNote {
+  id               Int      @id @default(autoincrement())
+  orderId          Int
+  order            Order    @relation(fields: [orderId], references: [id])
+  creditNoteNumber String   @unique
+  pdfPath          String?
+  reason           String?   @db.Text
+  amount           Float
+  issuedAt         DateTime @default(now())
+
+  @@index([orderId])
+  @@map("credit_notes")
+}
+
+// ─── Reviews (optional/nice-to-have) ─────────────────────
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerId Int
+  customer  Customer @relation(fields: [customerId], references: [id])
+  rating    Int
+  title     String?
+  body      String?    @db.Text
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@map("reviews")
+}
+
+// ─── Settings (configurable store settings) ──────────────
+
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+// ─── Wishlist / Liked Products ────────────────────────────
+
+model WishlistItem {
+  id        Int      @id @default(autoincrement())
+  customerId Int
+  customer  Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([customerId, productId])
+  @@index([customerId])
+  @@map("wishlist_items")
+}
+
+// ─── Coupons (optional/nice-to-have) ─────────────────────
+
+model Coupon {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  discountPercent Int?
+  discountAmount  Float?
+  minOrderAmount  Float?
+  maxUses     Int?
+  usedCount   Int      @default(0)
+  active      Boolean  @default(true)
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("coupons")
+}
