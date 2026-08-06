@@ -143,7 +143,7 @@ async function main() {
     { key: "shipping_flat_rate", value: "4.99" },
     { key: "free_shipping_threshold", value: "30" },
     { key: "store_name", value: "hausku" },
-    { key: "store_email", value: "info@hausku.de" },
+    { key: "store_email", value: "info@hausku.com" },
     { key: "company_name", value: "NI Intellect UG" },
     { key: "return_days", value: "60" },
     { key: "warranty_years", value: "2" },

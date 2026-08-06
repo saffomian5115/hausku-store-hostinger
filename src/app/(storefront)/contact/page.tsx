@@ -13,9 +13,19 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState("sending");
-    // Simulate form submission — to be replaced with actual API
-    await new Promise((r) => setTimeout(r, 1500));
-    setFormState("success");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        throw new Error("send failed");
+      }
+      setFormState("success");
+    } catch {
+      setFormState("error");
+    }
   };
 
   return (
@@ -147,13 +157,6 @@ export default function ContactPage() {
                     </form>
                   )}
 
-                  {/* Notice about form being disabled */}
-                  <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
-                    <p className="text-amber-700 text-sm flex items-start gap-2">
-                      <span className="text-lg flex-shrink-0">ℹ️</span>
-                      <span>{t("contact.contactFormHint")}</span>
-                    </p>
-                  </div>
                 </div>
               </AnimatedSection>
             </div>
@@ -172,8 +175,8 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">{t("contact.infoEmail")}</h3>
-                        <a href="mailto:info@hausku.de" className="text-lime-600 hover:text-lime-700 font-medium transition-colors">
-                          info@hausku.de
+                        <a href="mailto:info@hausku.com" className="text-lime-600 hover:text-lime-700 font-medium transition-colors">
+                          info@hausku.com
                         </a>
                         <p className="text-xs text-gray-400 mt-1">{t("contact.responseTime")}</p>
                       </div>

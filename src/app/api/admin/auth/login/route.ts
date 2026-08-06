@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@hausku.de";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@hausku.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "hausku-admin-2024";
 
 export async function POST(request: NextRequest) {

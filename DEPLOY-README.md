@@ -54,7 +54,7 @@ This folder is ready to upload to your Hostinger Business hosting account.
 
 ## Admin panel
 
-- Login: **admin@hausku.de** (or whatever you set in `ADMIN_EMAIL`)
+- Login: **admin@hausku.com** (or whatever you set in `ADMIN_EMAIL`)
 - Password: set a strong value in `ADMIN_PASSWORD` in `.env` — the app
   falls back to `hausku-admin-2024` if unset, so **do change it**.
 
@@ -82,6 +82,28 @@ This folder is ready to upload to your Hostinger Business hosting account.
 - **Set `NEXT_PUBLIC_APP_URL` to your real domain before building** — it is
   inlined into the bundle at build time and used for absolute links and
   Stripe redirects.
+
+## Email (SMTP — Hostinger Business Email)
+
+The store sends **order confirmation emails** (after successful Stripe
+payment) and **contact form notifications**. Both use the `info@hausku.com`
+mailbox via Hostinger SMTP.
+
+Set these in `.env` on the server (same values as your Hostinger mailbox):
+
+```env
+SMTP_HOST="smtp.hostinger.com"
+SMTP_PORT=465
+SMTP_SECURE="true"
+SMTP_USER="info@hausku.com"
+SMTP_PASS="<mailbox-password>"
+SMTP_FROM="info@hausku.com"
+SMTP_FROM_NAME="hausku"
+```
+
+> Port 465 with SSL is the Hostinger default. If you prefer STARTTLS, use
+> port 587 with `SMTP_SECURE="false"`. Emails are skipped (with a warning
+> in the logs) if `SMTP_USER`/`SMTP_PASS` are not set.
 
 ## Verify after deploy
 

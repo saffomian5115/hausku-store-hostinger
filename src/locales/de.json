@@ -355,8 +355,7 @@
     "responseTime": "Wir antworten innerhalb von 24 Stunden",
     "addressPlaceholder": "[Straße Nr., PLZ Ort, Deutschland]",
     "phonePlaceholder": "[Telefonnummer]",
-    "emailDisplay": "info@hausku.de",
-    "contactFormHint": "Hinweis: Das Kontaktformular ist aktuell deaktiviert. Bitte schreiben Sie uns direkt eine E-Mail an info@hausku.de."
+    "emailDisplay": "info@hausku.com"
   },
   "legal": {
     "privacy": "Datenschutz",
@@ -410,7 +409,7 @@
     "addressLine1": "Musterstraße 123",
     "addressLine2": "12345 Berlin, Deutschland",
     "contactInfo": "Kontakt",
-    "emailDisplay": "info@hausku.de",
+    "emailDisplay": "info@hausku.com",
     "phoneDisplay": "+49 30 123456789",
     "ceo": "Geschäftsführer",
     "ceoName": "Max Mustermann",

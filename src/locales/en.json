@@ -355,8 +355,7 @@
     "responseTime": "We respond within 24 hours",
     "addressPlaceholder": "[Street No., ZIP City, Germany]",
     "phonePlaceholder": "[Phone number]",
-    "emailDisplay": "info@hausku.de",
-    "contactFormHint": "Note: The contact form is currently disabled. Please write us directly at info@hausku.de."
+    "emailDisplay": "info@hausku.com"
   },
   "legal": {
     "privacy": "Privacy Policy",
@@ -410,7 +409,7 @@
     "addressLine1": "Musterstraße 123",
     "addressLine2": "12345 Berlin, Germany",
     "contactInfo": "Contact",
-    "emailDisplay": "info@hausku.de",
+    "emailDisplay": "info@hausku.com",
     "phoneDisplay": "+49 30 123456789",
     "ceo": "Managing Director",
     "ceoName": "Max Mustermann",

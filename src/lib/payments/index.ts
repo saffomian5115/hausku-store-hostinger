@@ -13,6 +13,7 @@
 
 import { createStripeCheckoutSession, getStripeSession } from "./stripe";
 import { prisma } from "@/lib/db";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export type PaymentProvider = "stripe" | "paypal" | "klarna";
 
@@ -97,6 +98,53 @@ export async function createPayment(
 }
 
 /**
+ * Shared post-payment processing: decrement stock + send the order
+ * confirmation email. Only called once per order (guarded by the caller's
+ * `status !== "paid"` check).
+ */
+async function processPaidOrder(orderId: number): Promise<void> {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
+
+  if (!order) return;
+
+  // Decrement stock for each item
+  for (const item of order.items) {
+    if (item.variantId) {
+      await prisma.productVariant.update({
+        where: { id: item.variantId },
+        data: { stockQty: { decrement: item.qty } },
+      });
+    }
+  }
+
+  // Send order confirmation email (skip silently if SMTP not configured)
+  await sendOrderConfirmationEmail({
+    orderNumber: order.orderNumber,
+    customerEmail: order.guestEmail || "",
+    customerName: order.guestName,
+    items: order.items.map((item) => ({
+      productName: item.productName,
+      variantLabel: item.variantLabel,
+      qty: item.qty,
+      unitPrice: Number(item.unitPrice),
+    })),
+    subtotal: Number(order.subtotal),
+    shippingCost: Number(order.shippingCost),
+    vatAmount: Number(order.vatAmount),
+    vatRate: Number(order.vatRate),
+    total: Number(order.total),
+    shippingName: order.shippingName,
+    shippingStreet: order.shippingStreet,
+    shippingCity: order.shippingCity,
+    shippingPostal: order.shippingPostal,
+    shippingCountry: order.shippingCountry,
+  });
+}
+
+/**
  * Handle Stripe checkout completion after redirect.
  * Idempotent — safe to call even if webhook already processed the order.
  */
@@ -110,37 +158,18 @@ export async function handleStripeSuccess(sessionId: string) {
   const orderId = parseInt(session.metadata.orderId, 10);
 
   if (session.payment_status === "paid") {
-    // Check if already processed (idempotent)
-    const existingOrder = await prisma.order.findUnique({
-      where: { id: orderId },
+    // Atomically claim the PENDING → paid transition so concurrent calls
+    // (webhook + success-page verify) never double-process the order.
+    const claimed = await prisma.order.updateMany({
+      where: { id: orderId, status: { not: "paid" } },
+      data: {
+        status: "paid",
+        paymentId: (session.payment_intent as string) || sessionId,
+      },
     });
 
-    if (existingOrder && existingOrder.status !== "paid") {
-      // Mark order as paid
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          status: "paid",
-          paymentId: (session.payment_intent as string) || sessionId,
-        },
-      });
-
-      // Decrement stock for each item
-      const order = await prisma.order.findUnique({
-        where: { id: orderId },
-        include: { items: true },
-      });
-
-      if (order) {
-        for (const item of order.items) {
-          if (item.variantId) {
-            await prisma.productVariant.update({
-              where: { id: item.variantId },
-              data: { stockQty: { decrement: item.qty } },
-            });
-          }
-        }
-      }
+    if (claimed.count > 0) {
+      await processPaidOrder(orderId);
     }
   }
 
@@ -172,34 +201,15 @@ export async function handleWebhook(
     if (session.metadata?.orderId && session.payment_status === "paid") {
       const orderId = parseInt(session.metadata.orderId, 10);
 
-      // Check if already processed (idempotent)
-      const existingOrder = await prisma.order.findUnique({
-        where: { id: orderId },
+      // Atomically claim the PENDING → paid transition so concurrent calls
+      // (webhook + success-page verify) never double-process the order.
+      const claimed = await prisma.order.updateMany({
+        where: { id: orderId, status: { not: "paid" } },
+        data: { status: "paid" },
       });
 
-      if (existingOrder && existingOrder.status !== "paid") {
-        await prisma.order.update({
-          where: { id: orderId },
-          data: { status: "paid" },
-        });
-
-        // Decrement stock
-        const order = await prisma.order.findUnique({
-          where: { id: orderId },
-          include: { items: true },
-        });
-
-        if (order) {
-          for (const item of order.items) {
-            if (item.variantId) {
-              await prisma.productVariant.update({
-                where: { id: item.variantId },
-                data: { stockQty: { decrement: item.qty } },
-              });
-            }
-          }
-        }
-
+      if (claimed.count > 0) {
+        await processPaidOrder(orderId);
         return { orderId, status: "completed" };
       }
     }

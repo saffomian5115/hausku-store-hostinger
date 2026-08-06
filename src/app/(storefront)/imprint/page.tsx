@@ -20,7 +20,7 @@ export default function ImprintPage() {
         <h2 className="text-xl font-bold mt-8 mb-4">{t("imprint.contactInfo")}</h2>
         <p className="text-gray-600">
           Telefon: [pending]<br />
-          E-Mail: info@hausku.de
+          E-Mail: info@hausku.com
         </p>
 
         <h2 className="text-xl font-bold mt-8 mb-4">{t("imprint.registerInfo")}</h2>
