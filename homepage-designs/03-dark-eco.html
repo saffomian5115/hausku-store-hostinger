@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hausku — Midnight Forest | Eco Tech Store</title>
+  <meta name="description" content="hausku Midnight Forest — sustainable, German-engineered eco tech for the home. Snack boxes, laptop cushions & lunch boxes. Free shipping from €39." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN 3 — MIDNIGHT FOREST (DARK + NEON LIME)
+       ═══════════════════════════════════════════ */
+    :root {
+      --bg: #0A120C;            /* near-black green */
+      --surface: #122017;       /* cards */
+      --surface-2: #1A2E1F;     /* hover states */
+      --neon: #A8FF3E;          /* CTAs, glows */
+      --neon-light: #BDFF66;    /* brighter neon */
+      --neon-dark: #7CD92E;     /* deeper neon */
+      --neon-deep: #3E6B44;     /* dark green accents (SVG) */
+      --neon-deeper: #2E5B38;   /* darkest green (SVG) */
+      --mint: #5FE3A2;          /* secondary accents */
+      --neon-rgb: 168, 255, 62; /* RGB triplet for glows/borders */
+      --text: #EAF6EC;          /* headings */
+      --muted: #8FB396;         /* body */
+      --border: rgba(var(--neon-rgb), 0.15);
+      --border-glow: rgba(var(--neon-rgb), 0.45);
+      --radius: 16px;
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--muted);
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      /* Fixed particle / star field */
+      background-image:
+        radial-gradient(1px 1px at 12% 22%, rgba(var(--neon-rgb), 0.35) 50%, transparent 50%),
+        radial-gradient(1px 1px at 32% 68%, rgba(255, 255, 255, 0.3) 50%, transparent 50%),
+        radial-gradient(1.5px 1.5px at 48% 12%, rgba(95, 227, 162, 0.3) 50%, transparent 50%),
+        radial-gradient(1px 1px at 64% 42%, rgba(255, 255, 255, 0.22) 50%, transparent 50%),
+        radial-gradient(1.5px 1.5px at 78% 78%, rgba(var(--neon-rgb), 0.3) 50%, transparent 50%),
+        radial-gradient(1px 1px at 88% 32%, rgba(95, 227, 162, 0.28) 50%, transparent 50%),
+        radial-gradient(1px 1px at 22% 90%, rgba(255, 255, 255, 0.2) 50%, transparent 50%),
+        radial-gradient(ellipse at 50% 120%, rgba(var(--neon-rgb), 0.06), transparent 60%);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, .logo, .nav-link, .btn {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--text);
+    }
+
+    img, svg { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 80px 0; }
+
+    /* ─── Section heads ─── */
+    .section-head { text-align: center; max-width: 660px; margin: 0 auto 54px; }
+    .section-head .glow-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 18px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(var(--neon-rgb), 0.06);
+      color: var(--neon);
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 18px;
+      box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.12);
+    }
+    .section-head h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 700; margin-bottom: 12px;
+      background: linear-gradient(120deg, #EAF6EC, var(--neon) 70%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .section-head p { font-size: 1.05rem; }
+
+    /* ─── Neon buttons ─── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 15px 32px; border: none; cursor: pointer;
+      border-radius: 12px; font-size: 1rem; font-weight: 700;
+      transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.25s, border-color 0.25s;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--border-glow); box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.25); }
+
+    .btn-primary {
+      background: var(--neon); color: #0A120C;
+      border: 1px solid var(--neon);
+      box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.45);
+      text-shadow: none;
+    }
+    .btn-primary:hover {
+      background: var(--neon-light);
+      box-shadow: 0 0 34px rgba(var(--neon-rgb), 0.65), 0 0 60px rgba(var(--neon-rgb), 0.25);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: rgba(var(--neon-rgb), 0.06);
+      border: 1px solid var(--border);
+      color: var(--neon);
+    }
+    .btn-ghost:hover { background: rgba(var(--neon-rgb), 0.12); border-color: var(--border-glow); }
+    .btn-sm { padding: 10px 22px; font-size: 0.9rem; border-radius: 10px; }
+
+    .btn:focus-visible, .icon-btn:focus-visible, .nav-link:focus-visible, a:focus-visible {
+      outline: 2px solid var(--neon);
+      outline-offset: 3px;
+    }
+
+    /* ─── Announcement bar ─── */
+    .announce {
+      background: linear-gradient(90deg, rgba(var(--neon-rgb), 0.1), rgba(var(--neon-rgb), 0.03));
+      border-bottom: 1px solid var(--border);
+      text-align: center; padding: 10px 16px;
+      font-size: 0.85rem; font-weight: 600; color: var(--neon);
+      letter-spacing: 0.3px;
+    }
+    .announce span { display: inline-block; margin: 0 10px; }
+    .announce .sep { opacity: 0.35; }
+
+    /* ─── Navbar (glass dark) ─── */
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10, 18, 12, 0.72);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.45rem; font-weight: 700; }
+    .logo .mark {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: var(--neon); color: #0A120C;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 18px rgba(var(--neon-rgb), 0.5);
+      font-weight: 700;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-link {
+      position: relative; padding: 9px 16px; border-radius: 8px;
+      font-size: 0.92rem; font-weight: 600; color: var(--muted);
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface-2); }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 2px; border-radius: 2px;
+      background: var(--neon); box-shadow: 0 0 8px var(--neon);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 60%; }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      position: relative; width: 42px; height: 42px;
+      border: 1px solid var(--border); cursor: pointer; border-radius: 12px;
+      background: rgba(18, 32, 23, 0.8);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .icon-btn:hover { color: var(--neon); border-color: var(--border-glow); box-shadow: 0 0 16px rgba(var(--neon-rgb), 0.25); background: var(--surface-2); }
+    .icon-btn .badge {
+      position: absolute; top: -5px; right: -5px;
+      background: var(--neon); color: #0A120C;
+      font-size: 0.65rem; font-weight: 800;
+      min-width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 10px rgba(var(--neon-rgb), 0.6);
+    }
+    .burger { display: none; }
+
+    .mobile-menu {
+      display: none; list-style: none;
+      border-top: 1px solid var(--border);
+      background: rgba(10, 18, 12, 0.95);
+      padding: 10px 16px 16px;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu li a {
+      display: block; padding: 13px 16px; border-radius: 10px;
+      color: var(--muted); font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      border-bottom: 1px solid rgba(var(--neon-rgb), 0.08);
+    }
+    .mobile-menu li a:hover { color: var(--neon); background: var(--surface-2); }
+
+    /* ─── Hero (aurora + forest photo) ─── */
+    .hero {
+      position: relative; padding-top: 40px; overflow: hidden;
+      background-color: var(--bg);
+      background-image: url('images/forest.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(10, 18, 12, 0.78) 0%, rgba(10, 18, 12, 0.45) 40%, rgba(10, 18, 12, 0.88) 100%);
+      pointer-events: none; z-index: 0;
+    }
+    .aurora { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .aurora .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.55;
+      animation: auroraDrift 14s ease-in-out infinite;
+    }
+    .blob-1 { width: 420px; height: 420px; top: -120px; left: -80px; background: #2E6B3E; }
+    .blob-2 { width: 380px; height: 380px; top: 10%; right: -100px; background: rgba(var(--neon-rgb), 0.35); animation-delay: -4s; }
+    .blob-3 { width: 300px; height: 300px; bottom: -80px; left: 30%; background: rgba(95, 227, 162, 0.3); animation-delay: -8s; }
+
+    @keyframes auroraDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.08); }
+      66% { transform: translate(-30px, 20px) scale(0.95); }
+    }
+
+    .hero-grid {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr; gap: 56px; align-items: center;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(var(--neon-rgb), 0.07);
+      color: var(--neon); font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.15);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5.5vw, 3.9rem);
+      font-weight: 700; line-height: 1.1; margin-bottom: 22px;
+      background: linear-gradient(120deg, #EAF6EC 20%, var(--neon) 60%, var(--mint) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      background-size: 200% 100%;
+      animation: gradientShift 6s ease infinite;
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .hero p.lead { font-size: 1.15rem; max-width: 540px; margin-bottom: 34px; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 16px; }
+
+    .hero-visual { position: relative; }
+    .hero-product {
+      position: relative; z-index: 2;
+      background: linear-gradient(160deg, var(--surface-2), var(--surface));
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 40px rgba(var(--neon-rgb), 0.12), inset 0 0 60px rgba(var(--neon-rgb), 0.04);
+      padding: 40px 30px 28px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .hero-product svg { width: min(330px, 82%); filter: drop-shadow(0 0 24px rgba(var(--neon-rgb), 0.25)); }
+    .hero-product .hp-name { font-size: 1.25rem; font-weight: 600; margin-top: 18px; color: var(--text); }
+    .hero-product .hp-price { color: var(--neon); font-weight: 600; margin-top: 4px; }
+    .hero-product .hp-btn { margin-top: 20px; }
+
+    .glass-chip {
+      position: absolute; z-index: 3;
+      background: rgba(18, 32, 23, 0.8);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 999px; padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600; color: var(--text);
+      box-shadow: 0 0 18px rgba(var(--neon-rgb), 0.15);
+      animation: chipFloat 5s ease-in-out infinite;
+    }
+    .glass-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 10px var(--neon); }
+    .gc-1 { top: 6%; left: -4%; }
+    .gc-2 { top: 40%; right: -4%; animation-delay: 1.4s; }
+    .gc-3 { bottom: 5%; left: 4%; animation-delay: 2.6s; }
+
+    @keyframes chipFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* ─── Social proof ─── */
+    .social-proof { padding: 0 0 80px; }
+    .proof-bar {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 40px;
+      background: linear-gradient(120deg, rgba(18, 32, 23, 0.9), rgba(26, 46, 31, 0.9));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 30px;
+      box-shadow: 0 0 30px rgba(var(--neon-rgb), 0.08);
+    }
+    .proof-item { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text); }
+    .proof-item strong { color: var(--neon); font-family: 'Space Grotesk', sans-serif; }
+    .stars { color: var(--neon); letter-spacing: 2px; text-shadow: 0 0 12px rgba(var(--neon-rgb), 0.5); }
+
+    /* ─── Trust badges ─── */
+    .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .trust-item {
+      background: linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px; text-align: center;
+      transition: transform 0.2s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .trust-item:hover { transform: translateY(-3px); border-color: var(--border-glow); box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.18); }
+    .trust-item .t-icon {
+      width: 52px; height: 52px; margin: 0 auto 14px;
+      border-radius: 14px;
+      background: rgba(var(--neon-rgb), 0.07);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--neon);
+      box-shadow: 0 0 16px rgba(var(--neon-rgb), 0.1);
+    }
+    .trust-item h4 { font-size: 1rem; margin-bottom: 4px; }
+    .trust-item p { font-size: 0.82rem; }
+
+    /* ─── Categories ─── */
+    .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .cat-card {
+      background: linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 22px; text-align: center;
+      transition: transform 0.2s, border-color 0.25s, box-shadow 0.25s; cursor: pointer;
+    }
+    .cat-card:hover { transform: translateY(-4px); border-color: var(--border-glow); box-shadow: 0 0 26px rgba(var(--neon-rgb), 0.2); }
+    .cat-card .c-icon {
+      width: 58px; height: 58px; margin: 0 auto 14px;
+      border-radius: 16px;
+      background: rgba(var(--neon-rgb), 0.07);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--neon);
+    }
+    .cat-card h4 { margin-bottom: 4px; }
+    .cat-card p { font-size: 0.84rem; }
+    .cat-card .c-count {
+      display: inline-block; margin-top: 12px;
+      font-size: 0.74rem; font-weight: 600; color: var(--neon);
+      border: 1px solid var(--border);
+      border-radius: 999px; padding: 4px 14px;
+      background: rgba(var(--neon-rgb), 0.05);
+    }
+
+    /* ─── Products ─── */
+    .product-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .product-card {
+      background: linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px; display: flex; flex-direction: column;
+      transition: transform 0.2s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .product-card:hover { transform: translateY(-4px); border-color: var(--border-glow); box-shadow: 0 0 28px rgba(var(--neon-rgb), 0.2); }
+    .product-media {
+      background: radial-gradient(ellipse at 50% 30%, rgba(var(--neon-rgb), 0.08), transparent 70%), var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 16px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 200px;
+    }
+    .product-media svg { width: min(190px, 84%); filter: drop-shadow(0 0 16px rgba(var(--neon-rgb), 0.2)); }
+    .p-badges { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .p-badge {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      border-radius: 6px; padding: 5px 10px;
+      border: 1px solid var(--border);
+      background: rgba(var(--neon-rgb), 0.08);
+      color: var(--neon);
+    }
+    .p-badge.sale { border-color: rgba(255, 107, 94, 0.5); background: rgba(255, 107, 94, 0.12); color: #FF8A7E; }
+    .product-card h3 { font-size: 1.15rem; margin-bottom: 4px; }
+    .product-card .p-cat { font-size: 0.78rem; font-weight: 600; color: var(--mint); margin-bottom: 8px; letter-spacing: 0.3px; }
+    .p-rating { color: var(--neon); font-size: 0.85rem; margin-bottom: 10px; text-shadow: 0 0 10px rgba(var(--neon-rgb), 0.4); }
+    .p-rating span { color: var(--muted); margin-left: 6px; font-weight: 500; text-shadow: none; }
+    .product-card .p-desc { font-size: 0.88rem; margin-bottom: 18px; }
+    .p-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; }
+    .p-price { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--text); }
+    .p-price small { font-size: 0.75rem; color: var(--muted); font-weight: 500; text-decoration: line-through; margin-right: 6px; }
+
+    /* ─── Promo banner (glowing gradient border) ─── */
+    .promo {
+      position: relative;
+      background: linear-gradient(160deg, var(--surface-2), var(--surface));
+      border-radius: 24px;
+      border: 1px solid transparent;
+      background-clip: padding-box;
+      box-shadow: 0 0 0 1px rgba(var(--neon-rgb), 0.35), 0 0 40px rgba(var(--neon-rgb), 0.15), inset 0 0 60px rgba(var(--neon-rgb), 0.05);
+      padding: 50px 36px; text-align: center;
+      overflow: hidden;
+    }
+    .promo::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 0%, rgba(var(--neon-rgb), 0.12), transparent 50%),
+                  radial-gradient(ellipse at 80% 100%, rgba(95, 227, 162, 0.12), transparent 50%);
+      pointer-events: none;
+    }
+    .promo h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); margin-bottom: 10px; position: relative; z-index: 1;
+      background: linear-gradient(120deg, var(--neon), var(--mint));
+      -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .promo p { max-width: 520px; margin: 0 auto 26px; position: relative; z-index: 1; }
+    .promo .btn { position: relative; z-index: 1; }
+
+    /* ─── Showcases ─── */
+    .showcase { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
+    .show-media {
+      background: radial-gradient(ellipse at 50% 40%, rgba(var(--neon-rgb), 0.1), transparent 70%), linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 30px;
+      box-shadow: 0 0 40px rgba(var(--neon-rgb), 0.08), inset 0 0 60px rgba(var(--neon-rgb), 0.03);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .show-media svg { width: min(400px, 90%); filter: drop-shadow(0 0 28px rgba(var(--neon-rgb), 0.22)); }
+    .show-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(var(--neon-rgb), 0.07);
+      color: var(--neon); font-size: 0.76rem; font-weight: 600;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .show-body h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 12px;
+      background: linear-gradient(120deg, #EAF6EC, var(--neon) 80%);
+      -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .show-body > p { margin-bottom: 24px; }
+    .show-feats { list-style: none; margin-bottom: 28px; }
+    .show-feats li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 13px; }
+    .show-feats .check {
+      flex-shrink: 0; width: 26px; height: 26px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(var(--neon-rgb), 0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--neon); margin-top: 2px;
+      box-shadow: 0 0 10px rgba(var(--neon-rgb), 0.12);
+    }
+    .show-feats span { font-size: 0.94rem; }
+    .show-cta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .show-cta .price { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--neon); }
+
+    /* ─── Why hausku ─── */
+    .why-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .why-card {
+      background: linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px; text-align: center;
+      transition: transform 0.2s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .why-card:hover { transform: translateY(-4px); border-color: var(--border-glow); box-shadow: 0 0 26px rgba(var(--neon-rgb), 0.18); }
+    .why-card .w-icon {
+      width: 64px; height: 64px; margin: 0 auto 16px;
+      border-radius: 18px;
+      background: rgba(var(--neon-rgb), 0.07);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--neon);
+      box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.1);
+    }
+    .why-card h3 { margin-bottom: 10px; }
+    .why-card p { font-size: 0.9rem; }
+
+    /* ─── Testimonials ─── */
+    .testi-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .testi-card {
+      position: relative;
+      background: linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .testi-card:hover { border-color: var(--border-glow); box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.15); }
+    .testi-card .quote {
+      position: absolute; top: 10px; right: 20px;
+      font-family: 'Space Grotesk', sans-serif; font-size: 4rem; font-weight: 700;
+      color: var(--neon); opacity: 0.16; line-height: 1;
+    }
+    .testi-card .stars { margin-bottom: 12px; }
+    .testi-card blockquote { font-size: 0.95rem; margin-bottom: 18px; }
+    .testi-author { display: flex; align-items: center; gap: 14px; }
+    .testi-author .avatar {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(var(--neon-rgb), 0.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--neon);
+    }
+    .testi-author strong { display: block; color: var(--text); font-size: 0.92rem; }
+    .testi-author small { font-size: 0.78rem; }
+
+    /* ─── Newsletter ─── */
+    .newsletter { padding-bottom: 40px; }
+    .news-card {
+      text-align: center; padding: 50px 32px;
+      background: linear-gradient(160deg, var(--surface), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 0 40px rgba(var(--neon-rgb), 0.1);
+    }
+    .news-card h2 {
+      font-size: clamp(1.7rem, 3vw, 2.3rem); margin-bottom: 10px;
+      background: linear-gradient(120deg, var(--neon), var(--mint));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .news-card > p { max-width: 480px; margin: 0 auto 26px; }
+    .news-form { display: flex; flex-direction: column; gap: 14px; max-width: 460px; margin: 0 auto; }
+    .news-form input {
+      flex: 1; border: 1px solid var(--border); outline: none;
+      background: rgba(10, 18, 12, 0.7);
+      border-radius: 12px; padding: 16px 24px;
+      font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .news-form input::placeholder { color: var(--muted); }
+    .news-form input:focus { border-color: var(--border-glow); box-shadow: 0 0 18px rgba(var(--neon-rgb), 0.25); }
+    .news-form input:focus-visible { outline: 2px solid var(--neon); outline-offset: 2px; }
+    .news-note { font-size: 0.75rem; margin-top: 16px; }
+    .news-success {
+      display: none; align-items: center; justify-content: center; gap: 10px;
+      background: rgba(var(--neon-rgb), 0.1);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px; padding: 16px 26px; margin: 0 auto;
+      max-width: 460px; font-weight: 600; color: var(--neon);
+      box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.2);
+    }
+    .news-success.show { display: flex; }
+
+    /* ─── Footer ─── */
+    .footer {
+      background: linear-gradient(to bottom, var(--bg), #060B08);
+      border-top: 1px solid var(--border);
+      margin-top: 40px; padding: 60px 0 0;
+    }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 36px; padding-bottom: 44px; }
+    .footer h4 { color: var(--text); font-size: 1.02rem; margin-bottom: 16px; }
+    .footer ul { list-style: none; }
+    .footer ul li { margin-bottom: 10px; }
+    .footer ul a { font-size: 0.9rem; transition: color 0.2s; }
+    .footer ul a:hover { color: var(--neon); }
+    .footer .brand-desc { font-size: 0.9rem; margin: 14px 0 22px; max-width: 320px; }
+    .pay-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pay-badge {
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 13px;
+      font-size: 0.72rem; font-weight: 600; color: var(--muted);
+      background: rgba(18, 32, 23, 0.7);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 22px 0;
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    /* ─── Toast + back-to-top ─── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translate(-50%, 80px);
+      background: rgba(18, 32, 23, 0.92);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: var(--text); border: 1px solid var(--border-glow);
+      border-radius: 12px; box-shadow: 0 0 30px rgba(var(--neon-rgb), 0.25);
+      padding: 14px 26px; font-weight: 600; font-size: 0.92rem;
+      display: flex; align-items: center; gap: 10px; z-index: 200;
+      opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease;
+      pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .toast .mark {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--neon); color: #0A120C;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800;
+    }
+
+    #backTop {
+      position: fixed; bottom: 28px; right: 28px; z-index: 150;
+      width: 52px; height: 52px; border: 1px solid var(--border-glow); cursor: pointer;
+      background: rgba(18, 32, 23, 0.9);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 14px;
+      box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.25);
+      color: var(--neon);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transform: translateY(16px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    #backTop.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    #backTop:hover { background: var(--surface-2); }
+
+    /* ─── Scroll reveal ─── */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .no-js .reveal { opacity: 1; transform: none; }
+
+    /* Gradient-text fallback for browsers without background-clip: text */
+    @supports not (background-clip: text) {
+      .hero h1, .section-head h2, .show-body h2, .news-card h2, .promo h2 {
+        background: none; -webkit-text-fill-color: initial; color: var(--text) !important;
+      }
+    }
+    @media (min-width: 640px) {
+      .trust-grid { grid-template-columns: repeat(3, 1fr); }
+      .cat-grid { grid-template-columns: repeat(4, 1fr); }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .news-form { flex-direction: row; }
+      .news-form .btn { white-space: nowrap; }
+    }
+    @media (min-width: 768px) {
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+      .testi-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .hero-grid { grid-template-columns: 1.05fr 0.95fr; }
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+      .why-grid { grid-template-columns: repeat(4, 1fr); }
+      .testi-grid { grid-template-columns: repeat(3, 1fr); }
+      .showcase { grid-template-columns: 1fr 1fr; gap: 64px; }
+      .showcase.reversed .show-media { order: 1; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .burger { display: none; }
+    }
+    @media (max-width: 1023px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+      .showcase.reversed .show-media { order: 0; }
+    }
+    @media (max-width: 400px) {
+      .nav-actions .icon-btn:first-child { display: none; }
+      .toast { white-space: normal; max-width: calc(100vw - 40px); text-align: center; }
+    }
+  </style>
+</head>
+<body class="no-js">
+
+  <!-- ═══ 1. ANNOUNCEMENT BAR ═══ -->
+  <div class="announce">
+    <span>🚚 Free shipping from €39</span><span class="sep">|</span>
+    <span>🔄 30-day trial</span><span class="sep">|</span>
+    <span>🇩🇪 Delivery 2–4 days</span>
+  </div>
+
+  <!-- ═══ 2. NAVBAR ═══ -->
+  <div class="nav-wrap">
+    <nav class="navbar" aria-label="Main navigation">
+      <a href="#top" class="logo" aria-label="hausku home">
+        <span class="mark">h</span>
+        hausku
+      </a>
+      <ul class="nav-links">
+        <li><a href="#top" class="nav-link active">Home</a></li>
+        <li><a href="#products" class="nav-link">Products</a></li>
+        <li><a href="#sale" class="nav-link">Sale</a></li>
+        <li><a href="#why" class="nav-link">About</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Wishlist">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </button>
+        <button class="icon-btn" id="cartBtn" aria-label="Cart">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span class="badge" id="cartCount">0</span>
+        </button>
+        <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" x2="20" y1="7" y2="7"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="17" y2="17"/></svg>
+        </button>
+      </div>
+    </nav>
+    <ul class="mobile-menu" id="mobileMenu">
+      <li><a href="#top">Home</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#sale">Sale</a></li>
+      <li><a href="#why">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+
+  <main id="top">
+
+    <!-- ═══ 3. HERO (aurora) ═══ -->
+    <section class="hero">
+      <div class="aurora" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+      </div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="hero-tag">⚡ Eco tech · Made in Germany</span>
+          <h1>Sustainable tech for a greener future</h1>
+          <p class="lead">German-engineered eco essentials for modern living — snack boxes, laptop cushions and lunch boxes with zero compromise on performance or planet.</p>
+          <div class="hero-cta">
+            <a href="#products" class="btn btn-primary">Shop now
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#why" class="btn btn-ghost">Learn more</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-product">
+            <svg viewBox="0 0 260 190" role="img" aria-label="Neon snack box illustration">
+              <defs>
+                <linearGradient id="nbLid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--neon-light)"/><stop offset="1" stop-color="var(--neon-dark)"/></linearGradient>
+                <linearGradient id="nbBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A2E1F"/><stop offset="1" stop-color="#0A120C"/></linearGradient>
+              </defs>
+              <ellipse cx="130" cy="168" rx="105" ry="10"fill="rgba(var(--neon-rgb),0.08)"/>
+              <rect x="22" y="52" width="216" height="104" rx="16" fill="url(#nbBody)" stroke="rgba(168,255,62,0.4)" stroke-width="1.5"/>
+              <path d="M48 96 v38 M130 96 v38 M212 96 v38 M48 96 h164 M48 134 h164" stroke="rgba(168,255,62,0.22)" stroke-width="3" stroke-linecap="round"/>
+              <rect x="22" y="34" width="216" height="34" rx="16" fill="url(#nbLid)" stroke="var(--neon)"/>
+              <rect x="22" y="52" width="216" height="14" fill="url(#nbLid)"/>
+              <rect x="118" y="26" width="24" height="14" rx="6" fill="#0A120C" stroke="var(--neon)" stroke-width="1.5"/>
+              <text x="130" y="73" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="19" font-weight="700" fill="var(--neon)">hausku</text>
+              <circle cx="92" cy="116" r="10" fill="var(--neon-deep)"/><circle cx="166" cy="112" r="9" fill="var(--neon-deeper)"/>
+              <circle cx="100" cy="123" r="5" fill="var(--neon-dark)"/><rect x="64" y="80" width="13" height="13" rx="6" fill="var(--mint)"/>
+              <rect x="148" y="126" width="13" height="13" rx="6" fill="var(--mint)"/><rect x="122" y="74" width="11" height="15" rx="5" fill="var(--neon)"/>
+            </svg>
+            <p class="hp-name">Neo Snackbox</p>
+            <p class="hp-price">from €29.90</p>
+            <button class="btn btn-primary btn-sm hp-btn add-to-cart" data-name="Neo Snackbox">Add to cart</button>
+          </div>
+          <div class="glass-chip gc-1"><span class="dot"></span> Climate neutral</div>
+          <div class="glass-chip gc-2"><span class="dot"></span> ⭐ 4.8 / 5</div>
+          <div class="glass-chip gc-3"><span class="dot"></span> 5-year warranty</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 4. SOCIAL PROOF ═══ -->
+    <section class="social-proof" aria-label="Trusted by thousands">
+      <div class="container">
+        <div class="proof-bar reveal">
+          <div class="proof-item"><span class="stars">★★★★★</span> <strong>4.8/5</strong> rating</div>
+          <div class="proof-item"><strong>50,000+</strong> happy customers</div>
+          <div class="proof-item"><strong>Trusted</strong> in 🇩🇪 🇦🇹 🇨🇭</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 5. TRUST BADGES ═══ -->
+    <section aria-label="Why shop with us">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h4>5-year warranty</h4><p>On all hausku products</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h-2v-6l2-5h9v11m-9 0v2a1 1 0 0 0 1 1h1m-2-3h11m0 0h3v-6l-3-5h-5"/><circle cx="7.5" cy="17.5" r=".5"/><circle cx="17.5" cy="17.5" r=".5"/></svg></div>
+            <h4>Free shipping</h4><p>From €39 order value</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></div>
+            <h4>30-day trial</h4><p>Test it, love it, keep it</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg></div>
+            <h4>Secure payment</h4><p>Visa, Mastercard &amp; PayPal</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <h4>Climate neutral</h4><p>CO₂-compensated shipping</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+            <h4>DHL GoGreen</h4><p>Sustainable delivery</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 6. CATEGORIES ═══ -->
+    <section aria-label="Shop by category">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="glow-chip">✦ Collections</span>
+          <h2>Shop by category</h2>
+          <p>Everything your family needs for a plastic-free everyday life.</p>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h20l-1.5 12h-17Z"/><path d="M2 7 5 3h14l3 4"/><circle cx="8" cy="17" r="1"/><circle cx="16" cy="17" r="1"/></svg></div>
+            <h4>Küche</h4><p>Bottles, containers &amp; more</p>
+            <span class="c-count">24 products</span>
+          </div>
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+            <h4>Haushalt</h4><p>Home &amp; cleaning essentials</p>
+            <span class="c-count">18 products</span>
+          </div>
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M7 12h4"/></svg></div>
+            <h4>Snackboxen</h4><p>Lunch &amp; snack on the go</p>
+            <span class="c-count">12 products</span>
+          </div>
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg></div>
+            <h4>Zubehör</h4><p>Cushions, covers &amp; extras</p>
+            <span class="c-count">9 products</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 7. FEATURED PRODUCTS ═══ -->
+    <section id="products" aria-label="Featured products">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="glow-chip">★ Bestsellers</span>
+          <h2>Our bestsellers</h2>
+          <p>Loved by over 50,000 families across Germany, Austria and Switzerland.</p>
+        </div>
+        <div class="product-grid">
+
+          <!-- Product 1 -->
+          <article class="product-card reveal">
+            <div class="product-media">
+              <svg viewBox="0 0 200 150" role="img" aria-label="Neo Snackbox">
+                <defs>
+                  <linearGradient id="p1Lid3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--neon-light)"/><stop offset="1" stop-color="var(--neon-dark)"/></linearGradient>
+                  <linearGradient id="p1Body3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A2E1F"/><stop offset="1" stop-color="#0A120C"/></linearGradient>
+                </defs>
+                <ellipse cx="100" cy="132" rx="80" ry="8"fill="rgba(var(--neon-rgb),0.08)"/>
+                <rect x="16" y="40" width="168" height="84" rx="13" fill="url(#p1Body3)" stroke="rgba(168,255,62,0.4)" stroke-width="1.5"/>
+                <path d="M38 74 v28 M100 74 v28 M162 74 v28 M38 74 h124 M38 102 h124" stroke="rgba(168,255,62,0.22)" stroke-width="2.4" stroke-linecap="round"/>
+                <rect x="16" y="26" width="168" height="26" rx="13" fill="url(#p1Lid3)" stroke="var(--neon)"/>
+                <rect x="16" y="40" width="168" height="10" fill="url(#p1Lid3)"/>
+                <rect x="88" y="19" width="24" height="12" rx="5" fill="#0A120C" stroke="var(--neon)" stroke-width="1.5"/>
+                <text x="100" y="58" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="14" font-weight="700" fill="var(--neon)">hausku</text>
+                <circle cx="72" cy="88" r="8" fill="var(--neon-deep)"/><circle cx="130" cy="86" r="7" fill="var(--neon-deeper)"/>
+                <circle cx="78" cy="93" r="4" fill="var(--neon-dark)"/><rect x="52" y="62" width="11" height="11" rx="5" fill="var(--mint)"/><rect x="124" y="96" width="11" height="11" rx="5" fill="var(--mint)"/>
+              </svg>
+            </div>
+            <div class="p-badges"><span class="p-badge">Bestseller</span><span class="p-badge">BIO</span></div>
+            <h3>Neo Snackbox</h3>
+            <p class="p-cat">Snackboxen · Bamboo lid</p>
+            <div class="p-rating">★★★★★ <span>4.9 · 2,413 reviews</span></div>
+            <p class="p-desc">Modular snack box with bamboo lid — engineered for the couch, office or on the go.</p>
+            <div class="p-foot">
+              <span class="p-price">€29.90</span>
+              <button class="btn btn-primary btn-sm add-to-cart" data-name="Neo Snackbox">Add to cart</button>
+            </div>
+          </article>
+
+          <!-- Product 2 -->
+          <article class="product-card reveal">
+            <div class="product-media">
+              <svg viewBox="0 0 200 150" role="img" aria-label="Laptopkissen Grau">
+                <defs>
+                  <linearGradient id="p2Cush3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A2E1F"/><stop offset="1" stop-color="#0D1A10"/></linearGradient>
+                </defs>
+                <ellipse cx="100" cy="132" rx="82" ry="8"fill="rgba(var(--neon-rgb),0.08)"/>
+                <rect x="18" y="92" width="164" height="34" rx="17" fill="url(#p2Cush3)" stroke="rgba(168,255,62,0.35)" stroke-width="1.5"/>
+                <rect x="24" y="98" width="152" height="22" rx="11" fill="none" stroke="rgba(168,255,62,0.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <rect x="22" y="82" width="156" height="13" rx="6.5" fill="#1E3A26"/>
+                <rect x="52" y="30" width="96" height="56" rx="7" fill="#050B07"/>
+                <rect x="58" y="36" width="84" height="44" rx="4" fill="#122017"/>
+                <path d="M58 44 h30 M58 52 h22 M58 60 h38" stroke="rgba(168,255,62,0.4)" stroke-width="3" stroke-linecap="round"/>
+                <rect x="44" y="82" width="112" height="9" rx="4.5" fill="var(--neon-dark)"/>
+              </svg>
+            </div>
+            <div class="p-badges"><span class="p-badge">Ergonomisch</span></div>
+            <h3>Laptopkissen Grau</h3>
+            <p class="p-cat">Zubehör · Ergonomic laptop cushion</p>
+            <div class="p-rating">★★★★★ <span>4.8 · 1,872 reviews</span></div>
+            <p class="p-desc">German-engineered ergonomic cushion — comfortable work anywhere, protects your lap.</p>
+            <div class="p-foot">
+              <span class="p-price">€39.90</span>
+              <button class="btn btn-primary btn-sm add-to-cart" data-name="Laptopkissen Grau">Add to cart</button>
+            </div>
+          </article>
+
+          <!-- Product 3 -->
+          <article class="product-card reveal">
+            <div class="product-media">
+              <svg viewBox="0 0 200 150" role="img" aria-label="Brotdose 1400ml">
+                <defs>
+                  <linearGradient id="p3Steel3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A3B2E"/><stop offset="0.5" stop-color="#16241B"/><stop offset="1" stop-color="#0A120C"/></linearGradient>
+                  <linearGradient id="p3Lid3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--neon-light)"/><stop offset="1" stop-color="var(--neon-dark)"/></linearGradient>
+                </defs>
+                <ellipse cx="100" cy="132" rx="82" ry="8"fill="rgba(var(--neon-rgb),0.08)"/>
+                <rect x="14" y="36" width="172" height="96" rx="14" fill="url(#p3Steel3)" stroke="rgba(168,255,62,0.35)" stroke-width="1.5"/>
+                <rect x="14" y="36" width="172" height="36" rx="14" fill="url(#p3Lid3)" stroke="var(--neon)"/>
+                <rect x="14" y="58" width="172" height="14" fill="url(#p3Lid3)"/>
+                <rect x="88" y="30" width="24" height="12" rx="5" fill="#0A120C" stroke="var(--neon)" stroke-width="1.5"/>
+                <path d="M58 78 h84 M58 78 v36 M58 114 h84 M142 78 v36" stroke="rgba(168,255,62,0.25)" stroke-width="2.4" stroke-linecap="round"/>
+                <rect x="70" y="86" width="52" height="9" rx="4.5" fill="var(--neon-deeper)"/>
+                <rect x="72" y="82" width="48" height="5" rx="2.5" fill="var(--neon-deep)"/>
+                <circle cx="108" cy="98" r="6" fill="var(--mint)"/><circle cx="102" cy="104" r="4" fill="var(--neon-dark)"/>
+                <text x="100" y="50" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#0A120C">1400ml</text>
+              </svg>
+            </div>
+            <div class="p-badges"><span class="p-badge sale">-20%</span><span class="p-badge">Stahl</span></div>
+            <h3>Brotdose 1400ml</h3>
+            <p class="p-cat">Küche · Stainless steel lunch box</p>
+            <div class="p-rating">★★★★★ <span>4.9 · 3,124 reviews</span></div>
+            <p class="p-desc">Leak-proof stainless steel lunch box with three compartments — dishwasher safe.</p>
+            <div class="p-foot">
+              <span class="p-price"><small>€43.90</small>€34.90</span>
+              <button class="btn btn-primary btn-sm add-to-cart" data-name="Brotdose 1400ml">Add to cart</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 8. PROMO BANNER ═══ -->
+    <section id="sale" aria-label="Summer sale">
+      <div class="container">
+        <div class="promo reveal">
+          <h2>☀️ Summer Sale — 20% off</h2>
+          <p>On all snack boxes and lunch boxes. Stock is limited — get yours before they're gone.</p>
+          <a href="#products" class="btn btn-primary">Shop the sale</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 9. SHOWCASE 1 — SNACKBOX ═══ -->
+    <section aria-label="Personalize your Snackbox">
+      <div class="container showcase">
+        <div class="show-media reveal">
+          <svg viewBox="0 0 260 190" role="img" aria-label="Personalized Neo Snackbox">
+            <defs>
+              <linearGradient id="s1Lid3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--neon-light)"/><stop offset="1" stop-color="var(--neon-dark)"/></linearGradient>
+              <linearGradient id="s1Body3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A2E1F"/><stop offset="1" stop-color="#0A120C"/></linearGradient>
+            </defs>
+            <ellipse cx="130" cy="168" rx="105" ry="10"fill="rgba(var(--neon-rgb),0.08)"/>
+            <rect x="22" y="52" width="216" height="104" rx="16" fill="url(#s1Body3)" stroke="rgba(168,255,62,0.4)" stroke-width="1.5"/>
+            <path d="M48 96 v38 M130 96 v38 M212 96 v38 M48 96 h164 M48 134 h164" stroke="rgba(168,255,62,0.22)" stroke-width="3" stroke-linecap="round"/>
+            <rect x="22" y="34" width="216" height="34" rx="16" fill="url(#s1Lid3)" stroke="var(--neon)"/>
+            <rect x="22" y="52" width="216" height="14" fill="url(#s1Lid3)"/>
+            <rect x="118" y="26" width="24" height="14" rx="6" fill="#0A120C" stroke="var(--neon)" stroke-width="1.5"/>
+            <text x="130" y="73" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="19" font-weight="700" fill="#0A120C">MAX</text>
+            <circle cx="92" cy="116" r="10" fill="var(--neon-deep)"/><circle cx="166" cy="112" r="9" fill="var(--neon-deeper)"/>
+            <circle cx="100" cy="123" r="5" fill="var(--neon-dark)"/><rect x="64" y="80" width="13" height="13" rx="6" fill="var(--mint)"/>
+            <rect x="148" y="126" width="13" height="13" rx="6" fill="var(--mint)"/><rect x="122" y="74" width="11" height="15" rx="5" fill="var(--neon)"/>
+          </svg>
+        </div>
+        <div class="show-body reveal">
+          <span class="show-tag">✨ Personalization</span>
+          <h2>Personalize your Snackbox</h2>
+          <p>Choose your compartments, colors and even engrave a name — made for school kids, commuters and couch-snackers alike.</p>
+          <ul class="show-feats">
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Modular compartments — up to 4 dividers</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Bamboo lid with airtight silicone seal</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Dishwasher safe &amp; BPA-free</span></li>
+          </ul>
+          <div class="show-cta">
+            <button class="btn btn-primary add-to-cart" data-name="Neo Snackbox">Personalize now</button>
+            <span class="price">€29.90</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 10. SHOWCASE 2 — LAPTOPKISSEN ═══ -->
+    <section aria-label="German engineering — Laptopkissen">
+      <div class="container showcase reversed">
+        <div class="show-media reveal">
+          <svg viewBox="0 0 260 190" role="img" aria-label="Laptopkissen Grau illustration">
+            <defs>
+              <linearGradient id="s2Cush3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A2E1F"/><stop offset="1" stop-color="#0D1A10"/></linearGradient>
+            </defs>
+            <ellipse cx="130" cy="168" rx="108" ry="10"fill="rgba(var(--neon-rgb),0.08)"/>
+            <rect x="28" y="124" width="204" height="42" rx="21" fill="url(#s2Cush3)" stroke="rgba(168,255,62,0.35)" stroke-width="1.5"/>
+            <rect x="36" y="130" width="188" height="30" rx="15" fill="none" stroke="rgba(168,255,62,0.2)" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <rect x="34" y="110" width="192" height="16" rx="8" fill="#1E3A26"/>
+            <rect x="68" y="42" width="124" height="72" rx="9" fill="#050B07"/>
+            <rect x="76" y="50" width="108" height="56" rx="5" fill="#122017"/>
+            <path d="M76 62 h40 M76 72 h30 M76 82 h48 M76 92 h36" stroke="rgba(168,255,62,0.4)" stroke-width="3.4" stroke-linecap="round"/>
+            <rect x="56" y="110" width="148" height="11" rx="5.5" fill="var(--neon-dark)"/>
+            <path d="M28 124 a21 21 0 0 1 42 0" fill="#1E3A26"/>
+          </svg>
+        </div>
+        <div class="show-body reveal">
+          <span class="show-tag">🇩🇪 German Engineering</span>
+          <h2>Work anywhere, comfortably</h2>
+          <p>The Laptopkissen Grau combines premium German engineering with ergonomic design — your back and lap will thank you.</p>
+          <ul class="show-feats">
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Ergonomic angle for healthy posture</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Breathable, machine-washable cover</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Non-slip base — stays where you put it</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Lightweight — only 480 g</span></li>
+          </ul>
+          <div class="show-cta">
+            <button class="btn btn-primary add-to-cart" data-name="Laptopkissen Grau">Learn more</button>
+            <span class="price">€39.90</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 11. SHOWCASE 3 — BROTDOSE ═══ -->
+    <section aria-label="Stainless steel excellence — Brotdose">
+      <div class="container showcase">
+        <div class="show-media reveal">
+          <svg viewBox="0 0 260 190" role="img" aria-label="Brotdose 1400ml illustration">
+            <defs>
+              <linearGradient id="s3Steel3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A3B2E"/><stop offset="0.5" stop-color="#16241B"/><stop offset="1" stop-color="#0A120C"/></linearGradient>
+              <linearGradient id="s3Lid3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--neon-light)"/><stop offset="1" stop-color="var(--neon-dark)"/></linearGradient>
+            </defs>
+            <ellipse cx="130" cy="168" rx="108" ry="10"fill="rgba(var(--neon-rgb),0.08)"/>
+            <rect x="20" y="40" width="220" height="120" rx="16" fill="url(#s3Steel3)" stroke="rgba(168,255,62,0.35)" stroke-width="1.5"/>
+            <rect x="20" y="40" width="220" height="44" rx="16" fill="url(#s3Lid3)" stroke="var(--neon)"/>
+            <rect x="20" y="72" width="220" height="12" fill="url(#s3Lid3)"/>
+            <rect x="112" y="32" width="36" height="14" rx="6" fill="#0A120C" stroke="var(--neon)" stroke-width="1.5"/>
+            <path d="M70 104 h120 M70 104 v50 M70 154 h120 M190 104 v50" stroke="rgba(168,255,62,0.25)" stroke-width="3" stroke-linecap="round"/>
+            <rect x="88" y="114" width="76" height="12" rx="6" fill="var(--neon-deeper)"/>
+            <rect x="90" y="109" width="72" height="6" rx="3" fill="var(--neon-deep)"/>
+            <circle cx="148" cy="134" r="8" fill="var(--mint)"/><circle cx="140" cy="141" r="5" fill="var(--neon-dark)"/><rect x="116" y="116" width="14" height="10" rx="5" fill="var(--neon)"/>
+            <text x="130" y="60" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="700" fill="#0A120C" letter-spacing="2">1400ml</text>
+          </svg>
+        </div>
+        <div class="show-body reveal">
+          <span class="show-tag">🥇 Stainless Steel Excellence</span>
+          <h2>The lunch box that outlives trends</h2>
+          <p>Made from 100% recyclable stainless steel — the Brotdose 1400ml keeps food fresh, tastes neutral and survives every school day.</p>
+          <ul class="show-feats">
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Leak-proof silicone seal — backpack safe</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Three practical compartments</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Dishwasher safe &amp; odour neutral</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>100% recyclable — for generations</span></li>
+          </ul>
+          <div class="show-cta">
+            <button class="btn btn-primary add-to-cart" data-name="Brotdose 1400ml">Learn more</button>
+            <span class="price">€34.90</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 12. WHY HAUSKU ═══ -->
+    <section id="why" aria-label="Why hausku">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="glow-chip">🌿 Our promise</span>
+          <h2>Why hausku?</h2>
+          <p>We make sustainable living easy — without compromising on quality or design.</p>
+        </div>
+        <div class="why-grid">
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <h3>Sustainability first</h3><p>Every product is climate-neutral, plastic-free and made to last for decades.</p>
+          </div>
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/><path d="M9 8h6"/><path d="M12 5v6"/></svg></div>
+            <h3>German quality</h3><p>Engineered and tested in Germany. 5-year warranty on everything we sell.</p>
+          </div>
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h-2v-6l2-5h9v11m-9 0v2a1 1 0 0 0 1 1h1m-2-3h11m0 0h3v-6l-3-5h-5"/><circle cx="7.5" cy="17.5" r=".5"/><circle cx="17.5" cy="17.5" r=".5"/></svg></div>
+            <h3>Fast &amp; free shipping</h3><p>Free from €39, climate-neutral delivery in 2–4 days via DHL GoGreen.</p>
+          </div>
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <h3>Fair prices</h3><p>Direct from the manufacturer — premium materials, honest pricing, no middlemen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 13. TESTIMONIALS ═══ -->
+    <section aria-label="Customer reviews">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="glow-chip">⭐ Reviews</span>
+          <h2>What our customers say</h2>
+          <p>★★★★★ 4.8 average from 7,400+ verified reviews</p>
+        </div>
+        <div class="testi-grid">
+          <div class="testi-card reveal">
+            <span class="quote">"</span>
+            <div class="stars">★★★★★</div>
+            <blockquote>Super hochwertig. Sogar eine Ersatzdichtung ist dabei — so macht nachhaltig einkaufen Spaß.</blockquote>
+            <div class="testi-author">
+              <div class="avatar">LC</div>
+              <div><strong>Ludolph C.</strong><small>Verified buyer · May 2026</small></div>
+            </div>
+          </div>
+          <div class="testi-card reveal">
+            <span class="quote">"</span>
+            <div class="stars">★★★★★</div>
+            <blockquote>Mein Kind benutzt diese Edelstahl-Brotdose täglich. Nach einem Jahr sieht sie noch aus wie neu!</blockquote>
+            <div class="testi-author">
+              <div class="avatar">SH</div>
+              <div><strong>Shakeel H.</strong><small>Verified buyer · May 2025</small></div>
+            </div>
+          </div>
+          <div class="testi-card reveal">
+            <span class="quote">"</span>
+            <div class="stars">★★★★★</div>
+            <blockquote>Die Box hat einen einfachen und praktischen Deckelverschluss. Top Qualität, top Preis.</blockquote>
+            <div class="testi-author">
+              <div class="avatar">DA</div>
+              <div><strong>danescu a.</strong><small>Verified buyer · Dec 2025</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 14. NEWSLETTER ═══ -->
+    <section class="newsletter" id="contact" aria-label="Newsletter">
+      <div class="container">
+        <div class="news-card reveal">
+          <h2>🌱 Get 10% off your first order</h2>
+          <p>Join our newsletter for eco tips, new products and exclusive member deals. No spam, ever.</p>
+          <form class="news-form" id="newsForm" novalidate>
+            <input type="email" id="newsEmail" placeholder="Your email address" aria-label="Email address" required />
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+          </form>
+          <div class="news-success" id="newsSuccess">✓ You're in! Check your inbox for your 10% code.</div>
+          <p class="news-note">By subscribing you agree to our privacy policy. Unsubscribe anytime.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══ 15. FOOTER ═══ -->
+  <footer class="footer" aria-label="Footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#top" class="logo" aria-label="hausku home">
+            <span class="mark">h</span>
+            hausku
+          </a>
+          <p class="brand-desc">Eco-friendly home &amp; living products, designed in Germany. Sustainable since day one.</p>
+          <div class="pay-badges" aria-label="Payment methods">
+            <span class="pay-badge">VISA</span><span class="pay-badge">MC</span><span class="pay-badge">PayPal</span><span class="pay-badge">Klarna</span><span class="pay-badge">Apple Pay</span>
+          </div>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="#products">All products</a></li>
+            <li><a href="#products">Küche</a></li>
+            <li><a href="#products">Haushalt</a></li>
+            <li><a href="#products">Snackboxen</a></li>
+            <li><a href="#sale">Sale</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Customer service</h4>
+          <ul>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#why">About hausku</a></li>
+            <li><a href="#why">Shipping &amp; returns</a></li>
+            <li><a href="#why">Warranty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#top">Imprint</a></li>
+            <li><a href="#top">Privacy policy</a></li>
+            <li><a href="#top">Terms &amp; conditions</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 hausku. All rights reserved.</span>
+        <span>Powered by 🌱 green energy</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ TOAST + BACK TO TOP ═══ -->
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="mark">✓</span><span id="toastMsg">Added to cart ✓</span></div>
+  <button id="backTop" aria-label="Back to top">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <script>
+    /* ═══ Interactions (vanilla JS) ═══ */
+
+    // JS is active — remove no-js fallback class
+    document.body.classList.remove('no-js');
+
+    // Mobile menu toggle
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    burger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open);
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Cart demo
+    let cartCount = 0;
+    const cartBadge = document.getElementById('cartCount');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    let toastTimer;
+
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cartCount += 1;
+        cartBadge.textContent = cartCount;
+        cartBadge.style.display = 'flex';
+        showToast(btn.dataset.name + ' added to cart ✓');
+      });
+    });
+
+    // Newsletter fake submit
+    const newsForm = document.getElementById('newsForm');
+    const newsSuccess = document.getElementById('newsSuccess');
+    newsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('newsEmail').value.trim();
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        showToast('Please enter a valid email address');
+        return;
+      }
+      newsForm.style.display = 'none';
+      newsSuccess.classList.add('show');
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Back to top
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Hide cart badge initially (0 items)
+    cartBadge.style.display = 'none';
+  </script>
+
+  <!-- ═══ Floating theme color picker ═══ -->
+  <style>
+    .theme-picker { position: fixed; left: 20px; bottom: 20px; z-index: 300; }
+    .tp-fab {
+      width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+      background: #fff; color: #333;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .tp-fab:hover { transform: scale(1.08); box-shadow: 0 10px 28px rgba(0,0,0,.3); }
+    .tp-fab svg { width: 26px; height: 26px; }
+    .tp-panel {
+      position: absolute; bottom: 68px; left: 0; width: 256px;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.28);
+      padding: 16px; color: #222;
+    }
+    .tp-panel[hidden] { display: none; }
+    .tp-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+      color: #666; margin: 0 0 10px;
+    }
+    .tp-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+    .tp-swatch {
+      width: 30px; height: 30px; border-radius: 50%; padding: 0;
+      border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.15);
+      cursor: pointer; transition: transform .15s;
+    }
+    .tp-swatch:hover { transform: scale(1.15); }
+    .tp-custom {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      font-size: 13px; color: #444; border-top: 1px solid #eee; padding-top: 10px; margin-bottom: 10px;
+    }
+    .tp-custom input[type=color] {
+      width: 44px; height: 30px; border: 1px solid #ddd; border-radius: 6px;
+      padding: 2px; cursor: pointer; background: none;
+    }
+    .tp-reset {
+      width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px;
+      background: #f6f6f6; color: #555; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .tp-reset:hover { background: #eee; }
+  </style>
+  <div class="theme-picker" id="themePicker">
+    <button class="tp-fab" id="tpFab" aria-label="Change theme color" aria-expanded="false" title="Change theme color">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 1 9-9c0 2-1.5 3-3 3h-2a2 2 0 0 0-2 2c0 .5.2 1 .5 1.5.3.6.5 1 .5 1.5a2 2 0 0 1-2 2Z"/><circle cx="7.5" cy="11.5" r=".5" fill="currentColor"/><circle cx="11" cy="7.5" r=".5" fill="currentColor"/><circle cx="16" cy="9.5" r=".5" fill="currentColor"/></svg>
+    </button>
+    <div class="tp-panel" id="tpPanel" hidden>
+      <p class="tp-title">Theme color</p>
+      <div class="tp-swatches" id="tpSwatches"></div>
+      <label class="tp-custom">Custom<input type="color" id="tpColor" value="#A8FF3E" /></label>
+      <button class="tp-reset" id="tpReset" type="button">Reset to default</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─── Theme color picker (hue-based palette engine) ─── */
+    (function () {
+      'use strict';
+      var DEFAULT = '#A8FF3E'; // original hausku neon lime
+      var PRESETS = [
+        ['#A8FF3E', 'Lime'], ['#3b82f6', 'Blue'], ['#ef4444', 'Red'], ['#a78bfa', 'Purple'],
+        ['#fb923c', 'Orange'], ['#2dd4bf', 'Teal'], ['#f472b6', 'Pink'], ['#818cf8', 'Indigo'],
+        ['#22d3ee', 'Cyan'], ['#fbbf24', 'Amber']
+      ];
+
+      function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        return { r: parseInt(hex.substr(0, 2), 16), g: parseInt(hex.substr(2, 2), 16), b: parseInt(hex.substr(4, 2), 16) };
+      }
+      function rgbToHex(r, g, b) {
+        return '#' + [r, g, b].map(function (v) { return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'); }).join('');
+      }
+      function shade(hex, pct) { /* pct>0 lighten toward white, pct<0 darken toward black */
+        var c = hexToRgb(hex), t = Math.abs(pct);
+        var target = pct >= 0 ? [255, 255, 255] : [0, 0, 0];
+        return rgbToHex(c.r + (target[0] - c.r) * t, c.g + (target[1] - c.g) * t, c.b + (target[2] - c.b) * t);
+      }
+
+      function lum(hex) { var c = hexToRgb(hex); return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b; }
+      function ensureLight(hex, minL) { /* keep neon bright enough for dark page + black text */
+        var L = lum(hex);
+        if (L >= minL) return hex;
+        return shade(hex, 1 - L / minL);
+      }
+      function applyTheme(hex) {
+        var root = document.documentElement;
+        var neon = ensureLight(hex, 150); /* dark colors get lightened so black text stays readable */
+        root.style.setProperty('--neon', neon);
+        root.style.setProperty('--neon-light', shade(neon, 0.12));
+        root.style.setProperty('--neon-dark', shade(neon, -0.2));
+        root.style.setProperty('--neon-deep', shade(neon, -0.55));
+        root.style.setProperty('--neon-deeper', shade(neon, -0.65));
+        root.style.setProperty('--mint', shade(neon, 0.35));
+        var c = hexToRgb(neon);
+        root.style.setProperty('--neon-rgb', c.r + ', ' + c.g + ', ' + c.b);
+        try { localStorage.setItem('hauskuTheme', hex); } catch (e) {}
+      }
+
+      // Build swatches
+      var wrap = document.getElementById('tpSwatches');
+      PRESETS.forEach(function (p) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'tp-swatch';
+        b.style.background = p[0]; b.title = p[1]; b.setAttribute('aria-label', p[1]);
+        b.addEventListener('click', function () { applyTheme(p[0]); });
+        wrap.appendChild(b);
+      });
+
+      var fab = document.getElementById('tpFab');
+      var panel = document.getElementById('tpPanel');
+      var colorInput = document.getElementById('tpColor');
+      var resetBtn = document.getElementById('tpReset');
+
+      fab.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = panel.hidden;
+        panel.hidden = !open;
+        fab.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function (e) {
+        if (!document.getElementById('themePicker').contains(e.target)) {
+          panel.hidden = true;
+          fab.setAttribute('aria-expanded', 'false');
+        }
+      });
+      colorInput.addEventListener('input', function () { applyTheme(colorInput.value); });
+      resetBtn.addEventListener('click', function () {
+        try { localStorage.removeItem('hauskuTheme'); } catch (e) {}
+        applyTheme(DEFAULT);
+        colorInput.value = DEFAULT;
+      });
+
+      // Apply saved theme or default on load
+      var saved = null;
+      try { saved = localStorage.getItem('hauskuTheme'); } catch (e) {}
+      applyTheme(saved && /^#[0-9a-f]{6}$/i.test(saved) ? saved : DEFAULT);
+    })();
+  </script>
+</body>
+</html>

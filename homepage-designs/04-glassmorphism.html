@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hausku — Aurora Glass | Fresh Eco Living</title>
+  <meta name="description" content="hausku Aurora Glass — vibrant, modern eco living. Snack boxes, laptop cushions & lunch boxes with fresh energy. Free shipping from €39." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN 4 — AURORA GLASS (GLASSMORPHISM)
+       ═══════════════════════════════════════════ */
+    :root {
+      --bg-start: #0E4D3A;       /* deep emerald */
+      --bg-mid: #1E8E5F;         /* vibrant green */
+      --bg-end: #4FA05A;         /* lime (kept readable for white text) */
+      --accent: #B9FBC0;         /* light accent */
+      --accent-2: #7ED957;       /* button gradient end */
+      --accent-2-dark: #4C9A38;  /* button gradient dark end */
+      --brand-rgb: 14, 77, 58;   /* RGB triplet for glass tint + orbs */
+      --accent-2-rgb: 126, 217, 87;
+      --glass: rgba(var(--brand-rgb), 0.38);      /* dark-tinted glass for text readability */
+      --glass-strong: rgba(var(--brand-rgb), 0.5);
+      --glass-border: rgba(255, 255, 255, 0.28);
+      --text: #FFFFFF;
+      --muted: rgba(255, 255, 255, 0.85);
+      --ink: #0E2B1D;            /* dark text on bright surfaces */
+      --danger: #FF7A6B;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      /* Base aurora gradient */
+      background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 55%, var(--bg-end) 130%);
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4, .logo, .nav-link, .btn {
+      font-family: 'Sora', sans-serif;
+      color: var(--text);
+    }
+
+    img, svg { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 80px 0; }
+
+    /* ─── Animated aurora background blobs ─── */
+    .aurora-bg {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+      background-color: var(--bg-start);
+      background-image:
+        linear-gradient(160deg, rgba(var(--brand-rgb), 0.55) 0%, rgba(24, 104, 71, 0.40) 55%, rgba(10, 60, 45, 0.62) 130%),
+        url('images/nature.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .aurora-bg .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px);
+      animation: orbDrift 18s ease-in-out infinite;
+    }
+    .orb-1 { width: 520px; height: 520px; top: -140px; left: -120px; background: rgba(233, 255, 198, 0.5); }
+    .orb-2 { width: 460px; height: 460px; top: 30%; right: -140px; background: rgba(95, 227, 162, 0.55); animation-delay: -6s; }
+    .orb-3 { width: 420px; height: 420px; bottom: -120px; left: 25%; background: rgba(168, 255, 62, 0.4); animation-delay: -12s; }
+    .orb-4 { width: 300px; height: 300px; top: 55%; left: -80px; background: rgba(255, 255, 255, 0.28); animation-delay: -9s; }
+
+    @keyframes orbDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(60px, -40px) scale(1.12); }
+      66% { transform: translate(-40px, 30px) scale(0.94); }
+    }
+
+    /* Fallback when backdrop-filter is unsupported */
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .glass, .navbar, .mobile-menu, .proof-bar, .trust-item, .cat-card, .product-card,
+      .promo, .show-media, .why-card, .testi-card, .news-card, .announce, .glass-chip,
+      .chip, .icon-btn, .news-form input, .news-success, .toast, #backTop, .footer {
+        background-color: rgba(var(--brand-rgb), 0.82);
+      }
+    }
+
+    /* ─── Glass primitives ─── */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* ─── Section heads ─── */
+    .section-head { text-align: center; max-width: 660px; margin: 0 auto 54px; }
+    .section-head .chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 18px; border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: var(--accent); font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 20px rgba(6, 32, 22, 0.25);
+    }
+    .section-head h2 { font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; margin-bottom: 12px; text-shadow: 0 2px 20px rgba(6, 32, 22, 0.35); }
+    .section-head p { font-size: 1.05rem; color: var(--muted); }
+
+    /* ─── Buttons ─── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 15px 32px; border: none; cursor: pointer;
+      border-radius: 999px; font-size: 1rem; font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s;
+    }
+    .btn-primary {
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: var(--ink);
+      box-shadow: 0 8px 24px rgba(var(--accent-2-rgb), 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 32px rgba(var(--accent-2-rgb), 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+    .btn-glass {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+    }
+    .btn-glass:hover { background: var(--glass-strong); transform: translateY(-2px); }
+    .btn-white {
+      background: #FFFFFF; color: var(--ink);
+      box-shadow: 0 8px 24px rgba(6, 32, 22, 0.3);
+    }
+    .btn-white:hover { transform: translateY(-2px) scale(1.02); }
+    .btn-sm { padding: 10px 22px; font-size: 0.9rem; }
+
+    .btn:focus-visible, .icon-btn:focus-visible, .nav-link:focus-visible, a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* ─── Announcement bar ─── */
+    .announce {
+      background: rgba(var(--brand-rgb), 0.45);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      text-align: center; padding: 10px 16px;
+      font-size: 0.85rem; font-weight: 600; color: var(--text);
+    }
+    .announce span { display: inline-block; margin: 0 10px; }
+    .announce .sep { opacity: 0.45; }
+
+    /* ─── Navbar (floating glass pill) ─── */
+    .nav-wrap {
+      position: sticky; top: 16px; z-index: 100;
+      padding: 0 20px;
+    }
+    .navbar {
+      max-width: 1200px; margin: 0 auto;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px 10px 22px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 800; }
+    .logo .mark {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      box-shadow: 0 4px 14px rgba(var(--accent-2-rgb), 0.5);
+    }
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-link {
+      padding: 9px 16px; border-radius: 999px;
+      font-size: 0.92rem; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { background: rgba(255, 255, 255, 0.2); color: #FFFFFF; }
+    .nav-actions { display: flex; align-items: center; gap: 6px; }
+    .icon-btn {
+      position: relative; width: 42px; height: 42px;
+      border: 1px solid var(--glass-border); cursor: pointer; border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-1px); }
+    .icon-btn .badge {
+      position: absolute; top: -4px; right: -4px;
+      background: linear-gradient(120deg, var(--accent-2), var(--accent-2-dark));
+      color: #fff; font-size: 0.65rem; font-weight: 800;
+      min-width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+    .burger { display: none; }
+
+    .mobile-menu {
+      display: none; list-style: none;
+      max-width: 1200px; margin: 10px auto 0;
+      background: rgba(var(--brand-rgb), 0.75);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px; padding: 14px;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu li a {
+      display: block; padding: 13px 18px; border-radius: 12px;
+      color: var(--text); font-family: 'Sora', sans-serif; font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .mobile-menu li a:hover { background: rgba(255, 255, 255, 0.15); }
+
+    /* ─── Hero ─── */
+    .hero { padding-top: 48px; }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr; gap: 56px; align-items: center;
+    }
+    .hero-panel {
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-panel::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 10%, rgba(255, 255, 255, 0.12), transparent 50%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 18px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid var(--glass-border);
+      color: var(--accent); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5.5vw, 3.9rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 22px;
+      text-shadow: 0 2px 24px rgba(6, 32, 22, 0.4);
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p.lead { font-size: 1.15rem; max-width: 540px; margin-bottom: 34px; color: var(--muted); }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 16px; }
+
+    .hero-visual { position: relative; }
+    .hero-product {
+      padding: 40px 30px 30px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .hero-product svg { width: min(330px, 82%); filter: drop-shadow(0 20px 30px rgba(6, 32, 22, 0.35)); }
+    .hero-product .hp-name { font-size: 1.25rem; font-weight: 700; margin-top: 18px; }
+    .hero-product .hp-price { color: var(--accent); font-weight: 600; margin-top: 4px; }
+    .hero-product .hp-btn { margin-top: 20px; }
+
+    .glass-chip {
+      position: absolute; z-index: 3;
+      background: var(--glass);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px; padding: 10px 18px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600;
+      box-shadow: 0 8px 24px rgba(6, 32, 22, 0.3);
+      animation: chipFloat 5s ease-in-out infinite;
+    }
+    .glass-chip .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+    .gc-1 { top: 5%; left: -4%; }
+    .gc-2 { top: 42%; right: -4%; animation-delay: 1.4s; }
+    .gc-3 { bottom: 4%; left: 5%; animation-delay: 2.6s; }
+
+    @keyframes chipFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* ─── Social proof ─── */
+    .social-proof { padding: 0 0 80px; }
+    .proof-bar {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 40px;
+      background: var(--glass);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 22px 30px;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.3);
+    }
+    .proof-item { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .proof-item strong { color: var(--accent); font-family: 'Sora', sans-serif; }
+    .stars { color: var(--accent); letter-spacing: 2px; text-shadow: 0 0 14px rgba(185, 251, 192, 0.6); }
+
+    /* ─── Trust badges ─── */
+    .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .trust-item {
+      background: var(--glass);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 24px 20px; text-align: center;
+      transition: transform 0.2s, background 0.25s, box-shadow 0.25s;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.25);
+    }
+    .trust-item:hover { transform: translateY(-3px); background: var(--glass-strong); box-shadow: 0 12px 40px rgba(6, 32, 22, 0.35); }
+    .trust-item .t-icon {
+      width: 52px; height: 52px; margin: 0 auto 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+    }
+    .trust-item h4 { font-size: 1rem; margin-bottom: 4px; }
+    .trust-item p { font-size: 0.82rem; color: var(--muted); }
+
+    /* ─── Categories ─── */
+    .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .cat-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 26px 22px; text-align: center;
+      transition: transform 0.2s, background 0.25s, box-shadow 0.25s; cursor: pointer;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.25);
+    }
+    .cat-card:hover { transform: translateY(-4px); background: var(--glass-strong); box-shadow: 0 14px 44px rgba(6, 32, 22, 0.35); }
+    .cat-card .c-icon {
+      width: 58px; height: 58px; margin: 0 auto 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+    }
+    .cat-card h4 { margin-bottom: 4px; }
+    .cat-card p { font-size: 0.84rem; color: var(--muted); }
+    .cat-card .c-count {
+      display: inline-block; margin-top: 12px;
+      font-size: 0.74rem; font-weight: 600; color: var(--accent);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px; padding: 4px 14px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ─── Products ─── */
+    .product-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .product-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 24px; display: flex; flex-direction: column;
+      transition: transform 0.2s, background 0.25s, box-shadow 0.25s;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.25);
+    }
+    .product-card:hover { transform: translateY(-4px); background: var(--glass-strong); box-shadow: 0 14px 44px rgba(6, 32, 22, 0.35); }
+    .product-media {
+      background: rgba(var(--brand-rgb), 0.28);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px 16px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 200px;
+      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.06);
+    }
+    .product-media svg { width: min(190px, 84%); filter: drop-shadow(0 12px 16px rgba(6, 32, 22, 0.35)); }
+    .p-badges { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .p-badge {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      border-radius: 999px; padding: 5px 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.16);
+      color: var(--accent);
+    }
+    .p-badge.sale { background: rgba(255, 122, 107, 0.3); border-color: rgba(255, 160, 150, 0.5); color: #FFD9D5; }
+    .product-card h3 { font-size: 1.15rem; margin-bottom: 4px; }
+    .product-card .p-cat { font-size: 0.78rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.3px; }
+    .p-rating { color: var(--accent); font-size: 0.85rem; margin-bottom: 10px; }
+    .p-rating span { color: var(--muted); margin-left: 6px; font-weight: 500; }
+    .product-card .p-desc { font-size: 0.88rem; margin-bottom: 18px; color: var(--muted); }
+    .p-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; }
+    .p-price { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; }
+    .p-price small { font-size: 0.75rem; color: var(--muted); font-weight: 500; text-decoration: line-through; margin-right: 6px; }
+
+    /* ─── Promo banner ─── */
+    .promo {
+      position: relative;
+      background: linear-gradient(120deg, rgba(185, 251, 192, 0.22), rgba(var(--accent-2-rgb), 0.3));
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      box-shadow: 0 12px 44px rgba(6, 32, 22, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      padding: 50px 36px; text-align: center;
+      overflow: hidden;
+    }
+    .promo::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 10%, rgba(255, 255, 255, 0.2), transparent 50%);
+      pointer-events: none;
+    }
+    .promo h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); margin-bottom: 10px; position: relative; z-index: 1; text-shadow: 0 2px 20px rgba(6, 32, 22, 0.3); }
+    .promo p { max-width: 520px; margin: 0 auto 26px; position: relative; z-index: 1; color: var(--muted); }
+    .promo .btn { position: relative; z-index: 1; }
+
+    /* ─── Showcases ─── */
+    .showcase { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
+    .show-media {
+      background: var(--glass);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 40px 30px;
+      box-shadow: 0 12px 44px rgba(6, 32, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .show-media svg { width: min(400px, 90%); filter: drop-shadow(0 20px 30px rgba(6, 32, 22, 0.4)); }
+    .show-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--glass-border);
+      color: var(--accent); font-size: 0.76rem; font-weight: 600;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .show-body h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 12px; text-shadow: 0 2px 20px rgba(6, 32, 22, 0.3); }
+    .show-body > p { margin-bottom: 24px; color: var(--muted); }
+    .show-feats { list-style: none; margin-bottom: 28px; }
+    .show-feats li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 13px; }
+    .show-feats .check {
+      flex-shrink: 0; width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); margin-top: 2px;
+    }
+    .show-feats span { font-size: 0.94rem; }
+    .show-cta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .show-cta .price { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--accent); }
+
+    /* ─── Why hausku ─── */
+    .why-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .why-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 28px 24px; text-align: center;
+      transition: transform 0.2s, background 0.25s, box-shadow 0.25s;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.25);
+    }
+    .why-card:hover { transform: translateY(-4px); background: var(--glass-strong); }
+    .why-card .w-icon {
+      width: 64px; height: 64px; margin: 0 auto 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+    }
+    .why-card h3 { margin-bottom: 10px; }
+    .why-card p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ─── Testimonials ─── */
+    .testi-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .testi-card {
+      position: relative;
+      background: var(--glass);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 26px;
+      transition: background 0.25s, transform 0.2s;
+      box-shadow: 0 8px 32px rgba(6, 32, 22, 0.25);
+    }
+    .testi-card:hover { background: var(--glass-strong); transform: translateY(-2px); }
+    .testi-card .quote {
+      position: absolute; top: 8px; right: 20px;
+      font-family: 'Sora', sans-serif; font-size: 4rem; font-weight: 800;
+      color: var(--accent); opacity: 0.25; line-height: 1;
+    }
+    .testi-card .stars { margin-bottom: 12px; }
+    .testi-card blockquote { font-size: 0.95rem; margin-bottom: 18px; }
+    .testi-author { display: flex; align-items: center; gap: 14px; }
+    .testi-author .avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif; font-weight: 700; color: var(--accent);
+    }
+    .testi-author strong { display: block; font-size: 0.92rem; }
+    .testi-author small { font-size: 0.78rem; color: var(--muted); }
+
+    /* ─── Newsletter ─── */
+    .newsletter { padding-bottom: 40px; }
+    .news-card {
+      text-align: center; padding: 50px 32px;
+      background: var(--glass);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      box-shadow: 0 12px 44px rgba(6, 32, 22, 0.35);
+    }
+    .news-card h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); margin-bottom: 10px; }
+    .news-card > p { max-width: 480px; margin: 0 auto 26px; color: var(--muted); }
+    .news-form { display: flex; flex-direction: column; gap: 14px; max-width: 460px; margin: 0 auto; }
+    .news-form input {
+      flex: 1; border: 1px solid var(--glass-border); outline: none;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px; padding: 16px 24px;
+      font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .news-form input::placeholder { color: rgba(255, 255, 255, 0.6); }
+    .news-form input:focus { border-color: rgba(255, 255, 255, 0.6); background: rgba(255, 255, 255, 0.2); box-shadow: 0 0 24px rgba(185, 251, 192, 0.25); }
+    .news-form input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .news-note { font-size: 0.75rem; margin-top: 16px; color: var(--muted); }
+    .news-success {
+      display: none; align-items: center; justify-content: center; gap: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px; padding: 16px 26px; margin: 0 auto;
+      max-width: 460px; font-weight: 600; color: var(--accent);
+    }
+    .news-success.show { display: flex; }
+
+    /* ─── Footer (dark glass) ─── */
+    .footer {
+      background: rgba(6, 24, 17, 0.6);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--glass-border);
+      margin-top: 40px; padding: 60px 0 0;
+    }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 36px; padding-bottom: 44px; }
+    .footer h4 { font-size: 1.02rem; margin-bottom: 16px; }
+    .footer ul { list-style: none; }
+    .footer ul li { margin-bottom: 10px; }
+    .footer ul a { font-size: 0.9rem; color: var(--muted); transition: color 0.2s; }
+    .footer ul a:hover { color: var(--accent); }
+    .footer .brand-desc { font-size: 0.9rem; margin: 14px 0 22px; max-width: 320px; color: var(--muted); }
+    .pay-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pay-badge {
+      border: 1px solid var(--glass-border);
+      border-radius: 10px; padding: 7px 13px;
+      font-size: 0.72rem; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 22px 0;
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between;
+      font-size: 0.8rem; color: var(--muted);
+    }
+
+    /* ─── Toast + back-to-top ─── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translate(-50%, 80px);
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      color: var(--text); border: 1px solid var(--glass-border);
+      border-radius: 999px; box-shadow: 0 10px 32px rgba(6, 32, 22, 0.4);
+      padding: 14px 26px; font-weight: 600; font-size: 0.92rem;
+      display: flex; align-items: center; gap: 10px; z-index: 200;
+      opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease;
+      pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .toast .mark {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800;
+    }
+
+    #backTop {
+      position: fixed; bottom: 28px; right: 28px; z-index: 150;
+      width: 52px; height: 52px; border: 1px solid var(--glass-border); cursor: pointer;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-radius: 50%;
+      box-shadow: 0 8px 24px rgba(6, 32, 22, 0.35);
+      color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transform: translateY(16px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    #backTop.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    #backTop:hover { background: rgba(255, 255, 255, 0.28); }
+
+    /* ─── Scroll reveal ─── */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .no-js .reveal { opacity: 1; transform: none; }
+
+    /* ─── Responsive ─── */
+    @media (min-width: 640px) {
+      .trust-grid { grid-template-columns: repeat(3, 1fr); }
+      .cat-grid { grid-template-columns: repeat(4, 1fr); }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .news-form { flex-direction: row; }
+      .news-form .btn { white-space: nowrap; }
+    }
+    @media (min-width: 768px) {
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+      .testi-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .hero-grid { grid-template-columns: 1.05fr 0.95fr; }
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+      .why-grid { grid-template-columns: repeat(4, 1fr); }
+      .testi-grid { grid-template-columns: repeat(3, 1fr); }
+      .showcase { grid-template-columns: 1fr 1fr; gap: 64px; }
+      .showcase.reversed .show-media { order: 1; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .burger { display: none; }
+    }
+    @media (max-width: 1023px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+      .showcase.reversed .show-media { order: 0; }
+    }
+    @media (max-width: 400px) {
+      .nav-actions .icon-btn:first-child { display: none; }
+      .toast { white-space: normal; max-width: calc(100vw - 40px); text-align: center; }
+    }
+  </style>
+</head>
+<body class="no-js">
+
+  <!-- Animated aurora background -->
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <!-- ═══ 1. ANNOUNCEMENT BAR ═══ -->
+  <div class="announce">
+    <span>🚚 Free shipping from €39</span><span class="sep">|</span>
+    <span>🔄 30-day trial</span><span class="sep">|</span>
+    <span>🇩🇪 Delivery 2–4 days</span>
+  </div>
+
+  <!-- ═══ 2. NAVBAR (glass pill) ═══ -->
+  <div class="nav-wrap">
+    <nav class="navbar" aria-label="Main navigation">
+      <a href="#top" class="logo" aria-label="hausku home">
+        <span class="mark">h</span>
+        hausku
+      </a>
+      <ul class="nav-links">
+        <li><a href="#top" class="nav-link active">Home</a></li>
+        <li><a href="#products" class="nav-link">Products</a></li>
+        <li><a href="#sale" class="nav-link">Sale</a></li>
+        <li><a href="#why" class="nav-link">About</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Wishlist">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </button>
+        <button class="icon-btn" id="cartBtn" aria-label="Cart">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span class="badge" id="cartCount">0</span>
+        </button>
+        <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" x2="20" y1="7" y2="7"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="17" y2="17"/></svg>
+        </button>
+      </div>
+    </nav>
+    <ul class="mobile-menu" id="mobileMenu">
+      <li><a href="#top">Home</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#sale">Sale</a></li>
+      <li><a href="#why">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+
+  <main id="top">
+
+    <!-- ═══ 3. HERO ═══ -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="hero-tag">🌿 Fresh energy · Eco living</span>
+          <h1>Live lighter, <em>breathe greener</em></h1>
+          <p class="lead">Vibrant, sustainable essentials for modern homes — snack boxes, laptop cushions and lunch boxes designed to make eco easy and beautiful.</p>
+          <div class="hero-cta">
+            <a href="#products" class="btn btn-primary">Shop now
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#why" class="btn btn-glass">About us</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-product glass">
+            <svg viewBox="0 0 260 190" role="img" aria-label="Aurora snack box illustration">
+              <defs>
+                <linearGradient id="abLid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
+                <linearGradient id="abBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D8F3D4"/></linearGradient>
+              </defs>
+              <ellipse cx="130" cy="168" rx="105" ry="10" fill="rgba(var(--brand-rgb), 0.25)"/>
+              <rect x="22" y="52" width="216" height="104" rx="16" fill="url(#abBody)" stroke="var(--accent)" stroke-width="2"/>
+              <path d="M48 96 v38 M130 96 v38 M212 96 v38 M48 96 h164 M48 134 h164" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+              <rect x="22" y="34" width="216" height="34" rx="16" fill="url(#abLid)" stroke="#5EAE4C"/>
+              <rect x="22" y="52" width="216" height="14" fill="url(#abLid)"/>
+              <rect x="118" y="26" width="24" height="14" rx="6" fill="var(--bg-start)" stroke="var(--accent)" stroke-width="1.5"/>
+              <text x="130" y="73" text-anchor="middle" font-family="Sora, sans-serif" font-size="19" font-weight="700" fill="var(--bg-start)">hausku</text>
+              <circle cx="92" cy="116" r="10" fill="var(--accent-2)"/><circle cx="166" cy="112" r="9" fill="var(--accent)"/>
+              <circle cx="100" cy="123" r="5" fill="#E8A25E"/><rect x="64" y="80" width="13" height="13" rx="6" fill="var(--accent-2-dark)"/>
+              <rect x="148" y="126" width="13" height="13" rx="6" fill="var(--accent-2-dark)"/><rect x="122" y="74" width="11" height="15" rx="5" fill="var(--accent-2)"/>
+            </svg>
+            <p class="hp-name">Aurora Snackbox</p>
+            <p class="hp-price">from €29.90</p>
+            <button class="btn btn-primary btn-sm hp-btn add-to-cart" data-name="Aurora Snackbox">Add to cart</button>
+          </div>
+          <div class="glass-chip gc-1"><span class="dot"></span> Climate neutral</div>
+          <div class="glass-chip gc-2"><span class="dot"></span> ⭐ 4.8 / 5</div>
+          <div class="glass-chip gc-3"><span class="dot"></span> Made in Germany</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 4. SOCIAL PROOF ═══ -->
+    <section class="social-proof" aria-label="Trusted by thousands">
+      <div class="container">
+        <div class="proof-bar reveal">
+          <div class="proof-item"><span class="stars">★★★★★</span> <strong>4.8/5</strong> rating</div>
+          <div class="proof-item"><strong>50,000+</strong> happy customers</div>
+          <div class="proof-item"><strong>Trusted</strong> in 🇩🇪 🇦🇹 🇨🇭</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 5. TRUST BADGES ═══ -->
+    <section aria-label="Why shop with us">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h4>5-year warranty</h4><p>On all hausku products</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h-2v-6l2-5h9v11m-9 0v2a1 1 0 0 0 1 1h1m-2-3h11m0 0h3v-6l-3-5h-5"/><circle cx="7.5" cy="17.5" r=".5"/><circle cx="17.5" cy="17.5" r=".5"/></svg></div>
+            <h4>Free shipping</h4><p>From €39 order value</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></div>
+            <h4>30-day trial</h4><p>Test it, love it, keep it</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg></div>
+            <h4>Secure payment</h4><p>Visa, Mastercard &amp; PayPal</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <h4>Climate neutral</h4><p>CO₂-compensated shipping</p>
+          </div>
+          <div class="trust-item reveal">
+            <div class="t-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+            <h4>DHL GoGreen</h4><p>Sustainable delivery</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 6. CATEGORIES ═══ -->
+    <section aria-label="Shop by category">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="chip">✦ Collections</span>
+          <h2>Shop by category</h2>
+          <p>Everything your family needs for a plastic-free everyday life.</p>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h20l-1.5 12h-17Z"/><path d="M2 7 5 3h14l3 4"/><circle cx="8" cy="17" r="1"/><circle cx="16" cy="17" r="1"/></svg></div>
+            <h4>Küche</h4><p>Bottles, containers &amp; more</p>
+            <span class="c-count">24 products</span>
+          </div>
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+            <h4>Haushalt</h4><p>Home &amp; cleaning essentials</p>
+            <span class="c-count">18 products</span>
+          </div>
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M7 12h4"/></svg></div>
+            <h4>Snackboxen</h4><p>Lunch &amp; snack on the go</p>
+            <span class="c-count">12 products</span>
+          </div>
+          <div class="cat-card reveal">
+            <div class="c-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg></div>
+            <h4>Zubehör</h4><p>Cushions, covers &amp; extras</p>
+            <span class="c-count">9 products</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 7. FEATURED PRODUCTS ═══ -->
+    <section id="products" aria-label="Featured products">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="chip">★ Bestsellers</span>
+          <h2>Our bestsellers</h2>
+          <p>Loved by over 50,000 families across Germany, Austria and Switzerland.</p>
+        </div>
+        <div class="product-grid">
+
+          <!-- Product 1 -->
+          <article class="product-card reveal">
+            <div class="product-media">
+              <svg viewBox="0 0 200 150" role="img" aria-label="Aurora Snackbox">
+                <defs>
+                  <linearGradient id="p1Lid4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
+                  <linearGradient id="p1Body4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D8F3D4"/></linearGradient>
+                </defs>
+                <ellipse cx="100" cy="132" rx="80" ry="8" fill="rgba(var(--brand-rgb), 0.25)"/>
+                <rect x="16" y="40" width="168" height="84" rx="13" fill="url(#p1Body4)" stroke="var(--accent)" stroke-width="2"/>
+                <path d="M38 74 v28 M100 74 v28 M162 74 v28 M38 74 h124 M38 102 h124" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+                <rect x="16" y="26" width="168" height="26" rx="13" fill="url(#p1Lid4)" stroke="#5EAE4C"/>
+                <rect x="16" y="40" width="168" height="10" fill="url(#p1Lid4)"/>
+                <rect x="88" y="19" width="24" height="12" rx="5" fill="var(--bg-start)" stroke="var(--accent)" stroke-width="1.5"/>
+                <text x="100" y="58" text-anchor="middle" font-family="Sora, sans-serif" font-size="14" font-weight="700" fill="var(--bg-start)">hausku</text>
+                <circle cx="72" cy="88" r="8" fill="var(--accent-2)"/><circle cx="130" cy="86" r="7" fill="var(--accent)"/>
+                <circle cx="78" cy="93" r="4" fill="#E8A25E"/><rect x="52" y="62" width="11" height="11" rx="5" fill="var(--accent-2-dark)"/><rect x="124" y="96" width="11" height="11" rx="5" fill="var(--accent-2-dark)"/>
+              </svg>
+            </div>
+            <div class="p-badges"><span class="p-badge">Bestseller</span><span class="p-badge">BIO</span></div>
+            <h3>Aurora Snackbox</h3>
+            <p class="p-cat">Snackboxen · Bamboo lid</p>
+            <div class="p-rating">★★★★★ <span>4.9 · 2,413 reviews</span></div>
+            <p class="p-desc">Modular snack box with bamboo lid — made for the couch, office or on the go.</p>
+            <div class="p-foot">
+              <span class="p-price">€29.90</span>
+              <button class="btn btn-primary btn-sm add-to-cart" data-name="Aurora Snackbox">Add to cart</button>
+            </div>
+          </article>
+
+          <!-- Product 2 -->
+          <article class="product-card reveal">
+            <div class="product-media">
+              <svg viewBox="0 0 200 150" role="img" aria-label="Laptopkissen Grau">
+                <defs>
+                  <linearGradient id="p2Cush4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#CBE8C4"/></linearGradient>
+                </defs>
+                <ellipse cx="100" cy="132" rx="82" ry="8" fill="rgba(var(--brand-rgb), 0.25)"/>
+                <rect x="18" y="92" width="164" height="34" rx="17" fill="url(#p2Cush4)" stroke="#9CCB93" stroke-width="2"/>
+                <rect x="24" y="98" width="152" height="22" rx="11" fill="none" stroke="#7EB075" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <rect x="22" y="82" width="156" height="13" rx="6.5" fill="var(--accent)"/>
+                <rect x="52" y="30" width="96" height="56" rx="7" fill="var(--bg-start)"/>
+                <rect x="58" y="36" width="84" height="44" rx="4" fill="#EAF8E6"/>
+                <path d="M58 44 h30 M58 52 h22 M58 60 h38" stroke="#9CCB93" stroke-width="3" stroke-linecap="round"/>
+                <rect x="44" y="82" width="112" height="9" rx="4.5" fill="var(--accent-2)"/>
+              </svg>
+            </div>
+            <div class="p-badges"><span class="p-badge">Ergonomisch</span></div>
+            <h3>Laptopkissen Grau</h3>
+            <p class="p-cat">Zubehör · Ergonomic laptop cushion</p>
+            <div class="p-rating">★★★★★ <span>4.8 · 1,872 reviews</span></div>
+            <p class="p-desc">German-engineered ergonomic cushion — comfortable work anywhere, protects your lap.</p>
+            <div class="p-foot">
+              <span class="p-price">€39.90</span>
+              <button class="btn btn-primary btn-sm add-to-cart" data-name="Laptopkissen Grau">Add to cart</button>
+            </div>
+          </article>
+
+          <!-- Product 3 -->
+          <article class="product-card reveal">
+            <div class="product-media">
+              <svg viewBox="0 0 200 150" role="img" aria-label="Brotdose 1400ml">
+                <defs>
+                  <linearGradient id="p3Steel4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#E2F0DE"/><stop offset="1" stop-color="#B9D8B2"/></linearGradient>
+                  <linearGradient id="p3Lid4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
+                </defs>
+                <ellipse cx="100" cy="132" rx="82" ry="8" fill="rgba(var(--brand-rgb), 0.25)"/>
+                <rect x="14" y="36" width="172" height="96" rx="14" fill="url(#p3Steel4)" stroke="#9CCB93" stroke-width="2"/>
+                <rect x="14" y="36" width="172" height="36" rx="14" fill="url(#p3Lid4)" stroke="#5EAE4C"/>
+                <rect x="14" y="58" width="172" height="14" fill="url(#p3Lid4)"/>
+                <rect x="88" y="30" width="24" height="12" rx="5" fill="var(--bg-start)" stroke="var(--accent)" stroke-width="1.5"/>
+                <path d="M58 78 h84 M58 78 v36 M58 114 h84 M142 78 v36" stroke="#9CCB93" stroke-width="2.4" stroke-linecap="round"/>
+                <rect x="70" y="86" width="52" height="9" rx="4.5" fill="var(--accent-2)"/>
+                <rect x="72" y="82" width="48" height="5" rx="2.5" fill="var(--accent)"/>
+                <circle cx="108" cy="98" r="6" fill="var(--accent-2-dark)"/><circle cx="102" cy="104" r="4" fill="#E8A25E"/>
+                <text x="100" y="50" text-anchor="middle" font-family="Sora, sans-serif" font-size="12" font-weight="700" fill="var(--bg-start)">1400ml</text>
+              </svg>
+            </div>
+            <div class="p-badges"><span class="p-badge sale">-20%</span><span class="p-badge">Stahl</span></div>
+            <h3>Brotdose 1400ml</h3>
+            <p class="p-cat">Küche · Stainless steel lunch box</p>
+            <div class="p-rating">★★★★★ <span>4.9 · 3,124 reviews</span></div>
+            <p class="p-desc">Leak-proof stainless steel lunch box with three compartments — dishwasher safe.</p>
+            <div class="p-foot">
+              <span class="p-price"><small>€43.90</small>€34.90</span>
+              <button class="btn btn-primary btn-sm add-to-cart" data-name="Brotdose 1400ml">Add to cart</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 8. PROMO BANNER ═══ -->
+    <section id="sale" aria-label="Summer sale">
+      <div class="container">
+        <div class="promo reveal">
+          <h2>☀️ Summer Sale — 20% off</h2>
+          <p>On all snack boxes and lunch boxes. Stock is limited — get yours before they're gone.</p>
+          <a href="#products" class="btn btn-white">Shop the sale</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 9. SHOWCASE 1 — SNACKBOX ═══ -->
+    <section aria-label="Personalize your Snackbox">
+      <div class="container showcase">
+        <div class="show-media reveal">
+          <svg viewBox="0 0 260 190" role="img" aria-label="Personalized Aurora Snackbox">
+            <defs>
+              <linearGradient id="s1Lid4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
+              <linearGradient id="s1Body4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D8F3D4"/></linearGradient>
+            </defs>
+            <ellipse cx="130" cy="168" rx="105" ry="10" fill="rgba(var(--brand-rgb), 0.25)"/>
+            <rect x="22" y="52" width="216" height="104" rx="16" fill="url(#s1Body4)" stroke="var(--accent)" stroke-width="2"/>
+            <path d="M48 96 v38 M130 96 v38 M212 96 v38 M48 96 h164 M48 134 h164" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+            <rect x="22" y="34" width="216" height="34" rx="16" fill="url(#s1Lid4)" stroke="#5EAE4C"/>
+            <rect x="22" y="52" width="216" height="14" fill="url(#s1Lid4)"/>
+            <rect x="118" y="26" width="24" height="14" rx="6" fill="var(--bg-start)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="130" y="73" text-anchor="middle" font-family="Sora, sans-serif" font-size="19" font-weight="700" fill="var(--bg-start)">MAX</text>
+            <circle cx="92" cy="116" r="10" fill="var(--accent-2)"/><circle cx="166" cy="112" r="9" fill="var(--accent)"/>
+            <circle cx="100" cy="123" r="5" fill="#E8A25E"/><rect x="64" y="80" width="13" height="13" rx="6" fill="var(--accent-2-dark)"/>
+            <rect x="148" y="126" width="13" height="13" rx="6" fill="var(--accent-2-dark)"/><rect x="122" y="74" width="11" height="15" rx="5" fill="var(--accent-2)"/>
+          </svg>
+        </div>
+        <div class="show-body reveal">
+          <span class="show-tag">✨ Personalization</span>
+          <h2>Personalize your Snackbox</h2>
+          <p>Choose your compartments, colors and even engrave a name — made for school kids, commuters and couch-snackers alike.</p>
+          <ul class="show-feats">
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Modular compartments — up to 4 dividers</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Bamboo lid with airtight silicone seal</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Dishwasher safe &amp; BPA-free</span></li>
+          </ul>
+          <div class="show-cta">
+            <button class="btn btn-primary add-to-cart" data-name="Aurora Snackbox">Personalize now</button>
+            <span class="price">€29.90</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 10. SHOWCASE 2 — LAPTOPKISSEN ═══ -->
+    <section aria-label="German engineering — Laptopkissen">
+      <div class="container showcase reversed">
+        <div class="show-media reveal">
+          <svg viewBox="0 0 260 190" role="img" aria-label="Laptopkissen Grau illustration">
+            <defs>
+              <linearGradient id="s2Cush4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#CBE8C4"/></linearGradient>
+            </defs>
+            <ellipse cx="130" cy="168" rx="108" ry="10" fill="rgba(var(--brand-rgb), 0.25)"/>
+            <rect x="28" y="124" width="204" height="42" rx="21" fill="url(#s2Cush4)" stroke="#9CCB93" stroke-width="2"/>
+            <rect x="36" y="130" width="188" height="30" rx="15" fill="none" stroke="#7EB075" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <rect x="34" y="110" width="192" height="16" rx="8" fill="var(--accent)"/>
+            <rect x="68" y="42" width="124" height="72" rx="9" fill="var(--bg-start)"/>
+            <rect x="76" y="50" width="108" height="56" rx="5" fill="#EAF8E6"/>
+            <path d="M76 62 h40 M76 72 h30 M76 82 h48 M76 92 h36" stroke="#9CCB93" stroke-width="3.4" stroke-linecap="round"/>
+            <rect x="56" y="110" width="148" height="11" rx="5.5" fill="var(--accent-2)"/>
+            <path d="M28 124 a21 21 0 0 1 42 0" fill="var(--accent)"/>
+          </svg>
+        </div>
+        <div class="show-body reveal">
+          <span class="show-tag">🇩🇪 German Engineering</span>
+          <h2>Work anywhere, comfortably</h2>
+          <p>The Laptopkissen Grau combines premium German engineering with ergonomic design — your back and lap will thank you.</p>
+          <ul class="show-feats">
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Ergonomic angle for healthy posture</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Breathable, machine-washable cover</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Non-slip base — stays where you put it</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Lightweight — only 480 g</span></li>
+          </ul>
+          <div class="show-cta">
+            <button class="btn btn-primary add-to-cart" data-name="Laptopkissen Grau">Learn more</button>
+            <span class="price">€39.90</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 11. SHOWCASE 3 — BROTDOSE ═══ -->
+    <section aria-label="Stainless steel excellence — Brotdose">
+      <div class="container showcase">
+        <div class="show-media reveal">
+          <svg viewBox="0 0 260 190" role="img" aria-label="Brotdose 1400ml illustration">
+            <defs>
+              <linearGradient id="s3Steel4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#E2F0DE"/><stop offset="1" stop-color="#B9D8B2"/></linearGradient>
+              <linearGradient id="s3Lid4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
+            </defs>
+            <ellipse cx="130" cy="168" rx="108" ry="10" fill="rgba(var(--brand-rgb), 0.25)"/>
+            <rect x="20" y="40" width="220" height="120" rx="16" fill="url(#s3Steel4)" stroke="#9CCB93" stroke-width="2"/>
+            <rect x="20" y="40" width="220" height="44" rx="16" fill="url(#s3Lid4)" stroke="#5EAE4C"/>
+            <rect x="20" y="72" width="220" height="12" fill="url(#s3Lid4)"/>
+            <rect x="112" y="32" width="36" height="14" rx="6" fill="var(--bg-start)" stroke="var(--accent)" stroke-width="1.5"/>
+            <path d="M70 104 h120 M70 104 v50 M70 154 h120 M190 104 v50" stroke="#9CCB93" stroke-width="3" stroke-linecap="round"/>
+            <rect x="88" y="114" width="76" height="12" rx="6" fill="var(--accent-2)"/>
+            <rect x="90" y="109" width="72" height="6" rx="3" fill="var(--accent)"/>
+            <circle cx="148" cy="134" r="8" fill="var(--accent-2-dark)"/><circle cx="140" cy="141" r="5" fill="#E8A25E"/><rect x="116" y="116" width="14" height="10" rx="5" fill="var(--accent-2)"/>
+            <text x="130" y="60" text-anchor="middle" font-family="Sora, sans-serif" font-size="15" font-weight="700" fill="var(--bg-start)" letter-spacing="2">1400ml</text>
+          </svg>
+        </div>
+        <div class="show-body reveal">
+          <span class="show-tag">🥇 Stainless Steel Excellence</span>
+          <h2>The lunch box that outlives trends</h2>
+          <p>Made from 100% recyclable stainless steel — the Brotdose 1400ml keeps food fresh, tastes neutral and survives every school day.</p>
+          <ul class="show-feats">
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Leak-proof silicone seal — backpack safe</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Three practical compartments</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Dishwasher safe &amp; odour neutral</span></li>
+            <li><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>100% recyclable — for generations</span></li>
+          </ul>
+          <div class="show-cta">
+            <button class="btn btn-primary add-to-cart" data-name="Brotdose 1400ml">Learn more</button>
+            <span class="price">€34.90</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 12. WHY HAUSKU ═══ -->
+    <section id="why" aria-label="Why hausku">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="chip">🌿 Our promise</span>
+          <h2>Why hausku?</h2>
+          <p>We make sustainable living easy — without compromising on quality or design.</p>
+        </div>
+        <div class="why-grid">
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <h3>Sustainability first</h3><p>Every product is climate-neutral, plastic-free and made to last for decades.</p>
+          </div>
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/><path d="M9 8h6"/><path d="M12 5v6"/></svg></div>
+            <h3>German quality</h3><p>Engineered and tested in Germany. 5-year warranty on everything we sell.</p>
+          </div>
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h-2v-6l2-5h9v11m-9 0v2a1 1 0 0 0 1 1h1m-2-3h11m0 0h3v-6l-3-5h-5"/><circle cx="7.5" cy="17.5" r=".5"/><circle cx="17.5" cy="17.5" r=".5"/></svg></div>
+            <h3>Fast &amp; free shipping</h3><p>Free from €39, climate-neutral delivery in 2–4 days via DHL GoGreen.</p>
+          </div>
+          <div class="why-card reveal">
+            <div class="w-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <h3>Fair prices</h3><p>Direct from the manufacturer — premium materials, honest pricing, no middlemen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 13. TESTIMONIALS ═══ -->
+    <section aria-label="Customer reviews">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="chip">⭐ Reviews</span>
+          <h2>What our customers say</h2>
+          <p>★★★★★ 4.8 average from 7,400+ verified reviews</p>
+        </div>
+        <div class="testi-grid">
+          <div class="testi-card reveal">
+            <span class="quote">"</span>
+            <div class="stars">★★★★★</div>
+            <blockquote>Super hochwertig. Sogar eine Ersatzdichtung ist dabei — so macht nachhaltig einkaufen Spaß.</blockquote>
+            <div class="testi-author">
+              <div class="avatar">LC</div>
+              <div><strong>Ludolph C.</strong><small>Verified buyer · May 2026</small></div>
+            </div>
+          </div>
+          <div class="testi-card reveal">
+            <span class="quote">"</span>
+            <div class="stars">★★★★★</div>
+            <blockquote>Mein Kind benutzt diese Edelstahl-Brotdose täglich. Nach einem Jahr sieht sie noch aus wie neu!</blockquote>
+            <div class="testi-author">
+              <div class="avatar">SH</div>
+              <div><strong>Shakeel H.</strong><small>Verified buyer · May 2025</small></div>
+            </div>
+          </div>
+          <div class="testi-card reveal">
+            <span class="quote">"</span>
+            <div class="stars">★★★★★</div>
+            <blockquote>Die Box hat einen einfachen und praktischen Deckelverschluss. Top Qualität, top Preis.</blockquote>
+            <div class="testi-author">
+              <div class="avatar">DA</div>
+              <div><strong>danescu a.</strong><small>Verified buyer · Dec 2025</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 14. NEWSLETTER ═══ -->
+    <section class="newsletter" id="contact" aria-label="Newsletter">
+      <div class="container">
+        <div class="news-card reveal">
+          <h2>🌱 Get 10% off your first order</h2>
+          <p>Join our newsletter for eco tips, new products and exclusive member deals. No spam, ever.</p>
+          <form class="news-form" id="newsForm" novalidate>
+            <input type="email" id="newsEmail" placeholder="Your email address" aria-label="Email address" required />
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+          </form>
+          <div class="news-success" id="newsSuccess">✓ You're in! Check your inbox for your 10% code.</div>
+          <p class="news-note">By subscribing you agree to our privacy policy. Unsubscribe anytime.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══ 15. FOOTER ═══ -->
+  <footer class="footer" aria-label="Footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#top" class="logo" aria-label="hausku home">
+            <span class="mark">h</span>
+            hausku
+          </a>
+          <p class="brand-desc">Eco-friendly home &amp; living products, designed in Germany. Sustainable since day one.</p>
+          <div class="pay-badges" aria-label="Payment methods">
+            <span class="pay-badge">VISA</span><span class="pay-badge">MC</span><span class="pay-badge">PayPal</span><span class="pay-badge">Klarna</span><span class="pay-badge">Apple Pay</span>
+          </div>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="#products">All products</a></li>
+            <li><a href="#products">Küche</a></li>
+            <li><a href="#products">Haushalt</a></li>
+            <li><a href="#products">Snackboxen</a></li>
+            <li><a href="#sale">Sale</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Customer service</h4>
+          <ul>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#why">About hausku</a></li>
+            <li><a href="#why">Shipping &amp; returns</a></li>
+            <li><a href="#why">Warranty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#top">Imprint</a></li>
+            <li><a href="#top">Privacy policy</a></li>
+            <li><a href="#top">Terms &amp; conditions</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 hausku. All rights reserved.</span>
+        <span>Made with 🌿 in Germany</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ TOAST + BACK TO TOP ═══ -->
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="mark">✓</span><span id="toastMsg">Added to cart ✓</span></div>
+  <button id="backTop" aria-label="Back to top">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <script>
+    /* ═══ Interactions (vanilla JS) ═══ */
+
+    // JS is active — remove no-js fallback class
+    document.body.classList.remove('no-js');
+
+    // Mobile menu toggle
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    burger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open);
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Cart demo
+    let cartCount = 0;
+    const cartBadge = document.getElementById('cartCount');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    let toastTimer;
+
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cartCount += 1;
+        cartBadge.textContent = cartCount;
+        cartBadge.style.display = 'flex';
+        showToast(btn.dataset.name + ' added to cart ✓');
+      });
+    });
+
+    // Newsletter fake submit
+    const newsForm = document.getElementById('newsForm');
+    const newsSuccess = document.getElementById('newsSuccess');
+    newsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('newsEmail').value.trim();
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        showToast('Please enter a valid email address');
+        return;
+      }
+      newsForm.style.display = 'none';
+      newsSuccess.classList.add('show');
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Back to top
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Hide cart badge initially (0 items)
+    cartBadge.style.display = 'none';
+  </script>
+
+  <!-- ═══ Floating theme color picker ═══ -->
+  <style>
+    .theme-picker { position: fixed; left: 20px; bottom: 20px; z-index: 300; }
+    .tp-fab {
+      width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+      background: #fff; color: #333;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .tp-fab:hover { transform: scale(1.08); box-shadow: 0 10px 28px rgba(0,0,0,.3); }
+    .tp-fab svg { width: 26px; height: 26px; }
+    .tp-panel {
+      position: absolute; bottom: 68px; left: 0; width: 256px;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.28);
+      padding: 16px; color: #222;
+    }
+    .tp-panel[hidden] { display: none; }
+    .tp-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+      color: #666; margin: 0 0 10px;
+    }
+    .tp-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+    .tp-swatch {
+      width: 30px; height: 30px; border-radius: 50%; padding: 0;
+      border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.15);
+      cursor: pointer; transition: transform .15s;
+    }
+    .tp-swatch:hover { transform: scale(1.15); }
+    .tp-custom {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      font-size: 13px; color: #444; border-top: 1px solid #eee; padding-top: 10px; margin-bottom: 10px;
+    }
+    .tp-custom input[type=color] {
+      width: 44px; height: 30px; border: 1px solid #ddd; border-radius: 6px;
+      padding: 2px; cursor: pointer; background: none;
+    }
+    .tp-reset {
+      width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px;
+      background: #f6f6f6; color: #555; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .tp-reset:hover { background: #eee; }
+  </style>
+  <div class="theme-picker" id="themePicker">
+    <button class="tp-fab" id="tpFab" aria-label="Change theme color" aria-expanded="false" title="Change theme color">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 1 9-9c0 2-1.5 3-3 3h-2a2 2 0 0 0-2 2c0 .5.2 1 .5 1.5.3.6.5 1 .5 1.5a2 2 0 0 1-2 2Z"/><circle cx="7.5" cy="11.5" r=".5" fill="currentColor"/><circle cx="11" cy="7.5" r=".5" fill="currentColor"/><circle cx="16" cy="9.5" r=".5" fill="currentColor"/></svg>
+    </button>
+    <div class="tp-panel" id="tpPanel" hidden>
+      <p class="tp-title">Theme color</p>
+      <div class="tp-swatches" id="tpSwatches"></div>
+      <label class="tp-custom">Custom<input type="color" id="tpColor" value="#1E8E5F" /></label>
+      <button class="tp-reset" id="tpReset" type="button">Reset to default</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─── Theme color picker (hue-based palette engine) ─── */
+    (function () {
+      'use strict';
+      var DEFAULT = '#1E8E5F'; // original hausku emerald
+      var PRESETS = [
+        ['#1E8E5F', 'Emerald'], ['#2563eb', 'Blue'], ['#dc2626', 'Red'], ['#7c3aed', 'Purple'],
+        ['#ea580c', 'Orange'], ['#0d9488', 'Teal'], ['#db2777', 'Pink'], ['#4f46e5', 'Indigo'],
+        ['#0891b2', 'Cyan'], ['#d97706', 'Amber']
+      ];
+
+      function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        return { r: parseInt(hex.substr(0, 2), 16), g: parseInt(hex.substr(2, 2), 16), b: parseInt(hex.substr(4, 2), 16) };
+      }
+      function rgbToHex(r, g, b) {
+        return '#' + [r, g, b].map(function (v) { return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'); }).join('');
+      }
+      function shade(hex, pct) { /* pct>0 lighten toward white, pct<0 darken toward black */
+        var c = hexToRgb(hex), t = Math.abs(pct);
+        var target = pct >= 0 ? [255, 255, 255] : [0, 0, 0];
+        return rgbToHex(c.r + (target[0] - c.r) * t, c.g + (target[1] - c.g) * t, c.b + (target[2] - c.b) * t);
+      }
+
+      function lum(hex) { var c = hexToRgb(hex); return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b; }
+      function ensureDark(hex, maxL) { /* keep deep background dark enough for white text */
+        var L = lum(hex);
+        if (L <= maxL) return hex;
+        return shade(hex, -(1 - maxL / L));
+      }
+      function ensureLight(hex, minL) { /* keep button accent light enough for dark ink text */
+        var L = lum(hex);
+        if (L >= minL) return hex;
+        return shade(hex, 1 - L / minL);
+      }
+      function applyTheme(hex) {
+        var root = document.documentElement;
+        var bgStart = ensureDark(shade(hex, -0.35), 95);
+        var accent2 = ensureLight(shade(hex, 0.12), 150);
+        root.style.setProperty('--bg-start', bgStart);
+        root.style.setProperty('--bg-mid', hex);
+        root.style.setProperty('--bg-end', shade(hex, 0.35));
+        root.style.setProperty('--accent', shade(hex, 0.72));
+        root.style.setProperty('--accent-2', accent2);
+        root.style.setProperty('--accent-2-dark', shade(hex, -0.2));
+        var c = hexToRgb(bgStart);
+        root.style.setProperty('--brand-rgb', c.r + ', ' + c.g + ', ' + c.b);
+        var c2 = hexToRgb(accent2);
+        root.style.setProperty('--accent-2-rgb', c2.r + ', ' + c2.g + ', ' + c2.b);
+        try { localStorage.setItem('hauskuTheme', hex); } catch (e) {}
+      }
+
+      // Build swatches
+      var wrap = document.getElementById('tpSwatches');
+      PRESETS.forEach(function (p) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'tp-swatch';
+        b.style.background = p[0]; b.title = p[1]; b.setAttribute('aria-label', p[1]);
+        b.addEventListener('click', function () { applyTheme(p[0]); });
+        wrap.appendChild(b);
+      });
+
+      var fab = document.getElementById('tpFab');
+      var panel = document.getElementById('tpPanel');
+      var colorInput = document.getElementById('tpColor');
+      var resetBtn = document.getElementById('tpReset');
+
+      fab.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = panel.hidden;
+        panel.hidden = !open;
+        fab.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function (e) {
+        if (!document.getElementById('themePicker').contains(e.target)) {
+          panel.hidden = true;
+          fab.setAttribute('aria-expanded', 'false');
+        }
+      });
+      colorInput.addEventListener('input', function () { applyTheme(colorInput.value); });
+      resetBtn.addEventListener('click', function () {
+        try { localStorage.removeItem('hauskuTheme'); } catch (e) {}
+        applyTheme(DEFAULT);
+        colorInput.value = DEFAULT;
+      });
+
+      // Apply saved theme or default on load
+      var saved = null;
+      try { saved = localStorage.getItem('hauskuTheme'); } catch (e) {}
+      applyTheme(saved && /^#[0-9a-f]{6}$/i.test(saved) ? saved : DEFAULT);
+    })();
+  </script>
+</body>
+</html>
