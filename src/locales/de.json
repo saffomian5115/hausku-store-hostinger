@@ -249,7 +249,10 @@
     "noAccount": "Noch kein Konto?",
     "registerNow": "Jetzt registrieren",
     "alreadyAccount": "Bereits ein Konto?",
-    "signInNow": "Jetzt anmelden"
+    "signInNow": "Jetzt anmelden",
+    "continueWithGoogle": "Mit Google fortfahren",
+    "googleError": "Anmeldung mit Google fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "googleNotConfigured": "Google-Anmeldung ist derzeit nicht konfiguriert. Bitte melden Sie sich mit E-Mail und Passwort an."
   },
   "account": {
     "title": "Mein Konto",

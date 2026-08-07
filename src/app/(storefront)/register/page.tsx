@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/storefront/AuthContext";
+import GoogleSignInButton from "@/components/storefront/GoogleSignInButton";
 import { useLocale } from "@/components/shared/LocaleContext";
 
 export default function RegisterPage() {
@@ -55,6 +56,16 @@ export default function RegisterPage() {
             {error}
           </div>
         )}
+
+        {/* Continue with Google */}
+        <GoogleSignInButton />
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-white/20" />
+          <span className="text-white/50 text-xs uppercase tracking-wider">{t("common.or")}</span>
+          <div className="flex-1 h-px bg-white/20" />
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Field */}

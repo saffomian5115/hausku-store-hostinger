@@ -235,6 +235,7 @@
 .auth-field-anim {
   animation: authFieldIn 0.5s ease-out both;
 }
+.auth-field-0 { animation-delay: 0.25s; }
 .auth-field-1 { animation-delay: 0.4s; }
 .auth-field-2 { animation-delay: 0.55s; }
 .auth-field-3 { animation-delay: 0.7s; }

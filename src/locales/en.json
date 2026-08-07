@@ -249,7 +249,10 @@
     "noAccount": "Don't have an account?",
     "registerNow": "Register now",
     "alreadyAccount": "Already have an account?",
-    "signInNow": "Sign in now"
+    "signInNow": "Sign in now",
+    "continueWithGoogle": "Continue with Google",
+    "googleError": "Google sign-in failed. Please try again.",
+    "googleNotConfigured": "Google sign-in is not configured yet. Please log in with email and password."
   },
   "account": {
     "title": "My Account",

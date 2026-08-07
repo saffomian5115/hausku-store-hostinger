@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/storefront/AuthContext";
+import GoogleSignInButton from "@/components/storefront/GoogleSignInButton";
 import { useLocale } from "@/components/shared/LocaleContext";
 
 export default function LoginPage() {
@@ -17,6 +18,17 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Show an error banner if Google OAuth redirected back with ?error=...
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get("error");
+    if (oauthError === "google") {
+      setError(t("auth.googleError"));
+    } else if (oauthError === "google_not_configured") {
+      setError(t("auth.googleNotConfigured"));
+    }
+  }, [t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +67,16 @@ export default function LoginPage() {
             {error}
           </div>
         )}
+
+        {/* Continue with Google */}
+        <GoogleSignInButton />
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-white/20" />
+          <span className="text-white/50 text-xs uppercase tracking-wider">{t("common.or")}</span>
+          <div className="flex-1 h-px bg-white/20" />
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
