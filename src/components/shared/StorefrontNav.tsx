@@ -69,7 +69,7 @@ export default function StorefrontNav() {
             <Link href="/" className="flex items-center h-full pl-2 pr-4 group">
               <div className="flex items-center h-full">
                 <Image
-                  src="/mylogo.jpeg"
+                  src="/mylogo.png"
                   alt="hausku"
                   width={140}
                   height={48}

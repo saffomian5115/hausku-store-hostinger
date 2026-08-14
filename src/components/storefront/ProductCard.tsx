@@ -7,6 +7,7 @@ import { useWishlist } from "./WishlistContext";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 import { useFly } from "@/components/shared/FlyAnimationProvider";
+import { Heart } from "lucide-react";
 
 type ProductWithVariants = {
   id: number;
@@ -25,7 +26,6 @@ type ProductWithVariants = {
 };
 
 export default function ProductCard({ product }: { product: ProductWithVariants }) {
-  const cardRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
   const heartBtnRef = useRef<HTMLButtonElement>(null);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -43,24 +43,6 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
     .map((v) => v.colorHex as string)
     .filter((hex, i, arr) => arr.indexOf(hex) === i);
   const liked = isLiked(product.id);
-
-  // 3D Tilt on hover
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-    cardRef.current.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-  }, []);
 
   // ── Add to Cart with fly animation ──
   const handleAddToCart = useCallback(
@@ -139,12 +121,7 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
   );
 
   return (
-    <div
-      ref={cardRef}
-      className="group relative border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 card-3d"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="group relative border border-stone-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
       {/* Heart / Like Button */}
       <button
         ref={heartBtnRef}
@@ -159,29 +136,19 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
             : "Zur Merkliste hinzufügen"
         }
       >
-        <svg
+        <Heart
           className={`w-5 h-5 transition-all duration-300 ${
             liked
               ? "text-lime-500 fill-lime-500 scale-110"
-              : "text-gray-400 hover:text-lime-400"
+              : "text-gray-400 hover:text-lime-500"
           }`}
-          fill={liked ? "currentColor" : "none"}
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-          />
-        </svg>
+        />
       </button>
 
       {/* Out of stock overlay */}
       {!inStock && (
-        <div className="absolute inset-0 z-10 bg-black/40 flex items-center justify-center rounded-lg">
-          <span className="bg-white text-gray-900 font-bold text-sm px-4 py-2 rounded-full shadow-lg">
+        <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[2px] flex items-center justify-center rounded-lg">
+          <span className="bg-gray-900 text-white font-bold text-sm px-4 py-2 rounded-full shadow-lg">
             Ausverkauft
           </span>
         </div>
@@ -190,17 +157,17 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
       <Link href={`/product/${product.slug}`} className="block">
         <div
           ref={imgRef}
-          className="aspect-square bg-gray-100 relative overflow-hidden"
+          className="aspect-square bg-white relative overflow-hidden flex items-center justify-center"
         >
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.04]"
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <div className="w-full h-full flex items-center justify-center text-gray-300">
               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -211,7 +178,7 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
           <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
             {product.category.name}
           </p>
-          <h3 className="font-medium text-gray-900 group-hover:text-lime-500 transition-colors line-clamp-2">
+          <h3 className="font-semibold text-gray-900 group-hover:text-lime-600 transition-colors line-clamp-2">
             {product.name}
           </h3>
           <div className="flex items-center justify-between mt-3">
@@ -247,12 +214,12 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
         <button
           onClick={handleAddToCart}
           disabled={!inStock}
-          className={`w-full flex items-center justify-center gap-2 font-semibold py-2.5 rounded-lg transition-all duration-200 text-sm ${
+          className={`w-full flex items-center justify-center gap-2 font-semibold py-2.5 rounded-xl transition-all duration-200 text-sm ${
             addedToCart
-              ? "bg-green-500 text-white"
+              ? "bg-emerald-500 text-white"
               : inStock
               ? "bg-lime-500 hover:bg-lime-600 text-white hover:shadow-lg hover:shadow-lime-500/30 active:scale-[0.98]"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-stone-100 text-gray-400 cursor-not-allowed"
           }`}
         >
           {addedToCart ? (

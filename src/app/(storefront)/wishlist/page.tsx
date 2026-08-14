@@ -59,7 +59,7 @@ export default function WishlistPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-8 h-8 border-2 border-lime-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-500">Merkliste wird geladen...</p>
         </div>
       </div>
@@ -122,12 +122,12 @@ export default function WishlistPage() {
               >
                 <div className="relative">
                   <Link href={`/product/${product.slug}`} className="block">
-                    <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                    <div className="aspect-square bg-white relative overflow-hidden flex items-center justify-center">
                       {product.imageUrl ? (
                         <img
                           src={product.imageUrl}
                           alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain p-4 group-hover:scale-[1.04] transition-transform duration-300"
                           loading="lazy"
                         />
                       ) : (

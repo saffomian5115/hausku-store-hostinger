@@ -34,13 +34,13 @@ export default function ProductGallery({
         {/* Main image - clickable */}
         <button
           onClick={() => openPreview(0)}
-          className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xl relative overflow-hidden group cursor-zoom-in"
+          className="w-full aspect-square bg-white rounded-2xl border border-stone-100 flex items-center justify-center text-gray-300 relative overflow-hidden group cursor-zoom-in"
           aria-label="Bild vergrößern"
         >
           <img
             src={mainImage}
             alt={productName}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-[1.04]"
           />
           {/* Zoom icon overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
@@ -68,7 +68,7 @@ export default function ProductGallery({
                 <img
                   src={image.url}
                   alt={image.alt}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain p-1"
                   onError={(e) => {
                     // Hide thumbnail if image fails to load
                     (e.target as HTMLElement).style.display = "none";

@@ -44,7 +44,7 @@ export default function MobileNav() {
         <div className="flex items-center justify-between p-5 border-b border-gray-100">
           <Link href="/" onClick={() => setOpen(false)} className="flex items-center">
             <Image
-              src="/mylogo.jpeg"
+              src="/mylogo.png"
               alt="hausku"
               width={100}
               height={36}

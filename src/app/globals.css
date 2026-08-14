@@ -1,6 +1,29 @@
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/fraunces/opsz.css";
 @import "tailwindcss";
 
-/* Smooth expand animation for search bar */
+/* ═══ Design tokens ═══ */
+@theme {
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fafaf9; /* warm off-white (stone-50) */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgb(132 204 22 / 0.3);
+}
+
+/* ═══ Smooth expand animation for search bar ═══ */
 @keyframes expand-search {
   from {
     width: 0;
@@ -47,7 +70,7 @@
   transform: translateX(40px);
 }
 .anim-scaleIn.animate-on-scroll {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .animate-on-scroll.animate-in-view {
@@ -55,10 +78,10 @@
   transform: translateY(0) translateX(0) scale(1);
 }
 
-/* Hero zoom-in entrance animation */
+/* ═══ Hero entrance animation ═══ */
 @keyframes heroZoom {
   from {
-    transform: scale(1.15);
+    transform: scale(1.12);
     opacity: 0;
   }
   to {
@@ -67,118 +90,110 @@
   }
 }
 .animate-hero-zoom {
-  animation: heroZoom 1.5s ease-out forwards;
+  animation: heroZoom 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Hero background container */
 .hero-bg {
-  background-color: #1a1a1a;
+  background-color: #0c2a1c; /* deep forest green base */
   isolation: isolate;
 }
 
-/* Hero floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+/* Subtle hero product float — gentle, not bouncy */
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+.animate-hero-float {
+  animation: heroFloat 6s ease-in-out infinite;
 }
 
-/* Shimmer loading effect */
+/* ═══ Shimmer loading effect ═══ */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%);
+  background: linear-gradient(
+    90deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
-/* Pulse glow for CTA buttons */
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(132, 204, 22, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(132, 204, 22, 0.5); }
-}
-.animate-pulse-glow {
-  animation: pulseGlow 2.5s ease-in-out infinite;
-}
-
-/* ═══ Gallery Float Animations for Product Cards ═══ */
-.gallery-grid {
-  perspective: 1200px;
-}
-
-.gallery-card {
-  animation: galleryFloat var(--float-duration, 4s) ease-in-out infinite;
-  animation-delay: var(--float-delay, 0s);
-}
-
-.gallery-card-1 {
-  --float-duration: 4.5s;
-  --float-delay: 0s;
-}
-.gallery-card-2 {
-  --float-duration: 5s;
-  --float-delay: 0.6s;
-}
-.gallery-card-3 {
-  --float-duration: 4s;
-  --float-delay: 1.2s;
-}
-
-@keyframes galleryFloat {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
+/* ═══ Auth Page Load Animations ═══ */
+/* Background zoom-in */
+@keyframes authBgZoom {
+  from {
+    transform: scale(1.08);
+    opacity: 0;
   }
-  25% {
-    transform: translateY(-6px) translateX(3px);
-  }
-  50% {
-    transform: translateY(0px) translateX(-2px);
-  }
-  75% {
-    transform: translateY(-3px) translateX(2px);
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
-
-/* 3D Tilt Card styles */
-.card-3d {
-  transition-property: transform, box-shadow;
-  transition-duration: 0.15s, 0.2s;
-  transition-timing-function: ease-out, ease-out;
-  transform-style: preserve-3d;
-  will-change: transform;
-  backface-visibility: hidden;
+.auth-bg-anim {
+  animation: authBgZoom 1.2s ease-out forwards;
 }
 
-.card-3d:hover {
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+/* Card slide-up + fade */
+@keyframes authCardUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.auth-card-anim {
+  animation: authCardUp 0.7s ease-out 0.2s both;
 }
 
-/* Product showcase image card with subtle float — used by snackbox, laptop cushion, lunchbox */
-.product-image-card {
-  animation: productFloat 6s ease-in-out infinite;
+/* Staggered field fade-in */
+@keyframes authFieldIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-@keyframes productFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+.auth-field-anim {
+  animation: authFieldIn 0.5s ease-out both;
 }
-
-.animate-float-slow {
-  animation: floatSlow 3s ease-in-out infinite;
+.auth-field-0 {
+  animation-delay: 0.25s;
 }
-
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+.auth-field-1 {
+  animation-delay: 0.4s;
 }
-
-/* Perspective utility for 3D container */
-.perspective-3d {
-  perspective: 1000px;
+.auth-field-2 {
+  animation-delay: 0.55s;
+}
+.auth-field-3 {
+  animation-delay: 0.7s;
+}
+.auth-field-4 {
+  animation-delay: 0.85s;
+}
+.auth-field-5 {
+  animation-delay: 1s;
 }
 
 /* ═══ Glassmorphism Login / Register Floating Labels ═══ */
@@ -208,48 +223,14 @@
   color: rgb(163, 230, 53);
 }
 
-/* ═══ Auth Page Load Animations ═══ */
-/* Background zoom-in */
-@keyframes authBgZoom {
-  from { transform: scale(1.08); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
-}
-.auth-bg-anim {
-  animation: authBgZoom 1.2s ease-out forwards;
-}
-
-/* Card slide-up + fade */
-@keyframes authCardUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);    }
-}
-.auth-card-anim {
-  animation: authCardUp 0.7s ease-out 0.2s both;
-}
-
-/* Staggered field fade-in */
-@keyframes authFieldIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-.auth-field-anim {
-  animation: authFieldIn 0.5s ease-out both;
-}
-.auth-field-0 { animation-delay: 0.25s; }
-.auth-field-1 { animation-delay: 0.4s; }
-.auth-field-2 { animation-delay: 0.55s; }
-.auth-field-3 { animation-delay: 0.7s; }
-.auth-field-4 { animation-delay: 0.85s; }
-.auth-field-5 { animation-delay: 1.0s; }
-
-/* ═══ Hero Cutout Sparkle Animation ═══ */
-@keyframes hero-sparkle {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.5) translateY(-20px);
+/* ═══ Reduced motion: respect user preference ═══ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
