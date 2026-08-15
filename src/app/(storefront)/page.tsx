@@ -187,7 +187,7 @@ export default async function HomePage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 md:-mt-6 pb-16 md:pb-20 relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {/* Big story card */}
-            <div className="col-span-2 lg:col-span-2 lg:row-span-2 bg-[#0F2A1C] rounded-3xl p-7 md:p-9 flex flex-col justify-between min-h-[220px] md:min-h-[280px] relative overflow-hidden">
+            <div className="col-span-2 lg:col-span-2 lg:row-span-2 bg-[#0F2A1C] rounded-3xl p-7 md:p-9 flex flex-col justify-between min-h-[220px] md:min-h-[280px] relative overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ease-out-quart">
               <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-lime-500/20 rounded-full blur-3xl" />
               <Globe2 className="w-7 h-7 text-lime-400 relative" />
               <div className="relative">
@@ -214,7 +214,7 @@ export default async function HomePage() {
             ].map((card, i) => (
               <div
                 key={i}
-                className={`${card.tone} rounded-3xl p-5 md:p-6 flex flex-col justify-between min-h-[130px] shadow-sm border border-black/[0.03]`}
+                className={`${card.tone} rounded-3xl p-5 md:p-6 flex flex-col justify-between min-h-[130px] shadow-sm border border-black/[0.03] hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-out-quart`}
               >
                 <card.icon className={`w-5 h-5 ${card.tone.includes("text-white") ? "text-white" : "text-gray-900"}`} strokeWidth={1.8} />
                 <p className={`font-semibold text-sm mt-4 ${card.tone.includes("text-white") ? "text-white" : "text-gray-900"}`}>
@@ -274,7 +274,7 @@ export default async function HomePage() {
                     <img
                       src={snackbox.imageUrl}
                       alt={snackbox.name}
-                      className="w-full h-full object-contain p-10 transition-transform duration-700 group-hover:scale-[1.04]"
+                      className="w-full h-full object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-lime-300">
@@ -381,7 +381,7 @@ export default async function HomePage() {
                     <img
                       src={laptopCushion.imageUrl}
                       alt={laptopCushion.name}
-                      className="w-full h-full object-contain p-10 transition-transform duration-700 group-hover:scale-[1.04]"
+                      className="w-full h-full object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-white/20">
@@ -417,7 +417,7 @@ export default async function HomePage() {
                   <img
                     src={lunchBox1400.imageUrl}
                     alt={lunchBox1400.name}
-                    className="w-full h-full object-contain p-10 transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="w-full h-full object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-green-300">
@@ -503,7 +503,7 @@ export default async function HomePage() {
               {row.map((review, i) => (
                 <div
                   key={i}
-                  className="w-[300px] bg-white border border-stone-200 rounded-2xl p-6 shadow-sm shrink-0"
+                  className="w-[300px] bg-white border border-stone-200 rounded-2xl p-6 shadow-sm shrink-0 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-out-quart"
                 >
                   <div className="flex items-center gap-1 text-amber-400 mb-3">
                     {Array.from({ length: 5 }).map((_, s) => (

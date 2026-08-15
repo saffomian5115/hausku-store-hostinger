@@ -121,7 +121,7 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
   );
 
   return (
-    <div className="group relative border border-stone-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+    <div className="group relative border border-stone-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out-quart">
       {/* Heart / Like Button */}
       <button
         ref={heartBtnRef}
@@ -163,7 +163,7 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.04]"
+              className="w-full h-full object-contain p-4 transition-transform duration-500 ease-out-quart group-hover:scale-[1.04]"
               loading="lazy"
             />
           ) : (
@@ -214,7 +214,7 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
         <button
           onClick={handleAddToCart}
           disabled={!inStock}
-          className={`w-full flex items-center justify-center gap-2 font-semibold py-2.5 rounded-xl transition-all duration-200 text-sm ${
+          className={`w-full flex items-center justify-center gap-2 font-semibold py-2.5 rounded-xl transition-all duration-200 ease-out-quart text-sm ${
             addedToCart
               ? "bg-emerald-500 text-white"
               : inStock
