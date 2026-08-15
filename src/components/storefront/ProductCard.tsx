@@ -147,7 +147,7 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
 
       {/* Out of stock overlay */}
       {!inStock && (
-        <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[2px] flex items-center justify-center rounded-lg">
+        <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[2px] flex items-center justify-center rounded-2xl">
           <span className="bg-gray-900 text-white font-bold text-sm px-4 py-2 rounded-full shadow-lg">
             Ausverkauft
           </span>

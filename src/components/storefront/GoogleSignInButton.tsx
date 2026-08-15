@@ -24,7 +24,7 @@ export default function GoogleSignInButton() {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="auth-field-anim auth-field-0 w-full flex items-center justify-center gap-3 py-3.5 rounded-xl border border-white/30 bg-white/10 backdrop-blur-md text-white font-semibold text-sm transition-all duration-200 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait"
+      className="auth-field-anim auth-field-0 w-full flex items-center justify-center gap-3 py-3.5 rounded-full border border-gray-200 bg-white text-gray-800 font-semibold text-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:scale-[1.02] active:scale-[0.98] shadow-sm disabled:opacity-60 disabled:cursor-wait"
     >
       {loading ? (
         <>

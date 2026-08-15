@@ -59,7 +59,7 @@ export default function ProductGallery({
               <button
                 key={index}
                 onClick={() => openPreview(index)}
-                className={`aspect-square bg-gray-100 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 hover:border-gray-900 ${
+                className={`aspect-square bg-gray-100 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 hover:border-gray-900 ${
                   index === activeIndex && !previewOpen
                     ? "border-gray-900"
                     : "border-transparent"
@@ -79,7 +79,7 @@ export default function ProductGallery({
             {images.length > 10 && (
               <button
                 onClick={() => openPreview(0)}
-                className="aspect-square bg-gray-100 rounded-md overflow-hidden cursor-pointer border-2 border-transparent hover:border-gray-900 transition-all duration-200 flex items-center justify-center text-gray-500 text-sm font-medium"
+                className="aspect-square bg-gray-100 rounded-xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-gray-900 transition-all duration-200 flex items-center justify-center text-gray-500 text-sm font-medium"
               >
                 +{images.length - 10}
               </button>

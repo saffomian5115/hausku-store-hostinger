@@ -35,7 +35,7 @@ export default function SortSelect({
       <select
         defaultValue={currentSort ?? "newest"}
         onChange={(e) => handleChange(e.target.value)}
-        className={`appearance-none bg-gray-50 border border-gray-200 rounded-lg pl-4 pr-10 py-2.5 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent cursor-pointer hover:bg-gray-100 transition-colors ${className}`}
+        className={`appearance-none bg-gray-50 border border-gray-200 rounded-2xl pl-4 pr-10 py-2.5 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent cursor-pointer hover:bg-gray-100 transition-colors ${className}`}
       >
         {sortOptions.map((opt) => (
           <option key={opt.value} value={opt.value}>

@@ -55,7 +55,7 @@ export default function CartPage() {
           </p>
           <Link
             href="/catalog"
-            className="inline-block bg-lime-500 hover:bg-lime-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+            className="inline-block bg-lime-500 hover:bg-lime-600 text-white font-semibold px-8 py-3 rounded-2xl transition-colors"
           >
             {t("cart.continueShopping")}
           </Link>
@@ -66,7 +66,7 @@ export default function CartPage() {
           <div className="lg:col-span-2">
             {/* Free Shipping Progress */}
             {freeShippingDiff > 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4">
                 <p className="text-sm text-blue-800">
                   {t("cart.freeShippingProgress").replace("{amount}", formatPrice(freeShippingDiff))}
                 </p>
@@ -82,7 +82,7 @@ export default function CartPage() {
             )}
 
             {/* Items */}
-            <div className="border rounded-lg divide-y">
+            <div className="border rounded-2xl divide-y overflow-hidden">
               {cart.items.map((item) => (
                 <CartItemRow key={item.variantId} item={item} />
               ))}
@@ -98,7 +98,7 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="border rounded-lg p-6 sticky top-24">
+            <div className="border rounded-2xl p-6 sticky top-24">
               <h2 className="text-lg font-bold mb-4">{t("cart.orderSummary")}</h2>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
@@ -127,7 +127,7 @@ export default function CartPage() {
 
               <Link
                 href="/checkout"
-                className="block w-full mt-6 bg-lime-500 hover:bg-lime-600 text-white font-semibold py-3 rounded-lg transition-colors text-center"
+                className="block w-full mt-6 bg-lime-500 hover:bg-lime-600 text-white font-semibold py-3 rounded-2xl transition-colors text-center"
               >
                 {t("cart.checkout")}
               </Link>

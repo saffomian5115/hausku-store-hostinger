@@ -31,7 +31,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
       </div>
 
       {/* Quantity Controls */}
-      <div className="flex items-center border rounded-lg">
+      <div className="flex items-center border rounded-2xl">
         <button
           onClick={() => updateItemQuantity(item.variantId, item.qty - 1)}
           className="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors"

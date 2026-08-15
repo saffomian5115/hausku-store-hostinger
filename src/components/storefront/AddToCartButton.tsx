@@ -90,7 +90,7 @@ export default function AddToCartButton(props: AddToCartButtonProps) {
     <>
       {/* Quantity */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center border rounded-lg">
+        <div className="flex items-center border rounded-2xl">
           <button
             onClick={() => setQty((q) => Math.max(1, q - 1))}
             className="px-4 py-3 text-gray-600 hover:text-gray-900 transition-colors"
@@ -110,7 +110,7 @@ export default function AddToCartButton(props: AddToCartButtonProps) {
         <button
           onClick={handleAdd}
           disabled={!isInStock}
-          className={`flex-1 font-semibold py-3 rounded-lg transition-colors ${
+          className={`flex-1 font-semibold py-3 rounded-2xl transition-colors ${
             added
               ? "bg-green-500 text-white"
               : isInStock

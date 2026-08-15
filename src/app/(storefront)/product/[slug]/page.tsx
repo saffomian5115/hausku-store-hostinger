@@ -121,7 +121,7 @@ export default async function ProductDetailPage({
                 {sizes.map((size) => (
                   <button
                     key={size}
-                    className="px-4 py-2 border rounded-lg hover:border-gray-900 transition-colors font-medium"
+                    className="px-4 py-2 border rounded-2xl hover:border-gray-900 transition-colors font-medium"
                   >
                     {size}
                   </button>
@@ -183,7 +183,7 @@ export default async function ProductDetailPage({
 
       {/* GPSR Info */}
       {(product.manufacturer || product.safetyWarnings) && (
-        <div className="mt-8 border rounded-lg p-6 bg-gray-50">
+        <div className="mt-8 border rounded-2xl p-6 bg-gray-50">
           <h2 className="text-sm font-bold text-gray-900 mb-3">
             {t("product.gpsrTitle")}
           </h2>

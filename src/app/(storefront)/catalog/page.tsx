@@ -101,7 +101,7 @@ export default async function CatalogPage({
       </div>
 
       {/* ── Top Filter Bar ── */}
-      <div className="bg-white border border-gray-200 rounded-xl p-4 mb-8 shadow-sm">
+      <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-8 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {/* Category Pills (scrollable on mobile) */}
           <div className="flex-1 min-w-0">
@@ -196,7 +196,7 @@ export default async function CatalogPage({
           <div className="mt-6 flex gap-3 justify-center">
             <Link
               href="/catalog"
-              className="px-5 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors shadow-sm"
+              className="px-5 py-2.5 bg-gray-900 text-white rounded-2xl text-sm font-medium hover:bg-gray-800 transition-colors shadow-sm"
             >
               {t("catalog.allProducts")}
             </Link>
