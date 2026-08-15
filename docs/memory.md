@@ -27,7 +27,7 @@ Purpose: running log of client info, key decisions, and current status — read 
 - 40% of minimum (€40) requested upfront to officially start work.
 - Monthly maintenance after free 30-day support: €35-50/month (optional, client's choice).
 
-## Status (updated 2026-08-06)
+## Status (updated 2026-08-15)
 
 ### Development progress
 - [x] Proposal drafted, revised, and accepted by client
@@ -56,11 +56,20 @@ Purpose: running log of client info, key decisions, and current status — read 
 - ✅ **Domain confirmed: hausku.com** — all `hausku.de` references updated to `hausku.com` (seed, locales, contact, imprint, admin default, DEPLOY-README).
 - ✅ **Email integration DONE (2026-08-06):** nodemailer + Hostinger SMTP (`src/lib/email`) — order confirmation emails after payment + live contact form. To activate, add SMTP_USER/SMTP_PASS (mailbox credentials) to `.env`.
 
-## Recommended Next Steps
-1. **Fill SMTP credentials** — put info@hausku.com mailbox password into `SMTP_USER`/`SMTP_PASS` in `.env`, then test contact form + a real order
-2. **Finish Phase 3** — wire VAT + shipping settings from DB into checkout/orders, make admin settings page functional, PayPal, Klarna
-3. **Finish Phase 4** — legal text content, invoice PDF generation, returns flow
-4. **Phase 5 testing → Phase 6 deploy** to Hostinger (steps in DEPLOY-README.md)
+## Recent Work (2026-08-15)
+- ✅ **Homepage redesign** — new HeroBlob, Marquee, ProductRail, StatCounter components + editorial sections (commits `23532e6`, `62d8a8f`)
+- ✅ **UX polish — smooth scroll + animations:** Lenis smooth-scroll library added (`src/components/shared/SmoothScroll.tsx`, wrapped in storefront layout); new easing tokens `ease-out-quart` / `ease-out-expo` in `globals.css`; ProductCard + homepage bento/testimonial cards got smooth hover transitions. Wheel/trackpad scroll is now buttery; reduced-motion users automatically get native scroll.
+- ✅ **Google OAuth login/register** (`/api/auth/google`) — commit `4315f4b`
+- ✅ **Wishlist** (heart/like) — API + context + storefront icons
+- ✅ **Newsletter form** — component + API
+- ✅ **English translations** (en.json) + language switcher
+
+## Recommended Next Steps (priority order)
+1. **Wire PayPal + Klarna** — credentials (`PAYPAL_CLIENT_ID/SECRET`, `KLARNA_USERNAME/PASSWORD`) are ALREADY in `.env`, but checkout still fakes both methods: order is created then redirected straight to `/checkout/success` with NO payment taken. This is the biggest correctness gap. `src/lib/payments/index.ts` has TODO placeholders.
+2. **Make admin settings functional + wire VAT/shipping from DB** — settings page is static UI (no save); cart/checkout/order API still hardcode 19% VAT and €30/€4.99 shipping. `src/lib/vat` helper exists but unused.
+3. **Fill SMTP credentials** — `SMTP_USER`/`SMTP_PASS` NOT in `.env` yet; email integration is built but dormant until set. Then test contact form + a real order email.
+4. **Finish Phase 4** — legal text content, invoice PDF generation (`src/lib/invoices` TODO stubs), returns flow.
+5. **Phase 5 testing → Phase 6 deploy** to Hostinger (steps in DEPLOY-README.md).
 
 ## Open Questions / To Revisit Later
 - design.md to be created once logo/brand colors are received from client

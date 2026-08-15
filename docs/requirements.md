@@ -7,7 +7,7 @@ Market: Germany (household & kitchen products — e.g. laptop cushions, lunch bo
 Existing sales channels: Amazon, eBay
 Goal: Independent web store to sell directly to customers.
 
-> Status legend: [x] done · [~] partial (stub/placeholder) · [ ] not started — last reviewed 2026-08-06
+> Status legend: [x] done · [~] partial (stub/placeholder) · [ ] not started — last reviewed 2026-08-15
 
 ## Languages
 - German — primary/default ✅
@@ -29,14 +29,23 @@ Goal: Independent web store to sell directly to customers.
 - [x] Guest checkout (no account required)
 - [x] Customer accounts (signup/login, order history, saved addresses) — alongside guest checkout
 - [x] Payment gateway: **Stripe** (checkout sessions + webhook)
-- [ ] Payment gateway: PayPal — not started
-- [ ] Payment gateway: Klarna — not started
+- [ ] Payment gateway: PayPal — credentials in `.env`, but checkout fakes it (order → success redirect, no payment taken)
+- [ ] Payment gateway: Klarna — credentials in `.env`, same fake-checkout status as PayPal
 - [~] Shipping rule: free above €30, flat rate below — implemented as hardcoded constants; admin-configurable pending
 - [x] Order confirmation email + contact form emails (nodemailer + Hostinger SMTP) — built 2026-08-06; activate by setting SMTP_USER/SMTP_PASS in .env
 - [ ] Auto-generated downloadable PDF invoice per order — not implemented
 - [x] Mobile-responsive design (built responsive; QA in Phase 5)
+- [x] Smooth scrolling + smooth hover/entrance animations (Lenis + custom easing, 2026-08-15)
+- [x] Wishlist / "Merkliste" (heart on product cards + wishlist page)
+- [x] Google OAuth login/registration
+- [x] Newsletter signup form
 - [ ] Return/refund request flow (14-day Widerrufsrecht compliant) — page stub only
 - [ ] Customer reviews & ratings (optional/nice-to-have, not core scope) — schema exists, no UI
+
+## Homepage / Design
+- [x] Homepage redesign (2026-08): hero blob + marquee ticker, product rail, editorial sections, stats counters, testimonials, newsletter
+- [x] Brand colors — lime/green theme (see AGENTS.md)
+- [~] Product photos: square 1:1 needed for product cards — see `docs/AI-ASSETS.md` (current images partially landscape)
 
 ## Admin Panel Features
 - [x] Single admin login (no multi-user roles needed)
