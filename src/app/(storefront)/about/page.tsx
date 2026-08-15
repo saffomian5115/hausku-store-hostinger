@@ -39,7 +39,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ MISSION SECTION ═══ */}
-      <section className="py-16 md:py-20 bg-white">
+      <section className="py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <AnimatedSection animation="slideLeft">
@@ -78,7 +78,7 @@ export default function AboutPage() {
 
       {/* ═══ OUR STORY ═══ */}
       <AnimatedSection animation="fadeUp">
-        <section className="py-16 md:py-20 bg-gray-50">
+        <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
               <span className="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-sm font-medium rounded-full mb-4">
@@ -94,7 +94,7 @@ export default function AboutPage() {
       </AnimatedSection>
 
       {/* ═══ VALUES SECTION ═══ */}
-      <section className="py-16 md:py-20 bg-white">
+      <section className="py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-3 py-1 bg-lime-100 text-lime-700 text-sm font-medium rounded-full mb-4">
@@ -125,7 +125,7 @@ export default function AboutPage() {
 
       {/* ═══ TEAM SECTION ═══ */}
       <AnimatedSection animation="fadeUp">
-        <section className="py-16 md:py-20 bg-gray-50">
+        <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
               <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-full mb-4">
@@ -155,7 +155,7 @@ export default function AboutPage() {
 
       {/* ═══ AMAZON / CTA SECTION ═══ */}
       <AnimatedSection animation="scaleIn">
-        <section className="py-16 md:py-20 bg-white">
+        <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-lime-400 via-lime-500 to-green-500 text-gray-900">
               <div className="absolute inset-0 opacity-10">

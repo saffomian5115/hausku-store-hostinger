@@ -62,12 +62,6 @@ export default async function HomePage() {
     de ? "100% auslaufsicher" : "100% leak-proof",
   ];
 
-  const dividerTag = de
-    ? "NACHHALTIGE MATERIALIEN"
-    : "SUSTAINABLE MATERIALS";
-  const dividerTag2 = de ? "DEUTSCHES DESIGN" : "GERMAN DESIGN";
-  const dividerTag3 = de ? "60 TAGE TESTEN" : "60-DAY TRIAL";
-
   return (
     <>
       {/* ═══ 1 — ANNOUNCEMENT MARQUEE ═══ */}
@@ -83,7 +77,7 @@ export default async function HomePage() {
       </div>
 
       {/* ═══ 2 — HERO ═══ */}
-      <section className="relative overflow-hidden bg-[#F6F2E7]">
+      <section className="relative overflow-hidden">
         {/* Ambient gradient blobs + grain wash */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-32 -left-24 w-[420px] h-[420px] bg-lime-300/40 rounded-full blur-[110px]" />
@@ -235,7 +229,7 @@ export default async function HomePage() {
       {/* ═══ 4 — PRODUCT RAIL (horizontal scroll-snap) ═══ */}
       {bestsellers.length > 0 && (
         <AnimatedSection animation="fadeUp">
-          <section className="bg-white py-16 md:py-20 border-t border-gray-100">
+          <section className="py-16 md:py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-end justify-between mb-10 gap-4">
                 <div>
@@ -260,17 +254,13 @@ export default async function HomePage() {
         </AnimatedSection>
       )}
 
-      {/* ═══ Divider marquee (stitched-tag motif) ═══ */}
-      <div className="overflow-hidden">
-      <div className="bg-lime-500 text-[#0F2A1C] py-3 text-sm font-bold tracking-wide uppercase -rotate-1 scale-105 my-1">
-        <Marquee speed={22} reverse pauseOnHover={false}>
-          {[dividerTag, dividerTag2, dividerTag3].map((tag, i) => (
-            <span key={i} className="flex items-center gap-3 whitespace-nowrap">
-              {tag} <span className="text-[#0F2A1C]/40">✦</span>
-            </span>
-          ))}
-        </Marquee>
-      </div>
+      {/* ═══ Divider — simple line with centered leaf badge ═══ */}
+      <div className="flex items-center justify-center py-10 md:py-14">
+        <div className="h-px w-16 sm:w-24 bg-lime-300" />
+        <span className="mx-4 w-9 h-9 rounded-full bg-lime-500 flex items-center justify-center shadow-sm shadow-lime-500/25">
+          <Leaf className="w-4 h-4 text-white" />
+        </span>
+        <div className="h-px w-16 sm:w-24 bg-lime-300" />
       </div>
 
       {/* ═══ 5 — EDITORIAL SPLIT: Snackbox ═══ */}
@@ -487,7 +477,7 @@ export default async function HomePage() {
 
       {/* ═══ 9 — TESTIMONIAL MARQUEE (two rows, opposite directions) ═══ */}
       <AnimatedSection animation="fadeUp">
-        <section className="bg-stone-50 border-y border-stone-100 py-16 md:py-20 overflow-hidden">
+        <section className="py-16 md:py-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10">
             <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900">
               {t("home.reviewsTitle")}

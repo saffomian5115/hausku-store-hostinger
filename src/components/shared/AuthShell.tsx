@@ -14,7 +14,7 @@ import type { ReactNode } from "react";
  */
 export default function AuthShell({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-[80vh] flex items-center justify-center px-4 py-14 overflow-hidden bg-[#F6F2E7]">
+    <div className="relative min-h-[80vh] flex items-center justify-center px-4 py-14 overflow-hidden">
       {/* Ambient gradient blobs + grain wash (homepage hero, smaller version) */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 -left-20 w-[380px] h-[380px] bg-lime-300/40 rounded-full blur-[100px]" />
