@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { getStoreSettings } from "@/lib/settings";
 
 type OrderItemInput = {
   variantId: number;
@@ -32,6 +33,27 @@ function generateOrderNumber(): string {
 
 export async function GET(request: NextRequest) {
   try {
+    // This endpoint exposes customer PII (names, emails, addresses) and is
+    // used by the admin order list — require an active admin session.
+    const session = request.cookies.get("admin-session");
+    let authorized = false;
+    if (session?.value) {
+      try {
+        const sessionData = JSON.parse(
+          Buffer.from(session.value, "base64").toString()
+        );
+        authorized = sessionData.expires > Date.now();
+      } catch {
+        authorized = false;
+      }
+    }
+    if (!authorized) {
+      return NextResponse.json(
+        { error: "Nicht autorisiert" },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
     const page = parseInt(searchParams.get("page") ?? "1");
@@ -154,11 +176,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ─── Calculate totals ──────────────────────────────────
-    // TODO: Fetch VAT rate and shipping from settings table (Phase 3)
-    const VAT_RATE = 19;
-    const FREE_SHIPPING_THRESHOLD = 30;
-    const SHIPPING_FLAT_RATE = 4.99;
+    // ─── Calculate totals (from admin-configurable settings) ──
+    const { vatRate, freeShippingThreshold, shippingFlatRate } =
+      await getStoreSettings();
 
     let subtotal = 0;
     const orderItems = items.map((item) => {
@@ -181,8 +201,9 @@ export async function POST(request: NextRequest) {
       };
     });
 
-    const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT_RATE;
-    const vatAmount = parseFloat(((subtotal * VAT_RATE) / 100).toFixed(2));
+    const shippingCost =
+      subtotal >= freeShippingThreshold ? 0 : shippingFlatRate;
+    const vatAmount = parseFloat(((subtotal * vatRate) / 100).toFixed(2));
     const total = parseFloat((subtotal + shippingCost + vatAmount).toFixed(2));
 
     // ─── Create order in transaction ───────────────────────
@@ -194,7 +215,7 @@ export async function POST(request: NextRequest) {
           status: "PENDING",
           subtotal,
           shippingCost,
-          vatRate: VAT_RATE,
+          vatRate,
           vatAmount,
           total,
           currency: "EUR",

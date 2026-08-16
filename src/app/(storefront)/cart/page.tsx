@@ -5,20 +5,19 @@ import { useCart } from "@/components/storefront/CartContext";
 import CartItemRow from "@/components/storefront/CartItemRow";
 import { formatPrice } from "@/lib/format";
 import { useLocale } from "@/components/shared/LocaleContext";
-
-// TODO: Fetch these from settings API (Phase 3) — must be admin-configurable
-const FREE_SHIPPING_THRESHOLD = 30;
-const SHIPPING_FLAT_RATE = 4.99;
-const VAT_RATE = 19;
+import { useStoreSettings } from "@/lib/useStoreSettings";
 
 export default function CartPage() {
   const { t } = useLocale();
   const { cart, total, itemCount } = useCart();
+  const { vatRate, freeShippingThreshold, shippingFlatRate } =
+    useStoreSettings();
 
-  const shipping = total >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT_RATE;
-  const vatAmount = parseFloat(((total * VAT_RATE) / 100).toFixed(2));
+  const shipping =
+    total >= freeShippingThreshold ? 0 : shippingFlatRate;
+  const vatAmount = parseFloat(((total * vatRate) / 100).toFixed(2));
   const grandTotal = parseFloat((total + shipping + vatAmount).toFixed(2));
-  const freeShippingDiff = FREE_SHIPPING_THRESHOLD - total;
+  const freeShippingDiff = freeShippingThreshold - total;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -74,7 +73,7 @@ export default function CartPage() {
                   <div
                     className="h-full bg-blue-500 rounded-full transition-all duration-500"
                     style={{
-                      width: `${Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100)}%`,
+                      width: `${Math.min(100, (total / freeShippingThreshold) * 100)}%`,
                     }}
                   />
                 </div>
@@ -116,7 +115,7 @@ export default function CartPage() {
                   )}
                 </div>
                 <div className="flex justify-between">
-                  <span>{t("cart.vat")} ({VAT_RATE}%)</span>
+                  <span>{t("cart.vat")} ({vatRate}%)</span>
                   <span>{formatPrice(vatAmount)}</span>
                 </div>
                 <div className="border-t pt-3 flex justify-between font-bold text-lg">

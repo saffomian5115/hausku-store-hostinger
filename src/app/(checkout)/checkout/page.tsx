@@ -5,16 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartContext";
 import { formatPrice } from "@/lib/format";
-
-const FREE_SHIPPING_THRESHOLD = 30;
-const SHIPPING_FLAT_RATE = 4.99;
-const VAT_RATE = 19;
+import { useStoreSettings } from "@/lib/useStoreSettings";
 
 type FormErrors = Record<string, string>;
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, total, itemCount, clearCart } = useCart();
+  const { vatRate, freeShippingThreshold, shippingFlatRate } =
+    useStoreSettings();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -32,8 +31,9 @@ export default function CheckoutPage() {
     notes: "",
   });
 
-  const shipping = total >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT_RATE;
-  const vatAmount = parseFloat(((total * VAT_RATE) / 100).toFixed(2));
+  const shipping =
+    total >= freeShippingThreshold ? 0 : shippingFlatRate;
+  const vatAmount = parseFloat(((total * vatRate) / 100).toFixed(2));
   const grandTotal = parseFloat((total + shipping + vatAmount).toFixed(2));
 
   const updateField = (field: string, value: string) => {
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
                   oder{" "}
                   <Link
                     href="/account"
-                    className="text-red-500 hover:text-red-600"
+                    className="text-lime-600 hover:text-lime-700"
                   >
                     Konto erstellen
                   </Link>
@@ -463,7 +463,7 @@ export default function CheckoutPage() {
                   )}
                 </div>
                 <div className="flex justify-between">
-                  <span>MwSt. ({VAT_RATE}%)</span>
+                  <span>MwSt. ({vatRate}%)</span>
                   <span>{formatPrice(vatAmount)}</span>
                 </div>
                 <div className="border-t pt-3 flex justify-between font-bold text-lg">

@@ -1,5 +1,5 @@
 import "server-only";
-import { prisma } from "@/lib/db/prisma";
+import { getStoreSettings } from "@/lib/settings";
 export { formatPrice, formatPriceSimple } from "../format";
 
 /**
@@ -8,10 +8,8 @@ export { formatPrice, formatPriceSimple } from "../format";
  * NEVER hardcode the VAT rate — always read from DB.
  */
 export async function getVatRate(): Promise<number> {
-  const setting = await prisma.setting.findUnique({
-    where: { key: "vat_rate" },
-  });
-  return setting ? parseFloat(setting.value) : 19;
+  const settings = await getStoreSettings();
+  return settings.vatRate;
 }
 
 /**

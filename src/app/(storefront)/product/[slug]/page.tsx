@@ -138,8 +138,8 @@ export default async function ProductDetailPage({
                 {t("product.inStock")} ({t("product.stockCount").replace("{count}", totalStock.toString())})
               </p>
             ) : (
-              <p className="text-sm text-lime-600 flex items-center gap-2">
-                <span className="w-2 h-2 bg-lime-500 rounded-full" />
+              <p className="text-sm text-red-500 flex items-center gap-2">
+                <span className="w-2 h-2 bg-red-500 rounded-full" />
                 {t("product.outOfStock")}
               </p>
             )}

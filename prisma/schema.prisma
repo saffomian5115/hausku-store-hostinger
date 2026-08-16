@@ -81,6 +81,7 @@ model Customer {
   orders    Order[]
   reviews   Review[]
   wishlist  WishlistItem[]
+  returnRequests ReturnRequest[]
 
   @@map("customers")
 }
@@ -132,11 +133,14 @@ model Order {
   shippingPostal String?
   shippingCountry String?
   notes         String?   @db.Text
+  trackingNumber String?
+  trackingCarrier String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   items         OrderItem[]
   invoice       Invoice?
   creditNotes   CreditNote[]
+  returnRequests ReturnRequest[]
 
   @@index([customerId])
   @@index([status])
@@ -188,6 +192,28 @@ model CreditNote {
 
   @@index([orderId])
   @@map("credit_notes")
+}
+
+// ─── Return / Widerruf requests ──────────────────────────
+
+model ReturnRequest {
+  id           Int      @id @default(autoincrement())
+  returnNumber String   @unique
+  orderId      Int
+  order        Order    @relation(fields: [orderId], references: [id])
+  customerId   Int?
+  customer     Customer? @relation(fields: [customerId], references: [id])
+  status       String   @default("PENDING")
+  // PENDING → APPROVED | REJECTED → RECEIVED → REFUNDED
+  reason       String   @db.Text
+  items        String   @db.Text // JSON: [{ productName, variantLabel, qty }]
+  adminNote    String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([customerId])
+  @@map("return_requests")
 }
 
 // ─── Reviews (optional/nice-to-have) ─────────────────────

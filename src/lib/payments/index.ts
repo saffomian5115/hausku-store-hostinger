@@ -13,7 +13,11 @@
 
 import { createStripeCheckoutSession, getStripeSession } from "./stripe";
 import { prisma } from "@/lib/db";
-import { sendOrderConfirmationEmail } from "@/lib/email";
+import {
+  sendOrderConfirmationEmail,
+  sendNewOrderAdminAlert,
+} from "@/lib/email";
+import { createInvoiceForOrder } from "@/lib/invoices";
 
 export type PaymentProvider = "stripe" | "paypal" | "klarna";
 
@@ -100,7 +104,7 @@ export async function createPayment(
 /**
  * Shared post-payment processing: decrement stock + send the order
  * confirmation email. Only called once per order (guarded by the caller's
- * `status !== "paid"` check).
+ * atomic PENDING → CONFIRMED claim).
  */
 async function processPaidOrder(orderId: number): Promise<void> {
   const order = await prisma.order.findUnique({
@@ -142,6 +146,22 @@ async function processPaidOrder(orderId: number): Promise<void> {
     shippingPostal: order.shippingPostal,
     shippingCountry: order.shippingCountry,
   });
+
+  // Notify the store owner about the new paid order (internal only)
+  await sendNewOrderAdminAlert({
+    orderNumber: order.orderNumber,
+    total: Number(order.total),
+    customerName: order.guestName,
+    customerEmail: order.guestEmail || "",
+    itemCount: order.items.reduce((sum, item) => sum + item.qty, 0),
+  });
+
+  // Generate the invoice PDF (best-effort — never block the payment flow)
+  try {
+    await createInvoiceForOrder(orderId);
+  } catch (error) {
+    console.error("[invoices] Auto-invoice failed for order", orderId, error);
+  }
 }
 
 /**
@@ -158,12 +178,14 @@ export async function handleStripeSuccess(sessionId: string) {
   const orderId = parseInt(session.metadata.orderId, 10);
 
   if (session.payment_status === "paid") {
-    // Atomically claim the PENDING → paid transition so concurrent calls
+    // Atomically claim the PENDING → CONFIRMED transition so concurrent calls
     // (webhook + success-page verify) never double-process the order.
+    // Only PENDING orders are claimed — an order the admin already moved
+    // forward (e.g. PROCESSING) is left untouched.
     const claimed = await prisma.order.updateMany({
-      where: { id: orderId, status: { not: "paid" } },
+      where: { id: orderId, status: "PENDING" },
       data: {
-        status: "paid",
+        status: "CONFIRMED",
         paymentId: (session.payment_intent as string) || sessionId,
       },
     });
@@ -201,11 +223,11 @@ export async function handleWebhook(
     if (session.metadata?.orderId && session.payment_status === "paid") {
       const orderId = parseInt(session.metadata.orderId, 10);
 
-      // Atomically claim the PENDING → paid transition so concurrent calls
+      // Atomically claim the PENDING → CONFIRMED transition so concurrent calls
       // (webhook + success-page verify) never double-process the order.
       const claimed = await prisma.order.updateMany({
-        where: { id: orderId, status: { not: "paid" } },
-        data: { status: "paid" },
+        where: { id: orderId, status: "PENDING" },
+        data: { status: "CONFIRMED" },
       });
 
       if (claimed.count > 0) {
@@ -221,8 +243,8 @@ export async function handleWebhook(
     if (session.metadata?.orderId) {
       const orderId = parseInt(session.metadata.orderId, 10);
       await prisma.order.update({
-        where: { id: orderId },
-        data: { status: "cancelled" },
+        where: { id: orderId, status: "PENDING" },
+        data: { status: "CANCELLED" },
       });
       return { orderId, status: "failed" };
     }

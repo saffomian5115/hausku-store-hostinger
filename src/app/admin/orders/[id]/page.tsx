@@ -32,10 +32,47 @@ type Order = {
   shippingPostal: string | null;
   shippingCountry: string | null;
   notes: string | null;
+  trackingNumber: string | null;
+  trackingCarrier: string | null;
   createdAt: string;
   updatedAt: string;
   items: OrderItem[];
+  invoice: {
+    id: number;
+    invoiceNumber: string;
+    pdfPath: string | null;
+  } | null;
+  creditNotes: {
+    id: number;
+    creditNoteNumber: string;
+    pdfPath: string | null;
+    reason: string | null;
+    amount: number;
+  }[];
 };
+
+const CARRIER_OPTIONS = ["DHL", "Hermes", "DPD", "GLS", "Deutsche Post"];
+
+const CARRIER_TRACKING_URLS: Record<string, string> = {
+  DHL: "https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?lang=de&idc={trackingNumber}",
+  HERMES: "https://www.myhermes.de/empfangen/sendungsverfolgung?suche={trackingNumber}",
+  DPD: "https://tracking.dpd.de/status/de_DE/parcel/{trackingNumber}",
+  GLS: "https://gls-group.eu/DE/de/paketverfolgung?match={trackingNumber}",
+  "DEUTSCHE POST": "https://www.deutschepost.de/sendung/simpleQuery?form.sendungsnummer={trackingNumber}",
+};
+
+function getTrackingUrl(
+  carrier: string | null,
+  trackingNumber: string | null
+): string | null {
+  if (!carrier || !trackingNumber) return null;
+  const template = CARRIER_TRACKING_URLS[carrier.trim().toUpperCase()];
+  if (!template) return null;
+  return template.replace(
+    "{trackingNumber}",
+    encodeURIComponent(trackingNumber.trim())
+  );
+}
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "Ausstehend",
@@ -64,12 +101,16 @@ export default function AdminOrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingCarrier, setTrackingCarrier] = useState("");
 
   useEffect(() => {
     fetch(`/api/admin/orders/${orderId}`)
       .then((res) => res.json())
       .then((data) => {
         setOrder(data.order);
+        setTrackingNumber(data.order.trackingNumber || "");
+        setTrackingCarrier(data.order.trackingCarrier || "");
         setLoading(false);
       })
       .catch(() => {
@@ -85,14 +126,89 @@ export default function AdminOrderDetailPage() {
       const res = await fetch(`/api/admin/orders/${order.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({
+          status: newStatus,
+          trackingNumber,
+          trackingCarrier,
+        }),
       });
 
       if (res.ok) {
-        setOrder((prev) => (prev ? { ...prev, status: newStatus } : null));
+        setOrder((prev) =>
+          prev
+            ? {
+                ...prev,
+                status: newStatus,
+                trackingNumber,
+                trackingCarrier,
+              }
+            : null
+        );
       } else {
         const data = await res.json();
         setError(data.error || "Fehler beim Aktualisieren");
+      }
+    } catch {
+      setError("Netzwerkfehler");
+    }
+    setUpdating(false);
+  };
+
+  const loadOrder = () => {
+    fetch(`/api/admin/orders/${orderId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setOrder(data.order);
+        setTrackingNumber(data.order.trackingNumber || "");
+        setTrackingCarrier(data.order.trackingCarrier || "");
+      })
+      .catch(() => setError("Fehler beim Laden"));
+  };
+
+  const generateDocument = async (type: "invoice" | "credit_note") => {
+    if (!order) return;
+    setUpdating(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/invoices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id, type }),
+      });
+      if (res.ok) {
+        loadOrder();
+      } else {
+        const data = await res.json().catch(() => null);
+        setError(data?.error || "Fehler beim Erstellen");
+      }
+    } catch {
+      setError("Netzwerkfehler");
+    }
+    setUpdating(false);
+  };
+
+  const handleSaveTracking = async () => {
+    if (!order) return;
+    setUpdating(true);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: order.status,
+          trackingNumber,
+          trackingCarrier,
+        }),
+      });
+
+      if (res.ok) {
+        setOrder((prev) =>
+          prev ? { ...prev, trackingNumber, trackingCarrier } : null
+        );
+        setError("");
+      } else {
+        const data = await res.json();
+        setError(data.error || "Fehler beim Speichern");
       }
     } catch {
       setError("Netzwerkfehler");
@@ -202,6 +318,152 @@ export default function AdminOrderDetailPage() {
               <p className="text-gray-600">
                 {order.shippingCountry || "DE"}
               </p>
+            </div>
+          </div>
+
+          {/* Tracking */}
+          <div className="bg-white rounded-lg border p-6">
+            <h2 className="text-lg font-bold mb-4">Versand & Tracking</h2>
+
+            {order.trackingNumber && (
+              <div className="mb-4 text-sm bg-lime-50 border border-lime-200 rounded-lg p-3">
+                <p className="text-gray-500 text-xs uppercase tracking-wide">
+                  Sendungsnummer
+                </p>
+                <p className="font-medium text-gray-900">
+                  {order.trackingNumber}
+                </p>
+                {order.trackingCarrier && (
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {order.trackingCarrier}
+                  </p>
+                )}
+                {getTrackingUrl(order.trackingCarrier, order.trackingNumber) && (
+                  <a
+                    href={getTrackingUrl(
+                      order.trackingCarrier,
+                      order.trackingNumber
+                    )!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-2 text-sm font-semibold text-lime-600 hover:text-lime-700"
+                  >
+                    Sendung verfolgen →
+                  </a>
+                )}
+              </div>
+            )}
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm text-gray-500 mb-1">
+                  Spediteur
+                </label>
+                <select
+                  value={trackingCarrier}
+                  onChange={(e) => setTrackingCarrier(e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm"
+                >
+                  <option value="">— Keiner —</option>
+                  {CARRIER_OPTIONS.map((carrier) => (
+                    <option key={carrier} value={carrier.toUpperCase()}>
+                      {carrier}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm text-gray-500 mb-1">
+                  Sendungsnummer
+                </label>
+                <input
+                  type="text"
+                  value={trackingNumber}
+                  onChange={(e) => setTrackingNumber(e.target.value)}
+                  placeholder="z. B. JJD00..."
+                  className="w-full border rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+              <button
+                onClick={handleSaveTracking}
+                disabled={updating}
+                className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+              >
+                Tracking speichern
+              </button>
+              <p className="text-xs text-gray-500">
+                Die Sendungsnummer wird dem Kunden mit der
+                „Versendet“-E-Mail geschickt (inkl. Tracking-Link).
+              </p>
+            </div>
+          </div>
+
+          {/* Invoices & Credit Notes */}
+          <div className="bg-white rounded-lg border p-6">
+            <h2 className="text-lg font-bold mb-4">Rechnungen & Gutschriften</h2>
+
+            <div className="mb-5">
+              <p className="text-sm text-gray-500 mb-2">Rechnung</p>
+              {order.invoice ? (
+                <div className="flex items-center justify-between bg-lime-50 border border-lime-200 rounded-lg px-3 py-2">
+                  <span className="text-sm font-medium">
+                    {order.invoice.invoiceNumber}
+                  </span>
+                  <a
+                    href={`/api/admin/invoices/${order.invoice.id}/download`}
+                    className="text-sm font-semibold text-lime-600 hover:text-lime-700"
+                  >
+                    PDF herunterladen ↓
+                  </a>
+                </div>
+              ) : (
+                <button
+                  onClick={() => generateDocument("invoice")}
+                  disabled={updating}
+                  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+                >
+                  Rechnung erstellen
+                </button>
+              )}
+            </div>
+
+            <div>
+              <p className="text-sm text-gray-500 mb-2">Gutschriften</p>
+              {order.creditNotes.length > 0 ? (
+                <div className="space-y-2">
+                  {order.creditNotes.map((cn) => (
+                    <div
+                      key={cn.id}
+                      className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2"
+                    >
+                      <div>
+                        <span className="text-sm font-medium">
+                          {cn.creditNoteNumber}
+                        </span>
+                        {cn.reason && (
+                          <span className="text-xs text-gray-500 ml-2">
+                            {cn.reason}
+                          </span>
+                        )}
+                      </div>
+                      <a
+                        href={`/api/admin/credit-notes/${cn.id}/download`}
+                        className="text-sm font-semibold text-lime-600 hover:text-lime-700"
+                      >
+                        PDF herunterladen ↓
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <button
+                  onClick={() => generateDocument("credit_note")}
+                  disabled={updating}
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                  Gutschrift erstellen
+                </button>
+              )}
             </div>
           </div>
 

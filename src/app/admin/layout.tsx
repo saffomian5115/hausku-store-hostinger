@@ -44,6 +44,12 @@ export default function AdminLayout({
               <span>🧾</span> Bestellungen
             </Link>
             <Link
+              href="/admin/returns"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              <span>↩️</span> Retouren
+            </Link>
+            <Link
               href="/admin/customers"
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
             >

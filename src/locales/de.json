@@ -293,7 +293,14 @@
     "postalCode": "PLZ",
     "city": "Stadt",
     "orderedOn": "am",
-    "orderItems": "Bestellte Artikel"
+    "orderItems": "Bestellte Artikel",
+    "invoiceDownload": "Rechnung (PDF)",
+    "creditNoteDownload": "Gutschrift (PDF)",
+    "return": "Retoure",
+    "requestReturn": "Retoure anfordern (Widerruf)",
+    "returnTitle": "Retoure anfordern",
+    "returnHint": "Wählen Sie die Artikel, die Sie zurücksenden möchten (14 Tage Widerrufsrecht).",
+    "submitReturn": "Retoure anfordern"
   },
   "order": {
     "statusPending": "Ausstehend",

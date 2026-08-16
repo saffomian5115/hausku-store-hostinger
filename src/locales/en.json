@@ -293,7 +293,14 @@
     "postalCode": "Postal Code",
     "city": "City",
     "orderedOn": "on",
-    "orderItems": "Ordered Items"
+    "orderItems": "Ordered Items",
+    "invoiceDownload": "Invoice (PDF)",
+    "creditNoteDownload": "Credit note (PDF)",
+    "return": "Return",
+    "requestReturn": "Request a return (right of withdrawal)",
+    "returnTitle": "Request a return",
+    "returnHint": "Select the items you want to return (14-day right of withdrawal).",
+    "submitReturn": "Request return"
   },
   "order": {
     "statusPending": "Pending",

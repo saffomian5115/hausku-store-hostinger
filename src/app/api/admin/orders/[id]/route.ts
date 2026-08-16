@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import {
+  sendOrderStatusEmail,
+  getTrackingUrl,
+  type OrderStatusEmailData,
+} from "@/lib/email";
+import { createCreditNoteForOrder } from "@/lib/invoices";
 
 const VALID_STATUSES = [
   "PENDING",
@@ -71,7 +77,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { status } = body;
+    const { status, trackingNumber, trackingCarrier } = body;
 
     if (!status || !VALID_STATUSES.includes(status)) {
       return NextResponse.json(
@@ -104,20 +110,32 @@ export async function PUT(
       REFUNDED: [],
     };
 
-    const allowed = validTransitions[existing.status] || [];
-    if (!allowed.includes(status)) {
-      return NextResponse.json(
-        {
-          error: `Status-Wechsel von "${existing.status}" zu "${status}" ist nicht erlaubt`,
-        },
-        { status: 400 }
-      );
+    // Same-status updates are allowed (e.g. saving tracking info) — only
+    // enforce the transition rules when the status actually changes.
+    if (status !== existing.status) {
+      const allowed = validTransitions[existing.status] || [];
+      if (!allowed.includes(status)) {
+        return NextResponse.json(
+          {
+            error: `Status-Wechsel von "${existing.status}" zu "${status}" ist nicht erlaubt`,
+          },
+          { status: 400 }
+        );
+      }
     }
 
-    // Update status
+    // Update status + tracking info (if provided)
     const order = await prisma.order.update({
       where: { id: orderId },
-      data: { status },
+      data: {
+        status,
+        ...(trackingNumber !== undefined
+          ? { trackingNumber: trackingNumber || null }
+          : {}),
+        ...(trackingCarrier !== undefined
+          ? { trackingCarrier: trackingCarrier || null }
+          : {}),
+      },
       include: {
         items: true,
       },
@@ -137,6 +155,45 @@ export async function PUT(
           }
         }
       }
+    }
+
+    // Auto-generate a credit note when an order is refunded (best-effort)
+    if (status === "REFUNDED" && existing.status !== "REFUNDED") {
+      try {
+        await createCreditNoteForOrder(orderId);
+      } catch (error) {
+        console.error(
+          "[invoices] Auto credit note failed for order",
+          orderId,
+          error
+        );
+      }
+    }
+
+    // Send a status email to the customer for statuses that matter
+    // (shipped / delivered / cancelled / refunded) — only on actual changes.
+    const NOTIFY_STATUSES = [
+      "SHIPPED",
+      "DELIVERED",
+      "CANCELLED",
+      "REFUNDED",
+    ] as const;
+    if (
+      existing.guestEmail &&
+      (NOTIFY_STATUSES as readonly string[]).includes(status) &&
+      status !== existing.status
+    ) {
+      await sendOrderStatusEmail({
+        orderNumber: order.orderNumber,
+        customerEmail: existing.guestEmail,
+        customerName: existing.guestName,
+        status: status as OrderStatusEmailData["status"],
+        trackingNumber: order.trackingNumber,
+        trackingUrl: getTrackingUrl(
+          order.trackingCarrier,
+          order.trackingNumber
+        ),
+      });
     }
 
     return NextResponse.json({ order });

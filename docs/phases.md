@@ -1,6 +1,6 @@
 # Development Phases — hausku E-Commerce Web Application
 
-Estimated total duration: ~5-6 weeks. — Status last reviewed: 2026-08-15
+Estimated total duration: ~5-6 weeks. — Status last reviewed: 2026-08-16
 
 ## Phase 1 — Planning & Design ✅ COMPLETE
 - [x] Set up Next.js project skeleton + folder structure per architecture.md
@@ -26,7 +26,7 @@ Estimated total duration: ~5-6 weeks. — Status last reviewed: 2026-08-15
 - [x] Shopping cart (add to cart, quantity management, localStorage persistence, free shipping progress)
 - [x] Search functionality (SearchBar component with Cmd+K shortcut, catalog filtering, filter chips)
 - [x] Guest checkout flow (form validation, order creation API with stock check, success page)
-- [x] Customer account system (signup/login with bcryptjs, session cookies, order history, address CRUD)
+- [x] Customer account system (signup/login with bcryptjs, session cookies, order history, address CRUD, **invoice/credit-note PDF download** — 2026-08-16)
 - [x] Admin panel: product CRUD (create/edit/delete, variant management, image upload, in-place variant updates)
 - [x] Admin panel: orders management (status updates, order detail view)
 - [x] Admin panel: customers management, dashboard stats
@@ -36,8 +36,8 @@ Estimated total duration: ~5-6 weeks. — Status last reviewed: 2026-08-15
 - [x] Stripe integration (checkout sessions, webhook handler, idempotent order processing, lazy SDK init)
 - [ ] PayPal integration — credentials in `.env`, but checkout fakes it (order → success redirect, no payment taken). TODO in `src/lib/payments/index.ts`
 - [ ] Klarna integration — credentials in `.env`, same fake-checkout status as PayPal
-- [~] Flexible VAT settings — DB helper (`src/lib/vat`) exists, admin settings UI exists but has no save; cart/checkout/order API still hardcode 19%. **Wiring pending.**
-- [~] Shipping rule (free above €30 / flat €4.99) — implemented as hardcoded constants in order API; admin-configurable setting pending.
+- [x] Flexible VAT settings — admin settings page saves VAT % + VAT ID to DB (`src/lib/settings`), cart/checkout/order API read from DB (2026-08-16)
+- [x] Shipping rule (free above threshold / flat rate) — admin-configurable via settings (default €30 / €4.99), used by cart/checkout/order API (2026-08-16)
 
 ## UX Polish (2026-08-15) ✅
 - [x] Smooth scrolling via Lenis (`src/components/shared/SmoothScroll.tsx`, storefront layout)
@@ -50,14 +50,18 @@ Estimated total duration: ~5-6 weeks. — Status last reviewed: 2026-08-15
 - [x] Cookie consent banner (GDPR)
 - [~] Privacy Policy page (GDPR) — page built, real legal text pending from client
 - [~] Impressum page — page built, company details pending from client
-- [~] Widerrufsrecht / returns flow (14-day right of withdrawal) — page stub only, flow pending
-- [ ] Invoice + credit note PDF generation — NOT implemented (TODO stubs in `src/lib/invoices` + `/api/invoices`)
+- [x] Widerruf / returns flow — `ReturnRequest` model + customer return form in order history (items + reason, one active per order) + admin „Retouren“ panel (approve/reject/receive/refund) + status emails + auto credit note on refund (2026-08-16)
+- [~] Returns page legal text (Widerrufsbelehrung / Muster-Widerrufsformular / Rücksendeadresse) — page built, final legal text pending from client
+- [x] Invoice + credit note PDF generation — pdf-lib (`src/lib/invoices`), admin create/download UI, auto on paid order + REFUNDED (2026-08-16)
+- [x] Customer invoice/credit-note download in account — order history shows PDF links; customer download routes verify session + ownership; orders API secured (2026-08-16)
 
-## Phase 5 — Testing & QA (not started)
-- [ ] Functional testing (cart, checkout, payments in sandbox mode) — ⚠️ PayPal/Klarna checkout currently completes WITHOUT payment; verify/fix before any real order
+## Phase 5 — Testing & QA (in progress — started 2026-08-16)
+- [x] Functional testing (cart, checkout, payments) — see `docs/qa.md`; **2 critical bugs fixed** (public `/api/orders` PII leak → admin-session required; paid orders stuck on lowercase `paid` status → now `CONFIRMED`)
+- [ ] Payments end-to-end (Stripe sandbox) — ⚠️ **BLOCKED: `.env` has placeholder Stripe keys (`sk_live_...`), real keys needed from client**
+- [ ] PayPal/Klarna checkout — still fake (order → success redirect, no payment); verify/fix before any real order
 - [ ] Responsiveness testing (mobile/tablet/desktop)
 - [ ] German/English language switch testing
-- [ ] Bug fixing
+- [ ] Bug fixing (ongoing) — minor fixes done: out-of-stock color, checkout link color
 
 ## Phase 6 — Deployment & Handover (not started)
 - [ ] Deploy to client's Hostinger Business account (steps in DEPLOY-README.md)
