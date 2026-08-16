@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
   type ReactNode,
 } from "react";
 
@@ -42,43 +43,91 @@ function FlyItem({
   onDone: () => void;
 }) {
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
-  const [animating, setAnimating] = useState(false);
-  const flyRef = useCallback((node: HTMLDivElement | null) => {
-    if (!node) return;
-    // After first paint, trigger the fly
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setAnimating(true);
-      });
-    });
-  }, []);
+  const elRef = useRef<HTMLDivElement | null>(null);
+  const doneRef = useRef(false);
 
+  // Land exactly once: triggers the caller's action + removes the fly.
+  const finish = useCallback(() => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    onDone();
+  }, [onDone]);
+
+  // Find the header icon to fly towards. If it's not on screen (e.g. mobile
+  // before the target got rendered), land immediately so the add-to-cart /
+  // like action still happens — never silently swallow the click.
   useEffect(() => {
     const selector =
       fly.type === "cart"
         ? '[data-fly-target="cart-icon"]'
         : '[data-fly-target="wishlist-icon"]';
-    const target = document.querySelector(selector);
+    // Pick the first VISIBLE target — hidden (display:none) duplicates exist
+    // for the other breakpoint (desktop button vs mobile link), and their
+    // getBoundingClientRect() would be all zeros.
+    let target: Element | null = null;
+    for (const el of document.querySelectorAll(selector)) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        target = el;
+        break;
+      }
+    }
     if (target) {
       setTargetRect(target.getBoundingClientRect());
+    } else {
+      finish();
     }
-  }, [fly.type]);
+  }, [fly.type, finish]);
+
+  // Run the flight with the Web Animations API instead of a CSS transition.
+  // CSS transition-duration can be overridden globally (e.g. a
+  // prefers-reduced-motion media query sets it to 0.01ms !important, which
+  // made the fly teleport instantly and become invisible). el.animate() is
+  // not affected by those overrides, so the float always plays.
+  useEffect(() => {
+    const el = elRef.current;
+    if (!targetRect || !el) return;
+
+    // Center-to-center offset
+    const dx =
+      targetRect.left +
+      targetRect.width / 2 -
+      (fly.sourceRect.left + fly.sourceRect.width / 2);
+    const dy =
+      targetRect.top +
+      targetRect.height / 2 -
+      (fly.sourceRect.top + fly.sourceRect.height / 2);
+
+    const anim = el.animate(
+      [
+        { transform: "translate(0, 0) scale(1)", opacity: 1 },
+        {
+          transform: `translate(${dx}px, ${dy}px) scale(0.25)`,
+          opacity: 0.5,
+        },
+      ],
+      {
+        duration: 600,
+        easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        fill: "forwards",
+      }
+    );
+    anim.onfinish = finish;
+
+    // Safety net: if onfinish never fires (hidden tab, paused browser), land
+    // anyway so the cart item is never lost.
+    const safety = setTimeout(finish, 900);
+    return () => {
+      clearTimeout(safety);
+      anim.cancel();
+    };
+  }, [targetRect, fly.sourceRect, finish]);
 
   if (!targetRect) return null;
 
-  // Center-to-center offset
-  const dx =
-    targetRect.left +
-    targetRect.width / 2 -
-    (fly.sourceRect.left + fly.sourceRect.width / 2);
-  const dy =
-    targetRect.top +
-    targetRect.height / 2 -
-    (fly.sourceRect.top + fly.sourceRect.height / 2);
-
   return (
     <div
-      ref={flyRef}
+      ref={elRef}
       style={{
         position: "fixed",
         left: fly.sourceRect.left,
@@ -87,17 +136,6 @@ function FlyItem({
         height: fly.sourceRect.height,
         zIndex: 9999,
         pointerEvents: "none",
-        transition: "all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        transform: animating
-          ? `translate(${dx}px, ${dy}px) scale(0.25)`
-          : "translate(0, 0) scale(1)",
-        opacity: animating ? 0.5 : 1,
-      }}
-      onTransitionEnd={(e) => {
-        // Only fire when the main transform completes (prevent double-fire from opacity)
-        if (e.propertyName === "transform") {
-          onDone();
-        }
       }}
     >
       {fly.type === "cart" ? (

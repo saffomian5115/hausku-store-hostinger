@@ -38,6 +38,7 @@ export default function ProductGallery({
           aria-label="Bild vergrößern"
         >
           <img
+            id="product-main-image"
             src={mainImage}
             alt={productName}
             className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-[1.04]"
