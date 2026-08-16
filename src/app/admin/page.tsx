@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import DashboardAutoRefresh from "@/components/admin/DashboardAutoRefresh";
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "Ausstehend",
@@ -110,9 +111,7 @@ export default async function AdminDashboardPage() {
   const openPct = totalTracked > 0 ? 100 - paidPct : 0;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
-
+    <DashboardAutoRefresh>
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
@@ -259,6 +258,6 @@ export default async function AdminDashboardPage() {
           </table>
         )}
       </div>
-    </div>
+    </DashboardAutoRefresh>
   );
 }
