@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { CartProvider } from "@/components/storefront/CartContext";
 import { WishlistProvider } from "@/components/storefront/WishlistContext";
 import { AuthProvider } from "@/components/storefront/AuthContext";
@@ -12,13 +13,15 @@ export const metadata: Metadata = {
     "Qualitätsprodukte für Haus und Küche. Kostenloser Versand ab 30 €.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("hausku_locale")?.value === "en" ? "en" : "de";
   return (
-    <html lang="de">
+    <html lang={locale}>
       <body>
         <AuthProvider>
           <FlyProvider>

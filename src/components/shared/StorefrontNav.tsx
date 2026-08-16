@@ -81,7 +81,7 @@ export default function StorefrontNav() {
           </div>
 
           {/* Center: Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-0.5 flex-1 justify-center">
+          <div className="hidden lg:flex items-center space-x-0.5 flex-1 justify-center">
             <Link href="/" className="relative text-gray-900 hover:text-lime-600 transition-all duration-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-gray-50 group">
               <span>{t("nav.home")}</span>
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-lime-500 rounded-full transition-all duration-300 group-hover:w-8" />

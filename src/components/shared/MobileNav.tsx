@@ -18,7 +18,7 @@ export default function MobileNav() {
       {/* Hamburger Button */}
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden p-2 text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200"
+        className="lg:hidden p-2 text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200"
         aria-label="Menü öffnen"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,14 +29,14 @@ export default function MobileNav() {
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setOpen(false)}
         />
       )}
 
       {/* Slide-out Menu */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed top-0 left-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ease-out lg:hidden ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
