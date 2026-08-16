@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { t as translate, type Locale, defaultLocale } from "@/locales";
 
 type LocaleContextType = {
@@ -14,6 +15,7 @@ const STORAGE_KEY = "hausku_locale";
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>(defaultLocale);
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -35,10 +37,12 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     } catch {
       // ignore
     }
-    // Set cookie for server components
+    // Set cookie for server components, then refresh the RSC payload so
+    // server-rendered content re-renders in the new locale. No full page
+    // reload — client components update instantly via state, server content
+    // merges in seamlessly, and scroll position / client state is preserved.
     document.cookie = `hausku_locale=${newLocale}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`;
-    // Reload page so server components re-render with new locale
-    window.location.reload();
+    router.refresh();
   };
 
   return (

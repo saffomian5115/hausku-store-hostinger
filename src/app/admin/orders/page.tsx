@@ -10,6 +10,7 @@ type Order = {
   status: string;
   total: number;
   createdAt: string;
+  paidAt: string | null;
   guestEmail: string | null;
   guestName: string | null;
   paymentMethod: string | null;
@@ -128,6 +129,9 @@ export default function AdminOrdersPage() {
                 Betrag
               </th>
               <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">
+                Zahlung
+              </th>
+              <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">
                 Status
               </th>
               <th className="text-right px-6 py-3 text-sm font-medium text-gray-500">
@@ -138,13 +142,13 @@ export default function AdminOrdersPage() {
           <tbody className="divide-y">
             {loading ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                   Wird geladen...
                 </td>
               </tr>
             ) : orders.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                   {statusFilter
                     ? "Keine Bestellungen mit diesem Status"
                     : "Noch keine Bestellungen vorhanden."}
@@ -176,6 +180,24 @@ export default function AdminOrdersPage() {
                   </td>
                   <td className="px-6 py-4 text-sm font-medium">
                     {formatPrice(order.total)}
+                  </td>
+                  <td className="px-6 py-4">
+                    {order.paidAt ? (
+                      <div>
+                        <span className="inline-block text-xs font-medium px-2.5 py-1 rounded-full bg-lime-100 text-lime-700">
+                          Bezahlt
+                        </span>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(order.paidAt).toLocaleDateString("de-DE", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-gray-400">Offen</span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <select

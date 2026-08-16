@@ -26,6 +26,7 @@ type Order = {
   guestPhone: string | null;
   paymentMethod: string | null;
   paymentId: string | null;
+  paidAt: string | null;
   shippingName: string | null;
   shippingStreet: string | null;
   shippingCity: string | null;
@@ -519,6 +520,20 @@ export default function AdminOrderDetailPage() {
                   })}
                 </span>
               </div>
+              {order.paidAt && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Bezahlt am</span>
+                  <span className="font-medium text-lime-600">
+                    {new Date(order.paidAt).toLocaleDateString("de-DE", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-gray-500">Status</span>
                 <span className="font-medium">

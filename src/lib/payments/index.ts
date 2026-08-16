@@ -187,6 +187,7 @@ export async function handleStripeSuccess(sessionId: string) {
       data: {
         status: "CONFIRMED",
         paymentId: (session.payment_intent as string) || sessionId,
+        paidAt: new Date(),
       },
     });
 
@@ -227,7 +228,7 @@ export async function handleWebhook(
       // (webhook + success-page verify) never double-process the order.
       const claimed = await prisma.order.updateMany({
         where: { id: orderId, status: "PENDING" },
-        data: { status: "CONFIRMED" },
+        data: { status: "CONFIRMED", paidAt: new Date() },
       });
 
       if (claimed.count > 0) {

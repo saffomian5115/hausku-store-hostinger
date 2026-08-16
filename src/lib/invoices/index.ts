@@ -48,6 +48,10 @@ export interface InvoiceData {
   vatAmount: number;
   total: number;
   currency: string;
+  /** When the order was actually paid (null → not recorded). */
+  paidAt?: Date | null;
+  /** Payment method label (e.g. "stripe"). */
+  paidMethod?: string | null;
   company: {
     name: string;
     email: string;
@@ -91,6 +95,12 @@ const BORDER = rgb(0.85, 0.87, 0.88);
 const BLACK = rgb(0.12, 0.14, 0.16);
 const WHITE = rgb(1, 1, 1);
 const LIME_SOFT = rgb(0.85, 0.98, 0.85);
+
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  stripe: "Stripe",
+  paypal: "PayPal",
+  klarna: "Klarna",
+};
 
 function formatMoney(amount: number): string {
   return amount.toLocaleString("de-DE", {
@@ -383,6 +393,23 @@ async function buildDocument(
   // Totals
   y = drawTotals(page, font, bold, data, y - 8);
 
+  // Payment confirmation (invoice only, when a payment is on record)
+  if (kind === "invoice" && data.paidAt) {
+    y -= 20;
+    const method = data.paidMethod
+      ? PAYMENT_METHOD_LABELS[data.paidMethod.toLowerCase()] || data.paidMethod
+      : "Online-Zahlung";
+    drawText(
+      page,
+      font,
+      9.5,
+      MARGIN,
+      y,
+      `Zahlung: Bereits bezahlt via ${method} am ${formatDate(data.paidAt)}.`,
+      DARK_GREEN
+    );
+  }
+
   // Credit note reason
   if (kind === "credit_note" && reason) {
     y -= 14;
@@ -480,6 +507,8 @@ export async function buildInvoiceData(
     total: number;
     currency: string;
     createdAt: Date;
+    paidAt: Date | null;
+    paymentMethod: string | null;
     guestName: string | null;
     guestEmail: string | null;
     shippingName: string | null;
@@ -496,13 +525,15 @@ export async function buildInvoiceData(
   },
   settings: StoreSettings,
   invoiceNumber: string,
-  referenceInvoiceNumber?: string
+  referenceInvoiceNumber?: string,
+  /** Issue date printed on the document (defaults to generation time). */
+  issuedAt: Date = new Date()
 ): Promise<InvoiceData> {
   return {
     invoiceNumber,
     referenceInvoiceNumber,
     orderNumber: order.orderNumber,
-    date: order.createdAt,
+    date: issuedAt,
     customerName: order.guestName || order.shippingName || "",
     customerEmail: order.guestEmail || "",
     customerAddress: {
@@ -524,6 +555,8 @@ export async function buildInvoiceData(
     vatAmount: Number(order.vatAmount),
     total: Number(order.total),
     currency: order.currency,
+    paidAt: order.paidAt,
+    paidMethod: order.paymentMethod,
     company: {
       name: settings.companyName || "NI Intellect UG",
       email: settings.companyEmail,
@@ -559,14 +592,17 @@ export async function createInvoiceForOrder(orderId: number) {
   for (let attempt = 0; attempt < 3; attempt++) {
     const invoiceNumber = await nextInvoiceNumber();
     try {
+      const issuedAt = new Date();
       const data = await buildInvoiceData(
         order,
         settings,
-        invoiceNumber
+        invoiceNumber,
+        undefined,
+        issuedAt
       );
       const pdfPath = await generateInvoicePDF(data);
       return await prisma.invoice.create({
-        data: { orderId, invoiceNumber, pdfPath },
+        data: { orderId, invoiceNumber, pdfPath, issuedAt },
       });
     } catch (error) {
       if (isUniqueViolation(error)) continue;
@@ -594,11 +630,13 @@ export async function createCreditNoteForOrder(
   for (let attempt = 0; attempt < 3; attempt++) {
     const creditNoteNumber = await nextCreditNoteNumber();
     try {
+      const issuedAt = new Date();
       const data = await buildInvoiceData(
         order,
         settings,
         creditNoteNumber,
-        order.invoice?.invoiceNumber
+        order.invoice?.invoiceNumber,
+        issuedAt
       );
       const pdfPath = await generateCreditNotePDF(data, reason);
       return await prisma.creditNote.create({
@@ -608,6 +646,7 @@ export async function createCreditNoteForOrder(
           pdfPath,
           reason,
           amount: order.total,
+          issuedAt,
         },
       });
     } catch (error) {

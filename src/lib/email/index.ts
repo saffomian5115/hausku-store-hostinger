@@ -46,6 +46,8 @@ export interface EmailPayload {
   to: string;
   subject: string;
   html: string;
+  /** Plain-text fallback — good for spam filters and text-only clients. */
+  text?: string;
   replyTo?: string;
 }
 
@@ -65,6 +67,7 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
       replyTo: payload.replyTo,
       subject: payload.subject,
       html: payload.html,
+      text: payload.text,
     });
     console.log(`[email] Sent "${payload.subject}" to ${payload.to}`);
     return true;
@@ -165,11 +168,22 @@ export async function sendContactNotification(
     `
   );
 
+  const text = `Neue Kontaktanfrage
+
+Name: ${input.name}
+E-Mail: ${input.email}
+Betreff: ${input.subject || "Neue Nachricht"}
+
+${input.message}
+
+Diese E-Mail wurde automatisch über das Kontaktformular auf hausku.com gesendet.`;
+
   return sendEmail({
     to: SMTP_FROM,
     replyTo: input.email,
     subject,
     html,
+    text,
   });
 }
 
@@ -234,6 +248,24 @@ export async function sendOrderConfirmationEmail(
     .map(escapeHtml)
     .join("<br />");
 
+  const itemsText = data.items
+    .map(
+      (item) =>
+        `- ${item.productName}${item.variantLabel ? ` (${item.variantLabel})` : ""}: ${item.qty} × ${formatPrice(item.unitPrice)} = ${formatPrice(item.unitPrice * item.qty)}`
+    )
+    .join("\n");
+
+  const addressText = [
+    data.shippingName,
+    data.shippingStreet,
+    [data.shippingPostal, data.shippingCity].filter(Boolean).join(" "),
+    data.shippingCountry,
+  ]
+    .filter((x): x is string => Boolean(x))
+    .join("\n");
+
+  const text = `Vielen Dank für Ihre Bestellung! 🎉\n\nHallo ${data.customerName || "und herzlich willkommen"},\nwir haben Ihre Bestellung ${data.orderNumber} erhalten und freuen uns, sie für Sie vorzubereiten.\n\nIhre Bestellung:\n${itemsText}\n\nZwischensumme: ${formatPrice(data.subtotal)}\nVersand: ${shippingLabel}\nMwSt. (${data.vatRate}%): ${formatPrice(data.vatAmount)}\nGesamt: ${formatPrice(data.total)}${addressText ? `\n\nLieferadresse:\n${addressText}` : ""}\n\nSie erhalten eine separate E-Mail, sobald Ihre Bestellung versendet wurde.\nBei Fragen helfen wir Ihnen gerne unter info@hausku.com weiter.`;
+
   const html = emailLayout(
     `Bestellbestätigung ${data.orderNumber}`,
     `
@@ -290,6 +322,7 @@ export async function sendOrderConfirmationEmail(
     to: data.customerEmail,
     subject: `Ihre Bestellung ${data.orderNumber} bei hausku`,
     html,
+    text,
   });
 }
 
@@ -418,11 +451,14 @@ export async function sendOrderStatusEmail(
     `
   );
 
+  const text = `${content.emoji} ${content.title}\n\nHallo ${data.customerName || "liebe Kundin, lieber Kunde"},\n\n${content.body}\n\nBestellnummer: ${data.orderNumber}${data.status === "SHIPPED" && data.trackingNumber ? `\nSendungsnummer: ${data.trackingNumber}` : ""}${data.status === "SHIPPED" && data.trackingUrl ? `\nSendung verfolgen: ${data.trackingUrl}` : ""}\n\nBei Fragen antworten Sie einfach auf diese E-Mail oder schreiben Sie uns an ${SMTP_FROM}.`;
+
   return sendEmail({
     to: data.customerEmail,
     replyTo: SMTP_FROM,
     subject: content.subject,
     html,
+    text,
   });
 }
 
@@ -524,11 +560,14 @@ export async function sendReturnStatusEmail(
     `
   );
 
+  const text = `${content.emoji} ${content.title}\n\nHallo ${data.customerName || "liebe Kundin, lieber Kunde"},\n\n${content.body}\n\nRetouren-Nummer: ${data.returnNumber}\nBestellnummer: ${data.orderNumber}${data.adminNote ? `\n\n${data.adminNote}` : ""}\n\nBei Fragen antworten Sie einfach auf diese E-Mail oder schreiben Sie uns an ${SMTP_FROM}.`;
+
   return sendEmail({
     to: data.customerEmail,
     replyTo: SMTP_FROM,
     subject,
     html,
+    text,
   });
 }
 
@@ -581,9 +620,12 @@ export async function sendNewOrderAdminAlert(
     `
   );
 
+  const text = `🛎️ Neue Bestellung eingegangen\n\nBestellnummer: ${data.orderNumber}\nKunde: ${data.customerName || "Gast"} (${data.customerEmail})\nArtikel: ${data.itemCount}\nBetrag: ${formatPrice(data.total)}\n\nIm Admin-Panel öffnen: https://hausku.com/admin/orders`;
+
   return sendEmail({
-    to: process.env.SMTP_ADMIN_ALERT_TO || "admin@hausku.com",
+    to: process.env.SMTP_ADMIN_ALERT_TO || "info@hausku.com",
     subject: `🛎️ Neue Bestellung ${data.orderNumber} — ${formatPrice(data.total)}`,
     html,
+    text,
   });
 }

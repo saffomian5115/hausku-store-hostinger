@@ -122,7 +122,7 @@ export default function MobileNav() {
                 <circle cx="12" cy="12" r="2" />
               </svg>
             </span>
-            {t("nav.sales")}
+            {t("nav.newArrivals")}
           </Link>
 
           <div className="my-2 border-t border-gray-100" />
