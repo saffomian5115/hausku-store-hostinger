@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db/prisma";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Spam protection: max 10 registrations / hour per IP
+    const limited = rateLimit(request, { limit: 10, windowMs: 60 * 60 * 1000 });
+    if (limited) return limited;
+
     const body = await request.json();
     const { email, password, name, phone } = body;
 

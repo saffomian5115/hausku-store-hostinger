@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useLocale } from "@/components/shared/LocaleContext";
 
 interface Suggestion {
@@ -273,9 +274,9 @@ export default function SearchBar({
                         onClick={() => handleSelectSuggestion(product.slug)}
                         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
                       >
-                        <div className="w-11 h-11 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
+                        <div className="w-11 h-11 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100 relative">
                           {product.imageUrl ? (
-                            <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+                            <Image src={product.imageUrl} alt={product.name} fill sizes="44px" className="object-contain" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">📷</div>
                           )}
@@ -377,9 +378,9 @@ export default function SearchBar({
                   onClick={() => { setShowSuggestions(false); setQuery(""); router.push(`/product/${product.slug}`); }}
                   className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
+                  <div className="w-11 h-11 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100 relative">
                     {product.imageUrl ? (
-                      <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+                      <Image src={product.imageUrl} alt={product.name} fill sizes="44px" className="object-contain" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">📷</div>
                     )}

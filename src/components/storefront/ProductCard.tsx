@@ -2,6 +2,7 @@
 
 import { useRef, useCallback, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { formatPrice } from "@/lib/format";
 import { useWishlist } from "./WishlistContext";
 import { useCart } from "./CartContext";
@@ -160,11 +161,12 @@ export default function ProductCard({ product }: { product: ProductWithVariants 
           className="aspect-square bg-white relative overflow-hidden flex items-center justify-center"
         >
           {product.imageUrl ? (
-            <img
+            <Image
               src={product.imageUrl}
               alt={product.name}
-              className="w-full h-full object-contain p-4 transition-transform duration-500 ease-out-quart group-hover:scale-[1.04]"
-              loading="lazy"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-contain p-4 transition-transform duration-500 ease-out-quart group-hover:scale-[1.04]"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-300">

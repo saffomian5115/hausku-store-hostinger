@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useWishlist } from "@/components/storefront/WishlistContext";
 import { useAuth } from "@/components/storefront/AuthContext";
 import { useCart } from "@/components/storefront/CartContext";
@@ -124,11 +125,12 @@ export default function WishlistPage() {
                   <Link href={`/product/${product.slug}`} className="block">
                     <div className="aspect-square bg-white relative overflow-hidden flex items-center justify-center">
                       {product.imageUrl ? (
-                        <img
+                        <Image
                           src={product.imageUrl}
                           alt={product.name}
-                          className="w-full h-full object-contain p-4 group-hover:scale-[1.04] transition-transform duration-300"
-                          loading="lazy"
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-contain p-4 group-hover:scale-[1.04] transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400">

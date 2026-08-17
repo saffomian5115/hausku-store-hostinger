@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendContactNotification } from "@/lib/email";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Spam protection: max 5 messages / 15 min per IP
+    const limited = rateLimit(request, { limit: 5, windowMs: 15 * 60 * 1000 });
+    if (limited) return limited;
+
     const body = await request.json();
     const { name, email, subject, message } = body;
 

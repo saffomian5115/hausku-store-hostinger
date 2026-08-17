@@ -137,6 +137,89 @@ async function main() {
 
   console.log(`✅ ${products.length} products created`);
 
+  // ─── Sample Customers ──────────────────────────────────
+  const reviewCustomers = [
+    { email: "ludolph.c@example.com", name: "Ludolph C." },
+    { email: "shakeel.h@example.com", name: "Shakeel H." },
+    { email: "danescu.a@example.com", name: "danescu a." },
+    { email: "petra.w@example.com", name: "Petra W." },
+    { email: "jonas.b@example.com", name: "Jonas B." },
+    { email: "meike.s@example.com", name: "Meike S." },
+    { email: "dominik.r@example.com", name: "Dominik R." },
+    { email: "aylin.k@example.com", name: "Aylin K." },
+    { email: "review.pending@example.com", name: "Neuer Kunde" },
+  ];
+
+  for (const c of reviewCustomers) {
+    await prisma.customer.upsert({
+      where: { email: c.email },
+      update: { name: c.name },
+      create: { email: c.email, name: c.name, isGuest: false },
+    });
+  }
+
+  console.log(`✅ ${reviewCustomers.length} sample customers created`);
+
+  // ─── Sample Reviews (approved → live on product pages) ──
+  const reviews: {
+    slug: string;
+    email: string;
+    rating: number;
+    title: string;
+    body: string;
+    approved?: boolean;
+  }[] = [
+    // brotdose-850ml
+    { slug: "brotdose-850ml", email: "ludolph.c@example.com", rating: 5, title: "Super Qualität", body: "Super hochwertig. Sogar eine Ersatzdichtung dabei. Meine Tochter liebt die Brotdose!" },
+    { slug: "brotdose-850ml", email: "shakeel.h@example.com", rating: 5, title: "Sehr zufrieden!", body: "Mein Kind benutzt diese Edelstahl-Brotdose täglich. Absolut auslaufsicher und leicht zu reinigen." },
+    { slug: "brotdose-850ml", email: "danescu.a@example.com", rating: 4, title: "Tip top", body: "Die Box hat einen einfachen und praktischen Deckelverschluss. Der Beutel ist eine schöne Zugabe." },
+    // brotdose-1200ml
+    { slug: "brotdose-1200ml", email: "aylin.k@example.com", rating: 4, title: "Schönes Design", body: "Sieht auf jedem Küchentisch gut aus und die Trennwand ist super praktisch für Meal Prep." },
+    // brotdose-1400ml
+    { slug: "brotdose-1400ml", email: "petra.w@example.com", rating: 5, title: "Absolute Empfehlung", body: "Endlich eine Marke, die hält was sie verspricht. Der Dip-Behälter ist das i-Tüpfelchen." },
+    // laptopkissen-grau
+    { slug: "laptopkissen-grau", email: "jonas.b@example.com", rating: 5, title: "Top Verarbeitung", body: "Man merkt sofort die Liebe zum Detail. Der Smartphone-Slot ist genial durchdacht." },
+    // laptopkissen-schwarz
+    { slug: "laptopkissen-schwarz", email: "dominik.r@example.com", rating: 5, title: "Schneller Versand", body: "Zwei Tage nach Bestellung war alles da. Das Kissen ist bequem und stabil zugleich." },
+    // couchbar-snackbox
+    { slug: "couchbar-snackbox", email: "meike.s@example.com", rating: 4, title: "Alltagstauglich", body: "Nutze die Snackbox jedes Wochenende. Die Getränkehalter sind der absolute Clou für den Filmabend." },
+    // one pending review → shows up in Admin → Bewertungen for moderation
+    { slug: "brotdose-1200ml", email: "review.pending@example.com", rating: 5, title: "Tolle Box", body: "Sehr robust und die Silikondichtung sitzt perfekt. Bestelle gleich noch eine zweite.", approved: false },
+  ];
+
+  for (const review of reviews) {
+    const product = await prisma.product.findUnique({
+      where: { slug: review.slug },
+      select: { id: true },
+    });
+    const customer = await prisma.customer.findUnique({
+      where: { email: review.email },
+      select: { id: true },
+    });
+    if (!product || !customer) continue;
+
+    await prisma.review.upsert({
+      where: {
+        customerId_productId: {
+          customerId: customer.id,
+          productId: product.id,
+        },
+      },
+      update: {},
+      create: {
+        productId: product.id,
+        customerId: customer.id,
+        rating: review.rating,
+        title: review.title,
+        body: review.body,
+        approved: review.approved ?? true,
+        rejected: false,
+      },
+    });
+  }
+
+  console.log(`✅ ${reviews.length} sample reviews created`);
+
   // ─── Settings ──────────────────────────────────────────
   const settings = [
     { key: "vat_rate", value: "19" },

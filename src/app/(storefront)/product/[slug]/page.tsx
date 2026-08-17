@@ -1,15 +1,74 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import type { Metadata } from "next";
 import { prisma } from "@/lib/db/prisma";
 import { formatPrice } from "@/lib/format";
 import { getTranslations } from "@/lib/i18n";
 import AddToCartButton from "@/components/storefront/AddToCartButton";
 import ProductGallery from "@/components/storefront/ProductGallery";
+import ReviewForm from "@/components/storefront/ReviewForm";
+
+type Params = { slug: string };
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hausku.com";
+
+function absoluteImage(url: string | null | undefined): string {
+  if (!url) return `${siteUrl}/images/og-default.jpg`;
+  if (url.startsWith("http")) return url;
+  return `${siteUrl}${url}`;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await prisma.product.findUnique({
+    where: { slug, active: true },
+    select: {
+      name: true,
+      description: true,
+      imageUrl: true,
+      category: { select: { name: true } },
+    },
+  });
+
+  if (!product) {
+    return { title: "Produkt nicht gefunden" };
+  }
+
+  const title = product.name;
+  const description =
+    product.description?.slice(0, 155) ||
+    `Qualitätsprodukt von hausku — ${product.category.name}.`;
+  const image = absoluteImage(product.imageUrl);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${siteUrl}/product/${slug}` },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      url: `${siteUrl}/product/${slug}`,
+      images: [{ url: image }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
 
 export default async function ProductDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<Params>;
 }) {
   const { t } = await getTranslations();
   const { slug } = await params;
@@ -43,11 +102,85 @@ export default async function ProductDetailPage({
   const totalStock = product.variants.reduce((sum, v) => sum + v.stockQty, 0);
   const isInStock = totalStock > 0;
 
+  // ── Reviews (approved only) ──
+  const [reviews, reviewAgg] = await Promise.all([
+    prisma.review.findMany({
+      where: { productId: product.id, approved: true, rejected: false },
+      include: { customer: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.review.aggregate({
+      where: { productId: product.id, approved: true, rejected: false },
+      _avg: { rating: true },
+      _count: true,
+    }),
+  ]);
+
+  // Has the current customer already reviewed this product?
+  let myReview: { id: number } | null = null;
+  try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("session")?.value;
+    if (sessionCookie) {
+      const sessionData = JSON.parse(
+        Buffer.from(sessionCookie, "base64").toString()
+      );
+      if (sessionData.expires > Date.now()) {
+        myReview = await prisma.review.findFirst({
+          where: { customerId: sessionData.id, productId: product.id },
+          select: { id: true },
+        });
+      }
+    }
+  } catch {
+    // ignore malformed session
+  }
+
+  const avgRating = reviewAgg._avg.rating
+    ? Math.round(reviewAgg._avg.rating * 10) / 10
+    : null;
+  const reviewCount = reviewAgg._count;
+
   // Use first variant as default for add-to-cart (will be refined with variant selection later)
   const defaultVariant = product.variants[0];
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description || undefined,
+    image: absoluteImage(product.imageUrl),
+    brand: { "@type": "Brand", name: "hausku" },
+    sku: defaultVariant?.sku || undefined,
+    category: product.category.name,
+    offers: {
+      "@type": "Offer",
+      url: `${siteUrl}/product/${product.slug}`,
+      priceCurrency: "EUR",
+      price: (defaultVariant?.priceOverride ?? product.basePrice).toFixed(2),
+      availability: isInStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+    ...(reviewCount > 0 && avgRating
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: avgRating.toFixed(1),
+            reviewCount,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* JSON-LD structured data for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-8">
         <Link href="/" className="hover:text-gray-900">
@@ -201,6 +334,106 @@ export default async function ProductDetailPage({
           )}
         </div>
       )}
+
+      {/* Reviews */}
+      <div className="mt-16">
+        <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Kundenbewertungen
+            </h2>
+            {reviewCount > 0 && avgRating && (
+              <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-0.5">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon
+                      key={star}
+                      filled={star <= Math.round(avgRating)}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm font-semibold text-gray-900">
+                  {avgRating.toFixed(1)}
+                </span>
+                <span className="text-sm text-gray-500">
+                  ({reviewCount} Bewertung{reviewCount !== 1 ? "en" : ""})
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Review list */}
+          <div className="lg:col-span-2 space-y-4">
+            {reviews.length === 0 ? (
+              <p className="text-gray-500 bg-gray-50 border border-gray-200 rounded-2xl p-6">
+                Noch keine Bewertungen für dieses Produkt.
+              </p>
+            ) : (
+              reviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="border border-gray-200 rounded-2xl p-6"
+                >
+                  <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <StarIcon key={star} filled={star <= review.rating} />
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-400">
+                      {new Date(review.createdAt).toLocaleDateString("de-DE", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  {review.title && (
+                    <h4 className="font-bold text-gray-900 mb-1">
+                      {review.title}
+                    </h4>
+                  )}
+                  {review.body && (
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {review.body}
+                    </p>
+                  )}
+                  <p className="text-xs font-medium text-gray-400 mt-3">
+                    {review.customer?.name || "Verifizierter Kunde"}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Review form */}
+          <div>
+            {myReview ? (
+              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-sm text-gray-600">
+                Du hast dieses Produkt bereits bewertet. Danke! 🌿
+              </div>
+            ) : (
+              <ReviewForm productId={product.id} />
+            )}
+          </div>
+        </div>
+      </div>
     </div>
+  );
+}
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      className={`w-4 h-4 ${
+        filled ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"
+      }`}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
   );
 }

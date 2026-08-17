@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCart } from "@/components/storefront/CartContext";
 import { formatPrice } from "@/lib/format";
 import type { CartItem } from "@/lib/cart";
@@ -10,8 +11,18 @@ export default function CartItemRow({ item }: { item: CartItem }) {
   return (
     <div className="p-4 flex items-center gap-4">
       {/* Image */}
-      <div className="w-20 h-20 bg-gray-100 rounded shrink-0 flex items-center justify-center text-gray-400 text-xs">
-        Bild
+      <div className="w-20 h-20 bg-gray-100 rounded shrink-0 flex items-center justify-center overflow-hidden relative">
+        {item.imageUrl ? (
+          <Image
+            src={item.imageUrl}
+            alt={item.name}
+            fill
+            sizes="80px"
+            className="object-contain p-1"
+          />
+        ) : (
+          <span className="text-gray-400 text-xs">Bild</span>
+        )}
       </div>
 
       {/* Info */}
@@ -35,6 +46,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
         <button
           onClick={() => updateItemQuantity(item.variantId, item.qty - 1)}
           className="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+          aria-label="Menge verringern"
         >
           −
         </button>
@@ -44,6 +56,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
         <button
           onClick={() => updateItemQuantity(item.variantId, item.qty + 1)}
           className="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+          aria-label="Menge erhöhen"
         >
           +
         </button>

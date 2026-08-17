@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useState, useRef } from "react";
+import Image from "next/image";
 
 interface ProductImagePreviewProps {
   images: { url: string; alt: string }[];
@@ -264,10 +265,14 @@ export default function ProductImagePreview({
                   transformStyle: "preserve-3d",
                 }}
               >
-                <img
+                <Image
                   src={image.url}
                   alt={image.alt}
-                  className="w-full h-full object-contain bg-gray-900/50"
+                  fill
+                  sizes="(max-width: 1024px) 85vw, 60vw"
+                  draggable={false}
+                  priority={index === 0}
+                  className="object-contain bg-gray-900/50"
                   style={{
                     transform:
                       isActive
@@ -275,8 +280,6 @@ export default function ProductImagePreview({
                         : "none",
                     transition: "transform 0.1s ease-out",
                   }}
-                  draggable={false}
-                  loading={index === 0 ? "eager" : "lazy"}
                 />
               </div>
             );

@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const [paidToday, ordersToday, paidOrders, openOrders, recentOrders] =
+  const [paidToday, ordersToday, paidOrders, openOrders, recentOrders, lowStockVariants] =
     await Promise.all([
       prisma.order.aggregate({
         where: { paidAt: { not: null, gte: todayStart } },
@@ -75,6 +75,14 @@ export default async function AdminDashboardPage() {
           guestName: true,
           guestEmail: true,
         },
+      }),
+      prisma.productVariant.findMany({
+        where: { active: true, stockQty: { lte: 5 } },
+        include: {
+          product: { select: { id: true, name: true, slug: true, imageUrl: true } },
+        },
+        orderBy: { stockQty: "asc" },
+        take: 10,
       }),
     ]);
 
@@ -112,6 +120,61 @@ export default async function AdminDashboardPage() {
 
   return (
     <DashboardAutoRefresh>
+      {/* Low-Stock Alert */}
+      {lowStockVariants.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-amber-900 flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Niedriger Lagerbestand
+            </h2>
+            <span className="text-sm text-amber-700 bg-amber-100 px-3 py-1 rounded-full font-medium">
+              {lowStockVariants.length} Artikel{lowStockVariants.length !== 1 ? "e" : ""}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {lowStockVariants.map((variant) => (
+              <div
+                key={variant.id}
+                className="flex items-center gap-3 bg-white rounded-lg border border-amber-100 p-3"
+              >
+                <div className="w-10 h-10 rounded-md bg-stone-100 flex items-center justify-center overflow-hidden shrink-0">
+                  {variant.product.imageUrl ? (
+                    <img
+                      src={variant.product.imageUrl}
+                      alt=""
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-xs text-stone-400">img</span>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <Link
+                    href={`/admin/products/${variant.product.id}`}
+                    className="text-sm font-medium text-gray-900 hover:text-lime-600 truncate block"
+                  >
+                    {variant.product.name}
+                  </Link>
+                  <p className="text-xs text-gray-500">
+                    {[variant.size, variant.color].filter(Boolean).join(" / ") || "Standard"}
+                  </p>
+                  <p
+                    className={`text-xs font-semibold ${
+                      variant.stockQty === 0 ? "text-red-600" : "text-orange-600"
+                    }`}
+                  >
+                    {variant.stockQty === 0 ? "Ausverkauft" : `Nur noch ${variant.stockQty} Stk.`}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (

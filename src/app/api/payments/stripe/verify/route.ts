@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     const order = await prisma.order.findUnique({
       where: { id: result.orderId },
-      select: { orderNumber: true, total: true },
+      select: { orderNumber: true, total: true, guestEmail: true },
     });
 
     if (!order) {
@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       orderNumber: order.orderNumber,
       total: order.total,
+      guestEmail: order.guestEmail,
       paymentStatus: result.status,
     });
   } catch (error) {

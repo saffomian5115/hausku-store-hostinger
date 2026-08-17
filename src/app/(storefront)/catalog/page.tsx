@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { prisma } from "@/lib/db/prisma";
 import ProductCard from "@/components/storefront/ProductCard";
 import SortSelect from "@/components/storefront/SortSelect";
@@ -9,6 +10,45 @@ type SearchParams = {
   sort?: string;
   q?: string;
 };
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hausku.com";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const { category, q } = await searchParams;
+  let title = "Alle Produkte";
+  let description =
+    "Entdecke alle Produkte von hausku — Brotdosen, Snackboxen, Lapdesks und mehr.";
+
+  if (category) {
+    const cat = await prisma.category.findUnique({
+      where: { slug: category },
+      select: { name: true },
+    });
+    if (cat) {
+      title = cat.name;
+      description = `${cat.name} bei hausku kaufen — nachhaltige Qualität für Haus und Küche.`;
+    }
+  } else if (q) {
+    title = `Suche: "${q}"`;
+    description = `Suchergebnisse für "${q}" bei hausku.`;
+  }
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${siteUrl}/catalog` },
+    openGraph: {
+      title: `${title} | hausku`,
+      description,
+      url: `${siteUrl}/catalog`,
+      images: [{ url: `${siteUrl}/images/og-default.jpg` }],
+    },
+  };
+}
 
 export default async function CatalogPage({
   searchParams,

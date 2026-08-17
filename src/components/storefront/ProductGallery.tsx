@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import ProductImagePreview, { getProductGalleryImages } from "./ProductImagePreview";
 
 interface ProductGalleryProps {
@@ -37,11 +38,14 @@ export default function ProductGallery({
           className="w-full aspect-square bg-white rounded-2xl border border-stone-100 flex items-center justify-center text-gray-300 relative overflow-hidden group cursor-zoom-in"
           aria-label="Bild vergrößern"
         >
-          <img
+          <Image
             id="product-main-image"
             src={mainImage}
             alt={productName}
-            className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-[1.04]"
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-contain p-6 transition-transform duration-500 group-hover:scale-[1.04]"
+            priority
           />
           {/* Zoom icon overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
@@ -66,13 +70,15 @@ export default function ProductGallery({
                     : "border-transparent"
                 }`}
               >
-                <img
+                <Image
                   src={image.url}
                   alt={image.alt}
-                  className="w-full h-full object-contain p-1"
+                  fill
+                  sizes="96px"
+                  className="object-contain p-1"
                   onError={(e) => {
                     // Hide thumbnail if image fails to load
-                    (e.target as HTMLElement).style.display = "none";
+                    (e.currentTarget as HTMLElement).style.display = "none";
                   }}
                 />
               </button>

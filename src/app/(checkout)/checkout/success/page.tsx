@@ -15,6 +15,7 @@ function SuccessContent() {
   const [orderData, setOrderData] = useState<{
     orderNumber: string;
     total: number;
+    guestEmail: string | null;
   } | null>(null);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ function SuccessContent() {
             setOrderData({
               orderNumber: data.orderNumber,
               total: data.total,
+              guestEmail: data.guestEmail || null,
             });
           }
           setVerified(true);
@@ -96,6 +98,32 @@ function SuccessContent() {
         Sie erhalten in Kürze eine Bestätigungs-E-Mail mit den Details Ihrer
         Bestellung.
       </p>
+
+      {/* Invoice download + order tracking for guests */}
+      <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+        {orderData?.guestEmail && displayOrderNumber !== "Unbekannt" && (
+          <a
+            href={`/api/orders/${displayOrderNumber}/invoice?email=${encodeURIComponent(
+              orderData.guestEmail
+            )}`}
+            className="inline-flex items-center justify-center gap-2 border border-lime-500 text-lime-600 hover:bg-lime-50 font-semibold px-8 py-3 rounded-lg transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Rechnung (PDF) herunterladen
+          </a>
+        )}
+        <Link
+          href="/order-lookup"
+          className="inline-flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          Bestellung verfolgen
+        </Link>
+      </div>
 
       <div className="flex gap-4 justify-center">
         <Link

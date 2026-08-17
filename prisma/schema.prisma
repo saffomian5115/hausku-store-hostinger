@@ -229,9 +229,11 @@ model Review {
   title     String?
   body      String?    @db.Text
   approved  Boolean  @default(false)
+  rejected  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([customerId, productId])
   @@index([productId])
   @@map("reviews")
 }

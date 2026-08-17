@@ -35,6 +35,7 @@ export default function NewsletterForm({
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        aria-label={placeholder}
         placeholder={placeholder}
         className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent"
       />

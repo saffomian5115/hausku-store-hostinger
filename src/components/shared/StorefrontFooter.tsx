@@ -93,6 +93,11 @@ export default function StorefrontFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/order-lookup" className="hover:text-white transition-colors">
+                  {t("footer.orderLookup")}
+                </Link>
+              </li>
+              <li>
                 <Link href="/returns" className="hover:text-white transition-colors">
                   {t("footer.returns")}
                 </Link>

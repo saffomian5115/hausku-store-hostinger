@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/db/prisma";
 import { getTranslations } from "@/lib/i18n";
 import AnimatedSection from "@/components/shared/AnimatedSection";
@@ -271,10 +272,12 @@ export default async function HomePage() {
               <div className="sticky top-24 relative">
                 <div className="aspect-[4/3] rounded-[2rem] overflow-hidden bg-gradient-to-br from-lime-50 to-emerald-100 shadow-xl relative group">
                   {snackbox.imageUrl ? (
-                    <img
+                    <Image
                       src={snackbox.imageUrl}
                       alt={snackbox.name}
-                      className="w-full h-full object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-lime-300">
@@ -378,10 +381,12 @@ export default async function HomePage() {
               <AnimatedSection animation="slideLeft" className="lg:order-1">
                 <div className="aspect-[4/3] rounded-[2rem] overflow-hidden bg-white/5 shadow-2xl relative group border border-white/10">
                   {laptopCushion.imageUrl ? (
-                    <img
+                    <Image
                       src={laptopCushion.imageUrl}
                       alt={laptopCushion.name}
-                      className="w-full h-full object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-white/20">
@@ -414,10 +419,12 @@ export default async function HomePage() {
             <AnimatedSection animation="slideLeft">
               <div className="aspect-[4/3] rounded-[2rem] overflow-hidden bg-gradient-to-br from-green-50 to-lime-100 shadow-xl relative group">
                 {lunchBox1400.imageUrl ? (
-                  <img
+                  <Image
                     src={lunchBox1400.imageUrl}
                     alt={lunchBox1400.name}
-                    className="w-full h-full object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-contain p-10 transition-transform duration-700 ease-out-quart group-hover:scale-[1.04]"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-green-300">
