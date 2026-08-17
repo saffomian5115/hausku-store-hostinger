@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# deployment artifacts
+.hostinger-stage/
+hausku-store-hostinger.zip
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
