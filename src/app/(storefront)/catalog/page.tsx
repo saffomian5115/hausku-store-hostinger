@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db/prisma";
 import ProductCard from "@/components/storefront/ProductCard";
 import SortSelect from "@/components/storefront/SortSelect";
 import { getTranslations } from "@/lib/i18n";
+import { rankProducts } from "@/lib/search";
 
 type SearchParams = {
   category?: string;
@@ -63,12 +64,8 @@ export default async function CatalogPage({
   if (category) {
     where.category = { slug: category };
   }
-  if (q) {
-    where.OR = [
-      { name: { contains: q } },
-      { description: { contains: q } },
-    ];
-  }
+  // NOTE: search queries are NOT applied via MySQL LIKE anymore — they are
+  // ranked in JS below (typo-tolerant matching).
 
   let orderBy: Record<string, string> = { createdAt: "desc" };
   if (sort === "price_asc") orderBy = { basePrice: "asc" };
@@ -76,7 +73,7 @@ export default async function CatalogPage({
   if (sort === "name") orderBy = { name: "asc" };
   if (sort === "name_desc") orderBy = { name: "desc" };
 
-  const [products, categories, totalCount] = await Promise.all([
+  const [allProducts, categories] = await Promise.all([
     prisma.product.findMany({
       where,
       include: {
@@ -89,8 +86,12 @@ export default async function CatalogPage({
       orderBy: { sortOrder: "asc" },
       include: { _count: { select: { products: { where: { active: true } } } } },
     }),
-    prisma.product.count({ where }),
   ]);
+
+  // Typo-tolerant search: when a query is present, relevance ranking wins
+  // over the selected sort order.
+  const products = q ? rankProducts(allProducts, q) : allProducts;
+  const totalCount = products.length;
 
   const activeCategory = categories.find((c) => c.slug === category);
 

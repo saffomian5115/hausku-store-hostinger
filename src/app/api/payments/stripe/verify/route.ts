@@ -26,7 +26,14 @@ export async function GET(request: NextRequest) {
 
     const order = await prisma.order.findUnique({
       where: { id: result.orderId },
-      select: { orderNumber: true, total: true, guestEmail: true },
+      select: {
+        orderNumber: true,
+        total: true,
+        guestEmail: true,
+        items: {
+          select: { productName: true, qty: true, unitPrice: true },
+        },
+      },
     });
 
     if (!order) {
@@ -40,6 +47,11 @@ export async function GET(request: NextRequest) {
       orderNumber: order.orderNumber,
       total: order.total,
       guestEmail: order.guestEmail,
+      items: order.items.map((item) => ({
+        name: item.productName,
+        quantity: item.qty,
+        price: Number(item.unitPrice),
+      })),
       paymentStatus: result.status,
     });
   } catch (error) {

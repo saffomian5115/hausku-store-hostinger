@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import DashboardAutoRefresh from "@/components/admin/DashboardAutoRefresh";
+import RevenueChart from "@/components/admin/RevenueChart";
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "Ausstehend",
@@ -43,7 +44,11 @@ export default async function AdminDashboardPage() {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const [paidToday, ordersToday, paidOrders, openOrders, recentOrders, lowStockVariants] =
+  const revenueSince = new Date();
+  revenueSince.setDate(revenueSince.getDate() - 89);
+  revenueSince.setHours(0, 0, 0, 0);
+
+  const [paidToday, ordersToday, paidOrders, openOrders, recentOrders, lowStockVariants, revenueData] =
     await Promise.all([
       prisma.order.aggregate({
         where: { paidAt: { not: null, gte: todayStart } },
@@ -84,7 +89,19 @@ export default async function AdminDashboardPage() {
         orderBy: { stockQty: "asc" },
         take: 10,
       }),
+      prisma.order.findMany({
+        where: { paidAt: { not: null, gte: revenueSince } },
+        select: { paidAt: true, total: true },
+        orderBy: { paidAt: "asc" },
+      }),
     ]);
+
+  const revenuePoints = revenueData
+    .map((order) => ({
+      date: order.paidAt!.toISOString().slice(0, 10),
+      total: order.total,
+    }))
+    .filter((point) => point.date >= revenueSince.toISOString().slice(0, 10));
 
   const stats = [
     {
@@ -228,6 +245,11 @@ export default async function AdminDashboardPage() {
             <span className="text-gray-400">({openPct}%)</span>
           </div>
         </div>
+      </div>
+
+      {/* Revenue Chart */}
+      <div className="mb-8">
+        <RevenueChart data={revenuePoints} />
       </div>
 
       {/* Recent Orders */}

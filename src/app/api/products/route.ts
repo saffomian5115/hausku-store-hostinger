@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { rankProducts } from "@/lib/search";
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,6 +21,23 @@ export async function GET(request: NextRequest) {
 
     if (category) {
       where.category = { slug: category };
+    }
+
+    // Typo-tolerant search: fetch candidates and rank in JS (small catalog).
+    if (search && !idsParam) {
+      const candidates = await prisma.product.findMany({
+        where: { active: true, ...(category ? { category: { slug: category } } : {}) },
+        include: {
+          category: true,
+          variants: { where: { active: true } },
+        },
+      });
+      const ranked = rankProducts(candidates, search);
+      const total = ranked.length;
+      return NextResponse.json({
+        products: ranked.slice(skip, skip + limit),
+        pagination: { page, limit, total, pages: Math.ceil(total / limit) },
+      });
     }
 
     if (search) {

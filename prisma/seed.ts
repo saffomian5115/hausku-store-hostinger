@@ -220,6 +220,89 @@ async function main() {
 
   console.log(`✅ ${reviews.length} sample reviews created`);
 
+  // ─── Sample Paid Orders (demo revenue for the dashboard chart) ──
+  // Fixed order numbers keep the seed idempotent (upsert by orderNumber).
+  const VAT_RATE = 19;
+  const SHIPPING_FLAT = 4.99;
+  const FREE_SHIPPING_FROM = 30;
+
+  const demoOrders = [
+    { seq: 1, daysAgo: 20, slug: "brotdose-850ml", qty: 1, name: "Ludolph C.", email: "ludolph.c@example.com" },
+    { seq: 2, daysAgo: 18, slug: "laptopkissen-grau", qty: 1, name: "Jonas B.", email: "jonas.b@example.com" },
+    { seq: 3, daysAgo: 16, slug: "couchbar-snackbox", qty: 1, name: "Meike S.", email: "meike.s@example.com" },
+    { seq: 4, daysAgo: 15, slug: "brotdose-1400ml", qty: 2, name: "Petra W.", email: "petra.w@example.com" },
+    { seq: 5, daysAgo: 13, slug: "brotdose-1200ml", qty: 1, name: "Aylin K.", email: "aylin.k@example.com" },
+    { seq: 6, daysAgo: 11, slug: "laptopkissen-schwarz", qty: 1, name: "Dominik R.", email: "dominik.r@example.com" },
+    { seq: 7, daysAgo: 9, slug: "brotdose-850ml", qty: 2, name: "Shakeel H.", email: "shakeel.h@example.com" },
+    { seq: 8, daysAgo: 7, slug: "couchbar-snackbox", qty: 1, name: "danescu a.", email: "danescu.a@example.com" },
+    { seq: 9, daysAgo: 5, slug: "laptopkissen-grau", qty: 1, name: "Petra W.", email: "petra.w@example.com" },
+    { seq: 10, daysAgo: 4, slug: "brotdose-1400ml", qty: 1, name: "Ludolph C.", email: "ludolph.c@example.com" },
+    { seq: 11, daysAgo: 2, slug: "brotdose-1200ml", qty: 2, name: "Jonas B.", email: "jonas.b@example.com" },
+    { seq: 12, daysAgo: 0, slug: "brotdose-850ml", qty: 1, name: "Aylin K.", email: "aylin.k@example.com" },
+  ];
+
+  for (const demo of demoOrders) {
+    const product = await prisma.product.findUnique({
+      where: { slug: demo.slug },
+      include: { variants: { where: { active: true }, orderBy: { id: "asc" }, take: 1 } },
+    });
+    const variant = product?.variants[0];
+    if (!product || !variant) continue;
+
+    const orderNumber = `hausku-demo-${String(demo.seq).padStart(3, "0")}`;
+    const exists = await prisma.order.findUnique({ where: { orderNumber } });
+    if (exists) continue; // idempotent
+
+    const unitPrice = variant.priceOverride ?? product.basePrice;
+    const subtotal = parseFloat((unitPrice * demo.qty).toFixed(2));
+    const shippingCost = subtotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_FLAT;
+    const vatAmount = parseFloat(((subtotal * VAT_RATE) / 100).toFixed(2));
+    const total = parseFloat((subtotal + shippingCost + vatAmount).toFixed(2));
+
+    const createdAt = new Date();
+    createdAt.setDate(createdAt.getDate() - demo.daysAgo);
+    createdAt.setHours(10 + (demo.seq % 8), (demo.seq * 13) % 60, 0, 0);
+    const paidAt = new Date(createdAt.getTime() + 45 * 60 * 1000);
+
+    await prisma.order.create({
+      data: {
+        orderNumber,
+        status: demo.daysAgo >= 10 ? "DELIVERED" : "CONFIRMED",
+        subtotal,
+        shippingCost,
+        vatRate: VAT_RATE,
+        vatAmount,
+        total,
+        currency: "EUR",
+        guestEmail: demo.email,
+        guestName: demo.name,
+        paymentMethod: "stripe",
+        paymentId: `demo_pi_${demo.seq}`,
+        paidAt,
+        createdAt,
+        shippingName: demo.name,
+        shippingStreet: "Musterstraße 1",
+        shippingCity: "Berlin",
+        shippingPostal: "10115",
+        shippingCountry: "DE",
+        items: {
+          create: [
+            {
+              productId: product.id,
+              variantId: variant.id,
+              productName: product.name,
+              variantLabel: [variant.size, variant.color].filter(Boolean).join(" / ") || null,
+              qty: demo.qty,
+              unitPrice,
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  console.log(`✅ ${demoOrders.length} sample paid orders created`);
+
   // ─── Settings ──────────────────────────────────────────
   const settings = [
     { key: "vat_rate", value: "19" },

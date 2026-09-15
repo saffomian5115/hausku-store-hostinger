@@ -2,8 +2,15 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { formatPrice } from "@/lib/format";
+import { trackPurchase } from "@/lib/track";
+
+type OrderItem = {
+  name: string;
+  quantity: number;
+  price: number;
+};
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -16,7 +23,9 @@ function SuccessContent() {
     orderNumber: string;
     total: number;
     guestEmail: string | null;
+    items: OrderItem[];
   } | null>(null);
+  const purchaseFired = useRef(false);
 
   useEffect(() => {
     if (sessionId) {
@@ -29,6 +38,7 @@ function SuccessContent() {
               orderNumber: data.orderNumber,
               total: data.total,
               guestEmail: data.guestEmail || null,
+              items: data.items || [],
             });
           }
           setVerified(true);
@@ -38,6 +48,23 @@ function SuccessContent() {
         });
     }
   }, [sessionId]);
+
+  // Fire the purchase conversion event exactly once per order confirmation.
+  useEffect(() => {
+    const displayOrderNumber = orderData?.orderNumber || orderNumber;
+    const displayTotal = orderData?.total || total;
+    if (!verified || purchaseFired.current) return;
+    if (!displayOrderNumber || displayOrderNumber === "Unbekannt") return;
+    if (displayTotal <= 0) return;
+
+    purchaseFired.current = true;
+    trackPurchase({
+      transactionId: displayOrderNumber,
+      value: displayTotal,
+      currency: "EUR",
+      items: orderData?.items || [],
+    });
+  }, [verified, orderData, orderNumber, total]);
 
   const displayOrderNumber = orderData?.orderNumber || orderNumber || "Unbekannt";
   const displayTotal = orderData?.total || total || 0;

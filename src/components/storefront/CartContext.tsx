@@ -20,6 +20,7 @@ import {
   getCartTotal,
   getCartItemCount,
 } from "@/lib/cart";
+import { trackAddToCart } from "@/lib/track";
 
 type CartContextType = {
   cart: Cart;
@@ -52,6 +53,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (item: Omit<CartItem, "qty">, quantity?: number) => {
+      const qty = Math.min(quantity ?? 1, item.stockQty || 1);
+      if (qty > 0) {
+        trackAddToCart({
+          itemId: item.variantId,
+          name: item.name,
+          quantity: qty,
+          price: item.unitPrice,
+        });
+      }
       setCart((prev) => _addToCart(prev, item, quantity));
     },
     []
