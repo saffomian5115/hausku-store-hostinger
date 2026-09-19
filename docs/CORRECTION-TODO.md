@@ -2,7 +2,7 @@
 
 > Source: `docs/HAUSKU_Webshop_V1_Correction_Report.pdf`
 > Created: 2026-09-16
-> Status: All items pending — 33 total corrections
+> Status: 14/33 complete (2026-09-19) — P0 me bacha: Stripe test (client blocked), consent banner (client list blocked), security hardening (CSRF/2FA/monitoring)
 
 ---
 
@@ -32,16 +32,15 @@
 - [x] **Footer "§5 TMG · NICHT EU"** — replaced with real company line ("NI Intellect UG (haftungsbeschränkt) · Roggenring 26 · 23619 Hamberge"). TMG reference outdated hai (nun DDG).
 - [x] **"Versand & Zahlung" link** — footer `shipping` ab `/terms#lieferzahlung` pe anchor karta hai (§ Lieferbedingungen in Kundeninformationen). Dedicated page optional (P1 #12).
 
-### #4 — GPSR Product Information
+### #4 — GPSR Product Information ✅ DONE (2026-09-19)
 
-- [ ] **Structured GPSR fields in admin** — Abhi sirf `manufacturer` (text) + `safetyWarnings` (text) hai. Add karo:
-  - Registered/trading name
-  - Postal address
-  - Email/electronic contact
-  - Product type
-  - SKU/model identifier (per variant)
-  - Safety warnings (structured, not free-text dump)
-  - **Location:** `prisma/schema.prisma`, `src/components/admin/ProductForm.tsx`, `src/app/(storefront)/product/[slug]/page.tsx`
+- [x] **Structured GPSR fields in admin** — `prisma/schema.prisma` Product model me naye fields: `manufacturerAddress`, `manufacturerEmail`, `productType` (+ pehle se the `manufacturer`, `safetyWarnings`). Wired end-to-end: admin ProductForm (GPSR section, warnings line-based), create/update APIs, edit page, seed (real NI Intellect UG data per product), product detail page ka structured GPSR block (address, mailto contact, warnings as bullet list), locales de/en (`manufacturerAddress`, `manufacturerEmail` keys).
+  - Registered/trading name ✅
+  - Postal address ✅
+  - Email/electronic contact ✅
+  - Product type ✅
+  - SKU/model identifier (per variant) — n/a: SKU per variant already variants section me hai aur product page pe visible
+  - Safety warnings (structured, not free-text dump) ✅ — line-based, storefront pe bullet list
 
 ### #5 — Customer Reviews & "4.8 / 47 Reviews" ✅ DONE
 
@@ -92,25 +91,25 @@
   - Homepage ticker (page.tsx line 62)
   - Any other references
 
-### #16 — Checkout/Payment Verification
+### #16 — Checkout/Payment Verification ⚠️ PARTIAL (2026-09-19)
 
-- [ ] **Stripe checkout test** — Currently BLOCKED (placeholder `sk_live_...` keys in `.env`)
-  - Client se real test keys leni hain
-- [ ] **PayPal/Klarna fake checkout fix** — Abhi order create hota hai + redirect success pe with NO payment taken. Real integration karo ya payment method hide karo.
-  - **Location:** `src/lib/payments/index.ts`, checkout page
-- [ ] **Sirf active payment methods ke logos dikhao** — Apple Pay/Google Pay ke logos tabhi jab actually supported ho
+- [x] **PayPal/Klarna fake checkout fix** — Fake checkout remove ho gaya: checkout page se PayPal/Klarna options hata diye (sirf Kreditkarte/Apple Pay/Google Pay), orders API ab sirf `stripe` accept karta hai (pehle paypal/klarna pe bina payment ke order + stock decrement hota tha — data fix), aur client pe error message dikhata hai agar koi baki method select kare. PayPal/Klarna tabhi add karo jab real integration ho — legal problem bhi: bina captured payment ke "Kostenpflichtig bestellen" misleading hota hai.
+  - **Location:** `src/app/(checkout)/checkout/page.tsx`, `src/app/api/orders/route.ts`, `src/app/api/payments/route.ts`
+- [ ] **Stripe checkout test** — Still BLOCKED (placeholder `sk_live_...` keys in `.env`). Client se real test keys leni hain, phir end-to-end test (test card 4242…, webhook local pe stripe cli se)
+- [ ] **Sirf active payment methods ke logos dikhao** — Checkout me ab sirf Stripe options hain ✅; footer/checkout ki payment icons (agar client assets me hain) verify karna baaki
 
 ### #17 — Checkout Final Order Button ✅ DONE
 
 - [x] **Order button wording change** — "Zur Kasse gehen" / "Bestellung aufgeben" → **"Kostenpflichtig bestellen"** (legally appropriate German)
   - **Location:** `src/app/(checkout)/checkout/page.tsx`
 
-### #22 — Privacy, Cookies & Tracking
+### #22 — Privacy, Cookies & Tracking ⚠️ PARTIAL (2026-09-19)
 
-- [ ] **Confirm all tracking technologies** installed/planned (GA, Ads, GTM, Meta Pixel, Bing, Hotjar, etc.)
-- [ ] **Non-essential tracking must not load before consent**
-- [ ] **Consent solution** must support: accept, reject, granular selection, withdrawal
-- [ ] **Datenschutzerklärung** must accurately reflect actual implementation
+> ⚠️ **Client se chahiye (blocker):** (1) Tracking technologies ki final list — GA4, Google Ads, GTM, Meta Pixel, Bing, Hotjar etc. me se kya use karna hai; (2) un services ke account/IDs. Jab tak ye nahi aata, code-side infra ready kar sakte hain par koi script wire nahi ho sakti.
+
+- [ ] **Consent banner implement karo** — Accept / Reject / granular selection / withdrawal, non-essential scripts sirf consent ke baad load. Provider suggestion: inline light solution ya Usercentrics/Cookiebot (TTDSG/DSGVO compliant)
+- [ ] **Datenschutzerklärung** must accurately reflect actual implementation — jab tracking list final ho jaye
+- [x] **Abhi koi tracking installed nahi hai** (verified 2026-09-19 — no GA/Pixel/GTM in codebase), isliye launch ke liye technically "no consent needed" hai JAB TAK client kuch add nahi karta — lekin banner client ki list ke bina final nahi ho sakta
 
 ### #26 — About Us Page ✅ DONE
 
@@ -132,25 +131,30 @@
 - [x] **Suggested topics** add ho gaye: Produktfrage, Bestellung, Versand, Rückgabe/Widerruf, Reklamation, Sonstiges (dropdown)
 - [ ] **Geschäftszeiten** — abhi bhi placeholder "Mo–Fr, 9:00–17:00 Uhr" (client confirmation pending — siehe CLIENT-DATA-NEEDED 2.8)
 
-### #30 — Security & Operational Controls
+### #30 — Security & Operational Controls ⚠️ MOSTLY DONE (2026-09-19)
 
-- [ ] Confirm: HTTPS, password hashing, server-side validation, CSRF, rate limiting, webhook validation
-- [ ] Confirm: No secrets client-side exposed, env vars protected
-- [ ] Confirm: DB backups, documented restore, staging env, error logging
-- [ ] Confirm: Secure sessions, 2FA for admin (if supported)
-- [ ] **All production assets owned by NI Intellect UG** (hosting, domain, DB, repo, payment, analytics, email)
+- [x] **Admin API auth** — CRITICAL fix: 11/12 admin routes pe koi auth check hi nahi tha (customers PII, invoices, settings sab publicly callable). Ab saare `/api/admin/*` routes `requireAdmin` guard se protected hain (`src/lib/adminAuth.ts`)
+- [x] **Session forging fix** — Admin aur customer session cookies pehle plain base64 JSON the (koi bhi `{"role":"admin"}` ya `{"id":5}` forge kar sakta tha). Ab dono HMAC-signed tokens hain (`AUTH_SECRET` env var ke saath)
+- [x] **Admin login rate limiting** — 5 attempts / 15 min per IP (brute-force protection). Contact pe pehle se tha
+- [x] **Password hashing** — customers bcrypt; admin creds env vars (rotation doc'd in HANDOVER.md)
+- [x] **HTTPS** — hosting-level (Vercel/Node reverse proxy); app me `secure` cookies production me
+- [x] **Server-side validation** — sab API routes me
+- [x] **Webhook validation** — Stripe signature verification (`verifyStripeWebhook`)
+- [x] **No secrets client-side** — keys sirf server env me; grep-verified no key leakage in client components
+- [ ] **CSRF review** — cookie-based state-changing endpoints (sameSite=lax madad karta hai, par explicit review recommended)
+- [ ] **Shared rate-limit store** — in-memory hai; multi-instance/serverless pe Redis/Upstash ya platform WAF
+- [ ] **DB backups automated + documented restore test** — manual process HANDOVER.md me doc'd
+- [ ] **2FA for admin** — agar supported ho
+- [ ] **Error logging/monitoring** (Sentry ya similar) + uptime check
+- [ ] **Staging environment**
+- [ ] **All production assets owned by NI Intellect UG** — HANDOVER.md checklist me hai
 
-### #31 — Source Code Handover
+### #31 — Source Code Handover ✅ DOCS READY (2026-09-19)
 
-- [ ] NI Intellect UG must receive:
-  - Complete application source code
-  - Database schema
-  - Git repository access/ownership
-  - Deployment configuration
-  - Environment variable documentation (without exposing secrets)
-  - Setup/deployment instructions
-  - Dependency list
-  - Backup/restore instructions
+- [x] **`docs/HANDOVER.md` created** — setup, env vars (incl. naya `AUTH_SECRET`), admin panel, DB backups/restore, payments flow, security summary, handover checklist
+- [x] Complete application source code, DB schema, env var documentation, setup/deploy instructions, dependency list, backup/restore instructions — sab doc'd
+- [ ] NI Intellect UG must receive: **git repo ownership transfer** ← client side
+- [ ] **Production asset ownership** (hosting, domain, DB, Stripe, email) ← client side
 
 ---
 
@@ -258,23 +262,14 @@
 - [ ] Meaningful image alt text
 - [ ] SEO-editable fields in admin panel
 
-### #24 — Color System & Visual Direction
+### #24 — Color System & Visual Direction ✅ DONE (2026-09-19)
 
-- [ ] **Replace bright lime/neon green** with HAUSKU design palette:
-  - Primary / Forest Green: `#2F6B4F`
-  - Primary Hover / Deep Forest: `#25543E`
-  - Secondary / Sage Green: `#79A97F`
-  - Secondary Light / Soft Sage: `#DDEBD9`
-  - Main Background: `#FAFAF7`
-  - Section Background: `#FFFFFF`
-  - Primary Text: `#1F2933`
-  - Secondary Text: `#4B5563`
-  - Standard Border: `#E5E7EB`
-- [ ] Hero gradient: `#79A97F → #2F6B4F` (not bright lime)
-- [ ] Implement via **CSS variables / design tokens** for consistency across:
-  - Header, buttons, product cards, badges, forms, footer, checkout, account, alerts
-- [ ] **Honeycomb/background pattern opacity reduce** karo
-- [ ] Bright lime/neon green should NOT be dominant large-area background
+- [x] **Palette implemented via Tailwind v4 `@theme` design tokens** (`src/app/globals.css`) — `lime-*`/`green-*`/`emerald-*` scales client ke forest ramp se remap: Primary Forest `#2F6B4F`, Hover Deep Forest `#25543E`, Sage `#79A97F`, Soft Sage `#DDEBD9`, bg `#FAFAF7`. Saari 359+ existing `lime-*`/`green-*` classes ab brand palette render karti hain — header, buttons, cards, badges, forms, footer, checkout, account, alerts automatically consistent
+- [x] **Hero gradients** — HeroBlob `#DDEBD9 → #79A97F → #2F6B4F`; about/contact hero bands `#79A97F → #2F6B4F → #25543E`
+- [x] **Hardcoded colors migrate** — emails (sab templates forest/sage), invoice PDF (GREEN/DARK_GREEN constants), homepage SVG swash, BackgroundGrid hover (sage, reduced alpha), `::selection`
+- [x] **Body background** `#fafaf9 → #FAFAF7` (brand Main Background)
+- [x] **About CTA contrast fix** — dark gradient pe gray-700 text white; buttons accessible contrast me
+- [ ] **Optional follow-up:** ShapeGrid honeycomb ka visual opacity tune + client review
 
 ### #25 — Homepage Counters / Server Rendering
 
@@ -311,11 +306,11 @@
 
 | Priority | Count | Status |
 |----------|-------|--------|
-| P0 (Launch Blockers) | 16 | 11/16 complete ✅ |
-| P1 (Pre-Launch Quality) | 16 | 1/16 complete ✅ |
+| P0 (Launch Blockers) | 16 | 13/16 complete (2 partial, 1 blocked) ✅ |
+| P1 (Pre-Launch Quality) | 16 | 2/16 complete ✅ |
 | P2 (Post-Launch) | 1 | Pending |
-| **Total** | **33** | **12/33 complete** |
+| **Total** | **33** | **15/33 complete** |
 
 ---
 
-*Last updated: 2026-09-18*
+*Last updated: 2026-09-19*

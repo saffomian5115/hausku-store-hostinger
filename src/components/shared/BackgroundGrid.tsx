@@ -5,8 +5,8 @@ import ShapeGrid from "./ShapeGrid";
 /**
  * Fixed full-page animated background (light-mode variant).
  * Sits behind all storefront content with pointer-events off, so it never
- * blocks clicks. Colors are tuned for the sand/cream (#fafaf9 / #F6F2E7)
- * theme: soft sage borders + lime hover fill with a trailing effect.
+ * blocks clicks. Colors are tuned for the forest/sage brand theme:
+ * soft sage borders + muted sage hover fill with a trailing effect.
  */
 export default function BackgroundGrid() {
   return (
@@ -16,7 +16,7 @@ export default function BackgroundGrid() {
         squareSize={28}
         direction="diagonal"
         borderColor="#D9E3CE"
-        hoverFillColor="rgba(132, 204, 22, 0.3)"
+        hoverFillColor="rgba(121, 169, 127, 0.25)"
         shape="hexagon"
         hoverTrailAmount={8}
       />

@@ -124,7 +124,7 @@ export default async function HomePage() {
                     >
                       <path
                         d="M2 18C60 6 150 2 200 10C250 18 300 8 338 14"
-                        stroke="#84CC16"
+                        stroke="#79A97F"
                         strokeWidth="6"
                         strokeLinecap="round"
                       />

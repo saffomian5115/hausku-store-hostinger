@@ -12,6 +12,50 @@
   /* Smooth, buttery easing curves — use as ease-out-quart / ease-out-expo */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ═══ HAUSKU forest green palette (Correction #24) ═══
+     The codebase was built on Tailwind's lime/green/emerald scales. Instead
+     of renaming 350+ class occurrences, the scales are remapped here to the
+     client-approved brand ramp:
+       Primary  Forest Green  #2F6B4F
+       Hover    Deep Forest   #25543E
+       Second.  Sage Green    #79A97F
+       Second.  Soft Sage     #DDEBD9
+     `lime-*` and `green-*` map to the forest ramp; `emerald-*` mirrors it
+     one step darker so mixed gradient stops stay inside the palette.
+     Use lime-* for primary/brand elements (buttons, links, accents). */
+  --color-lime-50: #f2f7f3;
+  --color-lime-100: #e3f0e5;
+  --color-lime-200: #ddebd9;
+  --color-lime-300: #a9c9ad;
+  --color-lime-400: #79a97f;
+  --color-lime-500: #2f6b4f;
+  --color-lime-600: #2f6b4f;
+  --color-lime-700: #25543e;
+  --color-lime-800: #1d4232;
+  --color-lime-900: #152f24;
+
+  --color-green-50: #f2f7f3;
+  --color-green-100: #e3f0e5;
+  --color-green-200: #ddebd9;
+  --color-green-300: #a9c9ad;
+  --color-green-400: #79a97f;
+  --color-green-500: #2f6b4f;
+  --color-green-600: #2f6b4f;
+  --color-green-700: #25543e;
+  --color-green-800: #1d4232;
+  --color-green-900: #152f24;
+
+  --color-emerald-50: #f2f7f3;
+  --color-emerald-100: #ddebd9;
+  --color-emerald-200: #cfe3d1;
+  --color-emerald-300: #a9c9ad;
+  --color-emerald-400: #6d9d75;
+  --color-emerald-500: #4a7f5e;
+  --color-emerald-600: #2f6b4f;
+  --color-emerald-700: #25543e;
+  --color-emerald-800: #1d4232;
+  --color-emerald-900: #152f24;
 }
 
 html {
@@ -19,13 +63,13 @@ html {
 }
 
 body {
-  background-color: #fafaf9; /* warm off-white (stone-50) */
+  background-color: #fafaf7; /* Main Background from brand palette */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background-color: rgb(132 204 22 / 0.3);
+  background-color: rgb(47 107 79 / 0.25);
 }
 
 /* ═══ Smooth expand animation for search bar ═══ */

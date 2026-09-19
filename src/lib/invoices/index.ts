@@ -89,8 +89,8 @@ const PAGE_W = 595.28; // A4 width (pt)
 const PAGE_H = 841.89; // A4 height (pt)
 const MARGIN = 48;
 
-const GREEN = rgb(0.196, 0.804, 0.196); // brand lime #32CD32
-const DARK_GREEN = rgb(0.059, 0.165, 0.11); // brand #0F2A1C
+const GREEN = rgb(0.184, 0.42, 0.31); // brand Forest Green #2F6B4F
+const DARK_GREEN = rgb(0.145, 0.329, 0.243); // brand Deep Forest #25543E
 const GRAY = rgb(0.42, 0.44, 0.47);
 const LIGHT_GRAY = rgb(0.94, 0.95, 0.95);
 const BORDER = rgb(0.85, 0.87, 0.88);

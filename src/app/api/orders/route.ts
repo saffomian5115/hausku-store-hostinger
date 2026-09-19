@@ -126,7 +126,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const VALID_PAYMENT_METHODS = ["stripe", "paypal", "klarna"];
+    // Only Stripe until PayPal/Klarna are really integrated (see CORRECTION-TODO #16)
+    const VALID_PAYMENT_METHODS = ["stripe"];
     if (!paymentMethod || !VALID_PAYMENT_METHODS.includes(paymentMethod)) {
       return NextResponse.json(
         { error: "Ungültige Zahlungsart" },
@@ -238,21 +239,8 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // For Stripe payments, don't decrement stock immediately.
-      // Stock will be decremented by the webhook after payment confirmation.
-      // For other payment methods, decrement stock immediately.
-      if (paymentMethod !== "stripe") {
-        for (const item of items) {
-          await tx.productVariant.update({
-            where: { id: item.variantId },
-            data: {
-              stockQty: {
-                decrement: item.qty,
-              },
-            },
-          });
-        }
-      }
+      // Stock is NOT decremented here — the Stripe webhook decrements it
+      // after payment confirmation, so unpaid orders never consume stock.
 
       return newOrder;
     });

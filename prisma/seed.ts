@@ -20,6 +20,14 @@ async function main() {
 
   console.log("✅ Categories created");
 
+  // ─── GPSR manufacturer data (Regulation (EU) 2023/988) ──
+  // Registered economic operator from the client's Impressum.
+  const GPSR = {
+    manufacturer: "NI Intellect UG (haftungsbeschränkt)",
+    manufacturerAddress: "Roggenring 26, 23619 Hamberge, Schleswig-Holstein, Deutschland",
+    manufacturerEmail: "saleshub@niintellect.de",
+  };
+
   // ─── Products (Real HAUSKU Products) ────────────────────
   const products = [
     // ── Laptop Cushions ──
@@ -32,7 +40,10 @@ async function main() {
       imageUrl: "/images/products/laptopkissen-grau.jpg",
       categoryId: haushalt.id,
       featured: true,
-      manufacturer: "HAUSKU",
+      ...GPSR,
+      productType: "Laptopkissen / Lapdesk",
+      safetyWarnings:
+        "Nicht als Sitzmöbel oder Tritthilfe verwenden.\nVon Feuer und offenen Flammen fernhalten.\nNicht im nassen Zustand verwenden (Elektrogeräte auf der Auflage).",
       variants: [
         { sku: "HSK-LK-GRY-001", color: "Grau", colorHex: "#808080", stockQty: 20, size: null },
       ],
@@ -46,7 +57,10 @@ async function main() {
       imageUrl: "/images/products/laptopkissen-schwarz.jpg",
       categoryId: haushalt.id,
       featured: true,
-      manufacturer: "HAUSKU",
+      ...GPSR,
+      productType: "Laptopkissen / Lapdesk",
+      safetyWarnings:
+        "Nicht als Sitzmöbel oder Tritthilfe verwenden.\nVon Feuer und offenen Flammen fernhalten.\nNicht im nassen Zustand verwenden (Elektrogeräte auf der Auflage).",
       variants: [
         { sku: "HSK-LK-BLK-001", color: "Schwarz", colorHex: "#1a1a1a", stockQty: 25, size: null },
       ],
@@ -62,7 +76,10 @@ async function main() {
       imageUrl: "/images/products/brotdose-850ml.jpg",
       categoryId: kueche.id,
       featured: true,
-      manufacturer: "HAUSKU",
+      ...GPSR,
+      productType: "Edelstahl-Brotdose",
+      safetyWarnings:
+        "Nicht für Mikrowelle oder Backofen geeignet (Edelstahl).\nHeiße Speisen vorsichtig einfüllen — Verbrennungsgefahr.\nDichtung vor dem Gebrauch auf Beschädigung prüfen.",
       variants: [
         { sku: "HSK-LB-850-SLV", color: "Silber", colorHex: "#C0C0C0", stockQty: 40, size: "850 ml" },
       ],
@@ -76,7 +93,10 @@ async function main() {
       imageUrl: "/images/products/brotdose-1200ml.jpg",
       categoryId: kueche.id,
       featured: false,
-      manufacturer: "HAUSKU",
+      ...GPSR,
+      productType: "Edelstahl-Brotdose",
+      safetyWarnings:
+        "Nicht für Mikrowelle oder Backofen geeignet (Edelstahl).\nHeiße Speisen vorsichtig einfüllen — Verbrennungsgefahr.\nDichtung vor dem Gebrauch auf Beschädigung prüfen.",
       variants: [
         { sku: "HSK-LB-1200-SLV", color: "Silber", colorHex: "#C0C0C0", stockQty: 35, size: "1200 ml" },
       ],
@@ -90,7 +110,10 @@ async function main() {
       imageUrl: "/images/products/brotdose-1400ml.jpg",
       categoryId: kueche.id,
       featured: true,
-      manufacturer: "HAUSKU",
+      ...GPSR,
+      productType: "Edelstahl-Brotdose",
+      safetyWarnings:
+        "Nicht für Mikrowelle oder Backofen geeignet (Edelstahl).\nHeiße Speisen vorsichtig einfüllen — Verbrennungsgefahr.\nDichtung vor dem Gebrauch auf Beschädigung prüfen.\nDip-Behälter nicht mit kohlensäurehaltigen Getränken befüllen (Überdruck).",
       variants: [
         { sku: "HSK-LB-1400-SLV", color: "Silber", colorHex: "#C0C0C0", stockQty: 30, size: "1400 ml" },
       ],
@@ -106,7 +129,10 @@ async function main() {
       imageUrl: "/images/products/couchbar-snackbox.jpg",
       categoryId: haushalt.id,
       featured: true,
-      manufacturer: "HAUSKU",
+      ...GPSR,
+      productType: "Snack-Organizer / Couchtisch-Ablage",
+      safetyWarnings:
+        "Nicht für heiße Töpfe oder Kochgeschirr vom Herd verwenden.\nMax. 2 kg Belastung pro Schale.\nVon Feuer und heißen Oberflächen fernhalten (Bambus).",
       variants: [
         { sku: "HSK-CB-NAT-001", color: "Natur/Schwarz", colorHex: "#d4a574", stockQty: 15, size: null },
       ],
@@ -125,6 +151,10 @@ async function main() {
         categoryId: productData.categoryId,
         featured: productData.featured,
         manufacturer: productData.manufacturer,
+        manufacturerAddress: productData.manufacturerAddress,
+        manufacturerEmail: productData.manufacturerEmail,
+        productType: productData.productType,
+        safetyWarnings: productData.safetyWarnings,
       },
       create: {
         ...productData,

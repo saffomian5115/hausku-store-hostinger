@@ -4,11 +4,15 @@ import {
   createCreditNoteForOrder,
   OrderNotFoundError,
 } from "@/lib/invoices";
+import { requireAdmin } from "@/lib/adminAuth";
 
 // POST /api/admin/invoices — generate an invoice or credit note for an order
 // body: { orderId: number, type?: "invoice" | "credit_note", reason?: string }
 export async function POST(request: NextRequest) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const body = await request.json();
     const orderId = parseInt(body?.orderId, 10);
     const type = body?.type === "credit_note" ? "credit_note" : "invoice";

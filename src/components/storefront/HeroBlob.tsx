@@ -45,7 +45,7 @@ export default function HeroBlob() {
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute w-[440px] h-[440px] sm:w-[520px] sm:h-[520px] animate-blob-morph bg-gradient-to-br from-lime-300 via-lime-400 to-emerald-500"
+        className="absolute w-[440px] h-[440px] sm:w-[520px] sm:h-[520px] animate-blob-morph bg-gradient-to-br from-[#DDEBD9] via-[#79A97F] to-[#2F6B4F]"
         style={{
           filter: "blur(0.5px)",
         }}

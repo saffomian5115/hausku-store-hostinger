@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
 // GET single product by ID
 export async function GET(
@@ -7,6 +8,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const productId = parseInt(id);
 
@@ -48,6 +52,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const productId = parseInt(id);
 
@@ -68,6 +75,9 @@ export async function PUT(
       active,
       featured,
       manufacturer,
+      manufacturerAddress,
+      manufacturerEmail,
+      productType,
       safetyWarnings,
       variants,
     } = body;
@@ -122,6 +132,11 @@ export async function PUT(
         active: active !== undefined ? active : existing.active,
         featured: featured !== undefined ? featured : existing.featured,
         manufacturer: manufacturer !== undefined ? manufacturer : existing.manufacturer,
+        manufacturerAddress:
+          manufacturerAddress !== undefined ? manufacturerAddress : existing.manufacturerAddress,
+        manufacturerEmail:
+          manufacturerEmail !== undefined ? manufacturerEmail : existing.manufacturerEmail,
+        productType: productType !== undefined ? productType : existing.productType,
         safetyWarnings: safetyWarnings !== undefined ? safetyWarnings : existing.safetyWarnings,
       },
       include: {
@@ -224,6 +239,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const productId = parseInt(id);
 

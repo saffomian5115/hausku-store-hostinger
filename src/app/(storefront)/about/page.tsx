@@ -10,7 +10,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ═══ HERO SECTION ═══ */}
-      <section className="relative bg-gradient-to-br from-lime-500 via-green-500 to-emerald-600 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#79A97F] via-[#2F6B4F] to-[#25543E] text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-80 h-80 bg-white rounded-full blur-[120px]" />
           <div className="absolute bottom-10 right-20 w-64 h-64 bg-white rounded-full blur-[100px]" />
@@ -157,7 +157,7 @@ export default function AboutPage() {
       <AnimatedSection animation="scaleIn">
         <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-lime-400 via-lime-500 to-green-500 text-gray-900">
+            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#79A97F] via-[#2F6B4F] to-[#25543E] text-white">
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -166,21 +166,21 @@ export default function AboutPage() {
                 <div className="text-center md:text-left">
                   <span className="inline-block px-3 py-1 bg-white/40 rounded-full text-sm font-medium mb-4">🛒 {t("about.amazonLink")}</span>
                   <h3 className="text-2xl md:text-3xl font-bold mb-2">{t("about.amazonLink")}</h3>
-                  <p className="text-gray-700 max-w-lg">{t("about.amazonLinkDesc")}</p>
+                  <p className="text-white/85 max-w-lg">{t("about.amazonLinkDesc")}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
                     href="https://www.amazon.de/s?me=A1H38T7KVDATDQ"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center bg-white text-lime-600 font-bold px-8 py-3.5 rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+                    className="inline-flex items-center bg-white/10 text-white font-bold px-8 py-3.5 rounded-lg hover:bg-white/20 transition-colors shadow-lg ring-1 ring-white/40"
                   >
                     🛒 Amazon.de
                     <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                   </a>
                   <Link
                     href="/catalog"
-                    className="inline-flex items-center bg-lime-600 text-white font-bold px-8 py-3.5 rounded-lg hover:bg-lime-700 transition-colors shadow-lg"
+                    className="inline-flex items-center bg-white text-[#2F6B4F] font-bold px-8 py-3.5 rounded-lg hover:bg-gray-100 transition-colors shadow-lg ring-1 ring-white/60"
                   >
                     {t("about.cta")}
                     <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>

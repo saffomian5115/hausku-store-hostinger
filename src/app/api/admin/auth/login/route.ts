@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createAdminToken, setAdminCookie } from "@/lib/adminAuth";
+import { rateLimit } from "@/lib/rateLimit";
 
+// Server-side only — never exposed to the client bundle.
+// TODO(client): rotate these via env before production (see docs/HANDOVER.md).
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@hausku.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "hausku-admin-2024";
 
 export async function POST(request: NextRequest) {
   try {
+    // Brute-force protection: max 5 attempts / 15 min per IP
+    const limited = rateLimit(request, { limit: 5, windowMs: 15 * 60 * 1000 });
+    if (limited) return limited;
+
     const body = await request.json();
-    const { email, password } = body;
+    const email = typeof body?.email === "string" ? body.email.trim() : "";
+    const password = typeof body?.password === "string" ? body.password : "";
 
     if (!email || !password) {
       return NextResponse.json(
@@ -15,7 +24,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify credentials
+    // Verify credentials — generic error so attackers learn nothing
     if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
       return NextResponse.json(
         { error: "Ungültige Anmeldedaten" },
@@ -23,27 +32,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session token
-    const sessionData = {
-      role: "admin",
-      email,
-      expires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-    };
-    const token = Buffer.from(JSON.stringify(sessionData)).toString("base64");
+    // Create HMAC-signed session token (see src/lib/adminAuth.ts)
+    const token = createAdminToken(email);
 
-    // Set session cookie
     const response = NextResponse.json(
       { message: "Erfolgreich angemeldet" },
       { status: 200 }
     );
-
-    response.cookies.set("admin-session", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60, // 24 hours
-      path: "/",
-    });
+    setAdminCookie(response, token);
 
     return response;
   } catch (error) {

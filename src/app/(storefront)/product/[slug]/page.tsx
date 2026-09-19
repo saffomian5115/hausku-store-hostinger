@@ -315,23 +315,54 @@ export default async function ProductDetailPage({
       )}
 
       {/* GPSR Info */}
-      {(product.manufacturer || product.safetyWarnings) && (
+      {(product.manufacturer ||
+        product.manufacturerAddress ||
+        product.manufacturerEmail ||
+        product.productType ||
+        product.safetyWarnings) && (
         <div className="mt-8 border rounded-2xl p-6 bg-gray-50">
           <h2 className="text-sm font-bold text-gray-900 mb-3">
             {t("product.gpsrTitle")}
+            {product.productType && (
+              <span className="font-normal text-gray-500"> · {product.productType}</span>
+            )}
           </h2>
-          {product.manufacturer && (
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">{t("product.manufacturer")}</span>{" "}
-              {product.manufacturer}
-            </p>
-          )}
-          {product.safetyWarnings && (
-            <p className="text-sm text-gray-600 mt-1">
-              <span className="font-medium">{t("product.safetyWarnings")}</span>{" "}
-              {product.safetyWarnings}
-            </p>
-          )}
+          <div className="space-y-1 text-sm text-gray-600">
+            {product.manufacturer && (
+              <p>
+                <span className="font-medium">{t("product.manufacturer")}</span>{" "}
+                {product.manufacturer}
+              </p>
+            )}
+            {product.manufacturerAddress && (
+              <p>
+                <span className="font-medium">{t("product.manufacturerAddress")}</span>{" "}
+                {product.manufacturerAddress}
+              </p>
+            )}
+            {product.manufacturerEmail && (
+              <p>
+                <span className="font-medium">{t("product.manufacturerEmail")}</span>{" "}
+                <a href={`mailto:${product.manufacturerEmail}`} className="hover:text-lime-600">
+                  {product.manufacturerEmail}
+                </a>
+              </p>
+            )}
+            {product.safetyWarnings && (
+              <div className="mt-3">
+                <span className="font-medium">{t("product.safetyWarnings")}</span>
+                <ul className="list-disc list-inside mt-1 space-y-0.5">
+                  {product.safetyWarnings
+                    .split("\n")
+                    .map((w) => w.trim())
+                    .filter(Boolean)
+                    .map((w, i) => (
+                      <li key={i}>{w}</li>
+                    ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

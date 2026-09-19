@@ -1,27 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
-function isAdmin(request: NextRequest): boolean {
-  const session = request.cookies.get("admin-session");
-  if (!session?.value) return false;
-  try {
-    const sessionData = JSON.parse(
-      Buffer.from(session.value, "base64").toString()
-    );
-    return sessionData.expires > Date.now();
-  } catch {
-    return false;
-  }
-}
-
-function unauthorized() {
-  return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 });
-}
 
 // GET /api/admin/reviews — list all reviews (pending first)
 export async function GET(request: NextRequest) {
   try {
-    if (!isAdmin(request)) return unauthorized();
+    const denied = requireAdmin(request);
+    if (denied) return denied;
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status"); // pending | approved | rejected
@@ -51,7 +37,8 @@ export async function GET(request: NextRequest) {
 // PATCH /api/admin/reviews — { id, action: "approve" | "reject" | "reset" }
 export async function PATCH(request: NextRequest) {
   try {
-    if (!isAdmin(request)) return unauthorized();
+    const denied = requireAdmin(request);
+    if (denied) return denied;
 
     const body = await request.json();
     const id = parseInt(body?.id, 10);
@@ -82,7 +69,8 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/admin/reviews?id=...
 export async function DELETE(request: NextRequest) {
   try {
-    if (!isAdmin(request)) return unauthorized();
+    const denied = requireAdmin(request);
+    if (denied) return denied;
 
     const { searchParams } = new URL(request.url);
     const id = parseInt(searchParams.get("id") || "", 10);

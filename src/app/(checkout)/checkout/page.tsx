@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartContext";
 import { formatPrice } from "@/lib/format";
 import { useStoreSettings } from "@/lib/useStoreSettings";
@@ -10,7 +9,6 @@ import { useStoreSettings } from "@/lib/useStoreSettings";
 type FormErrors = Record<string, string>;
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { cart, total, itemCount, clearCart } = useCart();
   const { vatRate, freeShippingThreshold, shippingFlatRate } =
     useStoreSettings();
@@ -151,11 +149,13 @@ export default function CheckoutPage() {
         return;
       }
 
-      // For other payment methods (PayPal, Klarna) — redirect to success for now
-      clearCart();
-      router.push(
-        `/checkout/success?order=${orderData.orderNumber}&total=${orderData.total}`
-      );
+      // PayPal/Klarna intentionally not offered until real integrations exist —
+      // orders must never be confirmed without a captured payment.
+      setErrors({
+        submit:
+          "Diese Zahlungsart ist derzeit nicht verfügbar. Bitte Kreditkarte wählen.",
+      });
+      setLoading(false);
     } catch {
       setErrors({ submit: "Netzwerkfehler. Bitte versuchen Sie es erneut." });
       setLoading(false);
@@ -370,12 +370,6 @@ export default function CheckoutPage() {
                     id: "stripe",
                     label: "Kreditkarte / Apple Pay / Google Pay",
                     icon: "💳",
-                  },
-                  { id: "paypal", label: "PayPal", icon: "🅿️" },
-                  {
-                    id: "klarna",
-                    label: "Klarna — Kauf auf Rechnung",
-                    icon: "🏦",
                   },
                 ].map((method) => (
                   <label

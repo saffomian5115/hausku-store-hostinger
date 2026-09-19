@@ -20,6 +20,9 @@ type ProductData = {
   active: boolean;
   featured: boolean;
   manufacturer: string;
+  manufacturerAddress: string;
+  manufacturerEmail: string;
+  productType: string;
   safetyWarnings: string;
   variants: {
     id?: number;
@@ -59,6 +62,9 @@ export default function EditProductPage() {
             active: p.active,
             featured: p.featured,
             manufacturer: p.manufacturer || "",
+            manufacturerAddress: p.manufacturerAddress || "",
+            manufacturerEmail: p.manufacturerEmail || "",
+            productType: p.productType || "",
             safetyWarnings: p.safetyWarnings || "",
             variants: p.variants.map(
               (v: {

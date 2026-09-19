@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createCustomerToken, setSessionCookie } from "@/lib/customerSession";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db/prisma";
 import { rateLimit } from "@/lib/rateLimit";
@@ -41,14 +42,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session token
-    const sessionData = {
+    // Create session token (HMAC-signed — see src/lib/customerSession.ts)
+    const token = createCustomerToken({
       id: customer.id,
       email: customer.email,
       name: customer.name,
-      expires: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
-    };
-    const token = Buffer.from(JSON.stringify(sessionData)).toString("base64");
+    });
 
     // Set session cookie
     const response = NextResponse.json(
@@ -61,13 +60,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-    response.cookies.set("session", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: "/",
-    });
+    setSessionCookie(response, token);
 
     return response;
   } catch (error) {

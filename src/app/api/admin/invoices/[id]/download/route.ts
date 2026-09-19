@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
 import { prisma } from "@/lib/db/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
 // GET /api/admin/invoices/[id]/download — download the invoice PDF
 export async function GET(
@@ -9,6 +10,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const invoice = await prisma.invoice.findUnique({
       where: { id: parseInt(id, 10) },

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
 export async function GET(request: NextRequest) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("q");
 

@@ -31,6 +31,9 @@ type ProductFormProps = {
     active: boolean;
     featured: boolean;
     manufacturer: string;
+    manufacturerAddress: string;
+    manufacturerEmail: string;
+    productType: string;
     safetyWarnings: string;
     variants: Variant[];
   };
@@ -55,6 +58,9 @@ export default function ProductForm({
     active: initialData?.active ?? true,
     featured: initialData?.featured ?? false,
     manufacturer: initialData?.manufacturer || "",
+    manufacturerAddress: initialData?.manufacturerAddress || "",
+    manufacturerEmail: initialData?.manufacturerEmail || "",
+    productType: initialData?.productType || "",
     safetyWarnings: initialData?.safetyWarnings || "",
   });
 
@@ -372,24 +378,61 @@ export default function ProductForm({
 
       {/* GPSR */}
       <div className="bg-white rounded-lg border p-6">
-        <h2 className="text-lg font-bold mb-4">Sicherheitsinformationen (GPSR)</h2>
+        <h2 className="text-lg font-bold mb-1">Sicherheitsinformationen (GPSR)</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Wirtschaftsteilnehmer und Sicherheitshinweise gemäß Verordnung (EU) 2023/988.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Hersteller</label>
+            <label className="block text-sm font-medium mb-1">Hersteller / Wirtschaftsteilnehmer</label>
             <input
               type="text"
               value={form.manufacturer}
               onChange={(e) => setForm({ ...form, manufacturer: e.target.value })}
               className="w-full border rounded-lg px-4 py-3"
+              placeholder="NI Intellect UG (haftungsbeschränkt)"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Warnhinweise</label>
+            <label className="block text-sm font-medium mb-1">Produkttyp</label>
+            <input
+              type="text"
+              value={form.productType}
+              onChange={(e) => setForm({ ...form, productType: e.target.value })}
+              className="w-full border rounded-lg px-4 py-3"
+              placeholder="z. B. Laptopkissen, Edelstahl-Brotdose"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Hersteller-Adresse</label>
+            <input
+              type="text"
+              value={form.manufacturerAddress}
+              onChange={(e) => setForm({ ...form, manufacturerAddress: e.target.value })}
+              className="w-full border rounded-lg px-4 py-3"
+              placeholder="Roggenring 26, 23619 Hamberge, Deutschland"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Hersteller-E-Mail</label>
+            <input
+              type="email"
+              value={form.manufacturerEmail}
+              onChange={(e) => setForm({ ...form, manufacturerEmail: e.target.value })}
+              className="w-full border rounded-lg px-4 py-3"
+              placeholder="saleshub@niintellect.de"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium mb-1">
+              Warnhinweise <span className="font-normal text-gray-500">(ein Hinweis pro Zeile)</span>
+            </label>
             <textarea
               value={form.safetyWarnings}
               onChange={(e) => setForm({ ...form, safetyWarnings: e.target.value })}
               className="w-full border rounded-lg px-4 py-3"
-              rows={2}
+              rows={4}
+              placeholder={"Von Feuer und offenen Flammen fernhalten.\nNicht als Sitzmöbel verwenden."}
             />
           </div>
         </div>

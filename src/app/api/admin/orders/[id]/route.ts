@@ -6,6 +6,7 @@ import {
   type OrderStatusEmailData,
 } from "@/lib/email";
 import { createCreditNoteForOrder } from "@/lib/invoices";
+import { requireAdmin } from "@/lib/adminAuth";
 
 const VALID_STATUSES = [
   "PENDING",
@@ -24,6 +25,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const orderId = parseInt(id);
 
@@ -66,6 +70,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const orderId = parseInt(id);
 

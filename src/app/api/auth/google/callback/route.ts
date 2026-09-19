@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createCustomerToken, setSessionCookie } from "@/lib/customerSession";
 import { prisma } from "@/lib/db/prisma";
 
 /**
@@ -126,23 +127,15 @@ export async function GET(request: NextRequest) {
     console.log(`Google OAuth: customer ${email} (id ${customer.id}) logged in`);
 
     // 4. Create the same session token used by email login/register
-    const sessionData = {
+    const token = createCustomerToken({
       id: customer.id,
       email: customer.email,
       name: customer.name,
-      expires: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
-    };
-    const token = Buffer.from(JSON.stringify(sessionData)).toString("base64");
+    });
 
     // 5. Set session cookie + clear the OAuth state cookie, then redirect
     const response = NextResponse.redirect(new URL("/account", request.url));
-    response.cookies.set("session", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: "/",
-    });
+    setSessionCookie(response, token);
     response.cookies.set("oauth_state", "", {
       httpOnly: true,
       path: "/",

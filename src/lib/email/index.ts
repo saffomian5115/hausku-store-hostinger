@@ -97,7 +97,7 @@ function footerCompanyBlock(settings: StoreSettings): string {
                 <div style="font-size:12px;color:#6b7280;line-height:1.6;">
                   ${line}<br />
                   Geschäftsführung: ${escapeHtml(settings.companyManager)}<br />
-                  <a href="mailto:${escapeHtml(settings.companyEmail)}" style="color:#16a34a;text-decoration:none;">${escapeHtml(settings.companyEmail)}</a>
+                  <a href="mailto:${escapeHtml(settings.companyEmail)}" style="color:#2F6B4F;text-decoration:none;">${escapeHtml(settings.companyEmail)}</a>
                 </div>`;
 }
 
@@ -125,7 +125,7 @@ async function emailLayout(
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#32CD32,#22c55e);padding:28px 32px;text-align:center;">
+            <td style="background:linear-gradient(135deg,#79A97F,#2F6B4F);padding:28px 32px;text-align:center;">
               <div style="font-size:28px;font-weight:bold;color:#ffffff;letter-spacing:2px;">HAUSKU</div>
               <div style="font-size:13px;color:#eaffea;margin-top:4px;">Home &amp; Kitchen</div>
             </td>
@@ -186,7 +186,7 @@ export async function sendContactNotification(
       </tr>
       <tr>
         <td style="padding:10px 0;font-size:13px;color:#6b7280;">E-Mail</td>
-        <td style="padding:10px 0;font-size:14px;color:#111827;"><a href="mailto:${escapeHtml(input.email)}" style="color:#16a34a;">${escapeHtml(input.email)}</a></td>
+        <td style="padding:10px 0;font-size:14px;color:#111827;"><a href="mailto:${escapeHtml(input.email)}" style="color:#2F6B4F;">${escapeHtml(input.email)}</a></td>
       </tr>
       <tr>
         <td style="padding:10px 0;font-size:13px;color:#6b7280;">Betreff</td>
@@ -339,7 +339,7 @@ export async function sendOrderConfirmationEmail(
         </tr>
         <tr>
           <td style="padding:12px 8px;font-size:15px;font-weight:bold;color:#111827;">Gesamt</td>
-          <td align="right" style="padding:12px 8px;font-size:15px;font-weight:bold;color:#16a34a;">${formatPrice(data.total)}</td>
+          <td align="right" style="padding:12px 8px;font-size:15px;font-weight:bold;color:#2F6B4F;">${formatPrice(data.total)}</td>
         </tr>
       </tbody>
     </table>
@@ -351,7 +351,7 @@ export async function sendOrderConfirmationEmail(
 
     <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.7;">
       Sie erhalten eine separate E-Mail, sobald Ihre Bestellung versendet wurde.
-      Bei Fragen helfen wir Ihnen gerne unter <a href="mailto:info@hausku.com" style="color:#16a34a;">info@hausku.com</a> weiter.
+      Bei Fragen helfen wir Ihnen gerne unter <a href="mailto:info@hausku.com" style="color:#2F6B4F;">info@hausku.com</a> weiter.
     </p>
     `
   );
@@ -463,7 +463,7 @@ export async function sendOrderStatusEmail(
     data.status === "SHIPPED" && data.trackingUrl
       ? `<a href="${escapeHtml(
           data.trackingUrl
-        )}" style="display:inline-block;margin-top:16px;background-color:#32CD32;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 28px;border-radius:999px;">Sendung verfolgen</a>`
+        )}" style="display:inline-block;margin-top:16px;background-color:#2F6B4F;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 28px;border-radius:999px;">Sendung verfolgen</a>`
       : "";
 
   const html = await emailLayout(
@@ -484,7 +484,7 @@ export async function sendOrderStatusEmail(
     ${trackingButton}
     <p style="margin:24px 0 0;font-size:13px;color:#6b7280;line-height:1.7;">
       Bei Fragen antworten Sie einfach auf diese E-Mail oder schreiben Sie uns an
-      <a href="mailto:${SMTP_FROM}" style="color:#16a34a;">${SMTP_FROM}</a>.
+      <a href="mailto:${SMTP_FROM}" style="color:#2F6B4F;">${SMTP_FROM}</a>.
     </p>
     `
   );
@@ -593,7 +593,7 @@ export async function sendReturnStatusEmail(
     ${noteHtml}
     <p style="margin:24px 0 0;font-size:13px;color:#6b7280;line-height:1.7;">
       Bei Fragen antworten Sie einfach auf diese E-Mail oder schreiben Sie uns an
-      <a href="mailto:${SMTP_FROM}" style="color:#16a34a;">${SMTP_FROM}</a>.
+      <a href="mailto:${SMTP_FROM}" style="color:#2F6B4F;">${SMTP_FROM}</a>.
     </p>
     `
   );
@@ -649,7 +649,7 @@ export async function sendNewOrderAdminAlert(
       </tr>
       <tr>
         <td style="padding:8px 0;font-size:13px;color:#6b7280;">Betrag</td>
-        <td style="padding:8px 0;font-size:15px;color:#16a34a;font-weight:bold;">${formatPrice(
+        <td style="padding:8px 0;font-size:15px;color:#2F6B4F;font-weight:bold;">${formatPrice(
           data.total
         )}</td>
       </tr>

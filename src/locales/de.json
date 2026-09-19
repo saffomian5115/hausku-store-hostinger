@@ -182,6 +182,8 @@
     "shippingHint": "Kostenloser Versand ab 30 € · Versand: 4,99 €",
     "gpsrTitle": "Sicherheitsinformationen (GPSR)",
     "manufacturer": "Hersteller:",
+    "manufacturerAddress": "Adresse:",
+    "manufacturerEmail": "Kontakt:",
     "safetyWarnings": "Warnhinweise:",
     "zoomIn": "Bild vergrößern",
     "hauptbild": "Hauptbild",

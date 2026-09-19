@@ -43,7 +43,7 @@ export default function ContactPage() {
   return (
     <>
       {/* ═══ HERO SECTION ═══ */}
-      <section className="relative bg-gradient-to-br from-lime-500 via-green-500 to-emerald-600 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#79A97F] via-[#2F6B4F] to-[#25543E] text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-80 h-80 bg-white rounded-full blur-[120px]" />
           <div className="absolute bottom-10 right-20 w-64 h-64 bg-white rounded-full blur-[100px]" />

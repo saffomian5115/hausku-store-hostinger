@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
 // GET all products (admin view - includes inactive)
 export async function GET(request: NextRequest) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const search = searchParams.get("q");
@@ -42,6 +46,9 @@ export async function GET(request: NextRequest) {
 // POST create new product
 export async function POST(request: NextRequest) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const body = await request.json();
     const {
       name,
@@ -52,6 +59,9 @@ export async function POST(request: NextRequest) {
       active = true,
       featured = false,
       manufacturer,
+      manufacturerAddress,
+      manufacturerEmail,
+      productType,
       safetyWarnings,
       variants = [],
     } = body;
@@ -94,6 +104,9 @@ export async function POST(request: NextRequest) {
         active,
         featured,
         manufacturer: manufacturer || null,
+        manufacturerAddress: manufacturerAddress || null,
+        manufacturerEmail: manufacturerEmail || null,
+        productType: productType || null,
         safetyWarnings: safetyWarnings || null,
         variants: {
           create: variants.map((v: Record<string, unknown>) => ({

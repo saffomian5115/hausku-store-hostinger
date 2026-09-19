@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 import { sendReturnStatusEmail } from "@/lib/email";
 import { createCreditNoteForOrder } from "@/lib/invoices";
 import { RETURN_STATUSES, type ReturnStatus } from "@/lib/returns";
+import { requireAdmin } from "@/lib/adminAuth";
 
 const VALID_TRANSITIONS: Record<string, string[]> = {
   PENDING: ["APPROVED", "REJECTED"],
@@ -18,6 +19,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const returnId = parseInt(id, 10);
 
@@ -64,6 +68,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = requireAdmin(request);
+    if (denied) return denied;
+
     const { id } = await params;
     const returnId = parseInt(id, 10);
 
