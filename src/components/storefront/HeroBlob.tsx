@@ -91,7 +91,7 @@ export default function HeroBlob() {
             <Recycle className="w-3.5 h-3.5 text-lime-600" />
           </span>
           <span className="text-[11px] font-semibold text-gray-800 whitespace-nowrap">
-            100% recycelbar
+            Nachhaltiges Design
           </span>
         </div>
       </motion.div>
@@ -109,7 +109,7 @@ export default function HeroBlob() {
             <ShieldCheck className="w-3.5 h-3.5 text-lime-300" />
           </span>
           <span className="text-[11px] font-semibold text-lime-100 whitespace-nowrap">
-            2 Jahre Garantie
+            Auslaufsicher
           </span>
         </div>
       </motion.div>

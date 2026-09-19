@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     if (limited) return limited;
 
     const body = await request.json();
-    const { name, email, subject, message } = body;
+    const { name, email, subject, message, topic, orderNumber } = body;
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
@@ -28,7 +28,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Send notification to the store inbox
-    const sent = await sendContactNotification({ name, email, subject, message });
+    const sent = await sendContactNotification({
+      name,
+      email,
+      subject,
+      message,
+      topic: typeof topic === "string" ? topic : undefined,
+      orderNumber: typeof orderNumber === "string" ? orderNumber.trim() || undefined : undefined,
+    });
 
     if (!sent) {
       return NextResponse.json(

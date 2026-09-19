@@ -11,6 +11,7 @@
 
 import nodemailer from "nodemailer";
 import { formatPrice } from "@/lib/format";
+import { getStoreSettings, DEFAULTS, type StoreSettings } from "@/lib/settings";
 
 const SMTP_HOST = process.env.SMTP_HOST || "smtp.hostinger.com";
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || "465", 10);
@@ -79,7 +80,37 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
 
 // ─── HTML layout ─────────────────────────────────────────
 
-function emailLayout(title: string, contentHtml: string): string {
+/**
+ * Company block for the email footer (legal requirement for commercial
+ * emails: company name, legal form, address, VAT ID, Geschäftsführung).
+ * Reads live store settings; falls back to the built-in real company defaults.
+ */
+function footerCompanyBlock(settings: StoreSettings): string {
+  const line = [
+    escapeHtml(settings.companyName),
+    escapeHtml(settings.companyAddress),
+    settings.vatId ? `USt-IdNr.: ${escapeHtml(settings.vatId)}` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  return `
+                <div style="font-size:12px;color:#6b7280;line-height:1.6;">
+                  ${line}<br />
+                  Geschäftsführung: ${escapeHtml(settings.companyManager)}<br />
+                  <a href="mailto:${escapeHtml(settings.companyEmail)}" style="color:#16a34a;text-decoration:none;">${escapeHtml(settings.companyEmail)}</a>
+                </div>`;
+}
+
+async function emailLayout(
+  title: string,
+  contentHtml: string
+): Promise<string> {
+  let settings: StoreSettings;
+  try {
+    settings = await getStoreSettings();
+  } catch {
+    settings = DEFAULTS;
+  }
   return `<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -108,10 +139,7 @@ function emailLayout(title: string, contentHtml: string): string {
           <!-- Footer -->
           <tr>
             <td style="background-color:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #e5e7eb;">
-              <div style="font-size:12px;color:#6b7280;line-height:1.6;">
-                NI Intellect UG · hausku<br />
-                <a href="mailto:info@hausku.com" style="color:#16a34a;text-decoration:none;">info@hausku.com</a>
-              </div>
+              ${footerCompanyBlock(settings)}
             </td>
           </tr>
         </table>
@@ -138,6 +166,8 @@ export interface ContactNotificationInput {
   email: string;
   subject: string;
   message: string;
+  topic?: string;
+  orderNumber?: string;
 }
 
 /** Notify the store about a new contact form submission. */
@@ -145,7 +175,7 @@ export async function sendContactNotification(
   input: ContactNotificationInput
 ): Promise<boolean> {
   const subject = `Kontaktformular: ${input.subject || "Neue Nachricht"}`;
-  const html = emailLayout(
+  const html = await emailLayout(
     "Neue Kontaktanfrage",
     `
     <h2 style="margin:0 0 20px;font-size:20px;color:#111827;">📬 Neue Kontaktanfrage</h2>
@@ -161,7 +191,15 @@ export async function sendContactNotification(
       <tr>
         <td style="padding:10px 0;font-size:13px;color:#6b7280;">Betreff</td>
         <td style="padding:10px 0;font-size:14px;color:#111827;">${escapeHtml(input.subject)}</td>
-      </tr>
+      </tr>${input.topic ? `
+      <tr>
+        <td style="padding:10px 0;font-size:13px;color:#6b7280;">Anliegen</td>
+        <td style="padding:10px 0;font-size:14px;color:#111827;">${escapeHtml(input.topic)}</td>
+      </tr>` : ""}${input.orderNumber ? `
+      <tr>
+        <td style="padding:10px 0;font-size:13px;color:#6b7280;">Bestell-Nr.</td>
+        <td style="padding:10px 0;font-size:14px;color:#111827;">${escapeHtml(input.orderNumber)}</td>
+      </tr>` : ""}
     </table>
     <div style="background-color:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:16px;font-size:14px;line-height:1.7;color:#374151;white-space:pre-wrap;">${escapeHtml(input.message)}</div>
     <p style="margin:24px 0 0;font-size:12px;color:#9ca3af;">Diese E-Mail wurde automatisch über das Kontaktformular auf hausku.com gesendet.</p>
@@ -172,7 +210,7 @@ export async function sendContactNotification(
 
 Name: ${input.name}
 E-Mail: ${input.email}
-Betreff: ${input.subject || "Neue Nachricht"}
+Betreff: ${input.subject || "Neue Nachricht"}${input.topic ? `\nAnliegen: ${input.topic}` : ""}${input.orderNumber ? `\nBestell-Nr.: ${input.orderNumber}` : ""}
 
 ${input.message}
 
@@ -266,7 +304,7 @@ export async function sendOrderConfirmationEmail(
 
   const text = `Vielen Dank für Ihre Bestellung! 🎉\n\nHallo ${data.customerName || "und herzlich willkommen"},\nwir haben Ihre Bestellung ${data.orderNumber} erhalten und freuen uns, sie für Sie vorzubereiten.\n\nIhre Bestellung:\n${itemsText}\n\nZwischensumme: ${formatPrice(data.subtotal)}\nVersand: ${shippingLabel}\nMwSt. (${data.vatRate}%): ${formatPrice(data.vatAmount)}\nGesamt: ${formatPrice(data.total)}${addressText ? `\n\nLieferadresse:\n${addressText}` : ""}\n\nSie erhalten eine separate E-Mail, sobald Ihre Bestellung versendet wurde.\nBei Fragen helfen wir Ihnen gerne unter info@hausku.com weiter.`;
 
-  const html = emailLayout(
+  const html = await emailLayout(
     `Bestellbestätigung ${data.orderNumber}`,
     `
     <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Vielen Dank für Ihre Bestellung! 🎉</h2>
@@ -428,7 +466,7 @@ export async function sendOrderStatusEmail(
         )}" style="display:inline-block;margin-top:16px;background-color:#32CD32;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 28px;border-radius:999px;">Sendung verfolgen</a>`
       : "";
 
-  const html = emailLayout(
+  const html = await emailLayout(
     content.subject,
     `
     <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">${content.emoji} ${content.title}</h2>
@@ -534,7 +572,7 @@ export async function sendReturnStatusEmail(
       )}</div>`
     : "";
 
-  const html = emailLayout(
+  const html = await emailLayout(
     subject,
     `
     <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">${content.emoji} ${content.title}</h2>
@@ -588,7 +626,7 @@ export interface NewOrderAdminAlertData {
 export async function sendNewOrderAdminAlert(
   data: NewOrderAdminAlertData
 ): Promise<boolean> {
-  const html = emailLayout(
+  const html = await emailLayout(
     "Neue Bestellung",
     `
     <h2 style="margin:0 0 16px;font-size:20px;color:#111827;">🛎️ Neue Bestellung eingegangen</h2>

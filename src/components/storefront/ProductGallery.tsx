@@ -64,7 +64,7 @@ export default function ProductGallery({
               <button
                 key={index}
                 onClick={() => openPreview(index)}
-                className={`aspect-square bg-gray-100 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 hover:border-gray-900 ${
+                className={`relative aspect-square bg-gray-100 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 hover:border-gray-900 ${
                   index === activeIndex && !previewOpen
                     ? "border-gray-900"
                     : "border-transparent"

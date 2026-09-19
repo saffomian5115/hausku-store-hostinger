@@ -19,6 +19,7 @@ export const SETTING_KEYS = {
   companyEmail: "company_email",
   companyPhone: "company_phone",
   companyAddress: "company_address",
+  companyManager: "company_manager",
 } as const;
 
 export interface StoreSettings {
@@ -33,20 +34,26 @@ export interface StoreSettings {
   companyEmail: string;
   companyPhone: string;
   companyAddress: string;
+  /** Geschäftsführer(in) — printed on invoices (§ 35a EGBGB / Impressum data). */
+  companyManager: string;
 }
 
-const DEFAULTS: StoreSettings = {
+// Real company data (from client-provided Impressum, 2026-09) — used as fallback
+// so invoices/legal docs always carry correct details even before admin saves settings.
+/** Fallback settings when the DB has no rows (also used by the email footer). */
+export const DEFAULTS: StoreSettings = {
   vatRate: 19,
-  vatId: "",
+  vatId: "DE367665227",
   freeShippingThreshold: 30,
   shippingFlatRate: 4.99,
   shopName: "hausku",
   defaultLanguage: "de",
   shopDescription: "",
-  companyName: "NI Intellect UG",
-  companyEmail: "",
-  companyPhone: "",
-  companyAddress: "",
+  companyName: "NI Intellect UG (haftungsbeschränkt)",
+  companyEmail: "saleshub@niintellect.de",
+  companyPhone: "+49 176 45972009",
+  companyAddress: "Roggenring 26, 23619 Hamberge, Deutschland",
+  companyManager: "Nazia Iqbal",
 };
 
 /** Read all store settings from the DB, falling back to defaults. */
@@ -75,6 +82,7 @@ export async function getStoreSettings(): Promise<StoreSettings> {
     companyEmail: map.get(SETTING_KEYS.companyEmail) ?? DEFAULTS.companyEmail,
     companyPhone: map.get(SETTING_KEYS.companyPhone) ?? DEFAULTS.companyPhone,
     companyAddress: map.get(SETTING_KEYS.companyAddress) ?? DEFAULTS.companyAddress,
+    companyManager: map.get(SETTING_KEYS.companyManager) ?? DEFAULTS.companyManager,
   };
 }
 

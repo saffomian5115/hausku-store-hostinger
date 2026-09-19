@@ -27,7 +27,7 @@ Purpose: running log of client info, key decisions, and current status — read 
 - 40% of minimum (€40) requested upfront to officially start work.
 - Monthly maintenance after free 30-day support: €35-50/month (optional, client's choice).
 
-## Status (updated 2026-08-16)
+## Status (updated 2026-09-19)
 
 ### Development progress
 - [x] Proposal drafted, revised, and accepted by client
@@ -44,8 +44,8 @@ Purpose: running log of client info, key decisions, and current status — read 
   - [ ] Klarna integration — not started
   - [x] **VAT + shipping configurable (2026-08-16):** `src/lib/settings` (get/save over Setting table) is the single source of truth. Admin settings page now loads + saves (VAT %, VAT ID, free-shipping threshold, flat rate, shop info). Cart, checkout, and order API all read VAT/shipping from DB — no hardcoded 19%/€30/€4.99 anymore. Public `/api/settings` + admin `/api/admin/settings` (proxy-protected). Tested: save → reflected in public API → restored.
 - [~] **Phase 4 — Legal & Compliance: PARTIAL**
-  - [~] Privacy / Imprint / Terms pages exist as stubs — real legal text + client details pending
-  - [x] Returns/Widerrufsrecht page built + **return request flow functional** (2026-08-16); page legal text (Widerrufsbelehrung / Musterformular / Rücksendeadresse) still placeholder — client final text pending
+  - [x] **Legal pages implemented from client texts (2026-09):** /imprint, /terms (AGB Teil I + Kundeninformationen Teil II), /privacy, /returns built out from the client-provided `legal pages/` folder (Impressum.txt, AGB.txt, Widerrufsrecht.txt) — real Impressum data (NI Intellect UG (haftungsbeschränkt), Roggenring 26 Hamberge, Amtsgericht Lübeck HRB 24694HL, USt-IdNr. DE367665227, Geschäftsführerin Nazia Iqbal), full Widerrufsbelehrung + Muster-Widerrufsformular with PDF download (`/api/legal/withdrawal-form`, de/en), contact page real data. ⚠️ AGB source was eBay-specific — adapted for the web shop, **client sign-off still pending**.
+  - [x] Returns/Widerrufsrecht page built + **return request flow functional** (2026-08-16); page legal text (Widerrufsbelehrung / Musterformular) now implemented from client text — see legal-pages line above
   - [x] GPSR fields built (manufacturer + safetyWarnings in schema, admin product form, product page display)
   - [x] Cookie consent banner built
   - [x] **Invoice + credit note PDFs (2026-08-16):** `src/lib/invoices` implemented with **pdf-lib** (pure JS, no native deps). German invoice layout (HAUSKU header, company info from settings, customer address, item table, VAT breakdown, legal footer); credit notes reference the invoice + reason. Numbers `RE-YYYY-XXXX` / `GN-YYYY-XXXX` (unique-safe retry). Saved to `public/invoices/` (gitignored). Auto-generated: invoice on paid order (best-effort in `processPaidOrder`), credit note when admin sets REFUNDED. Admin order detail page has „Rechnung erstellen“ / „Gutschrift erstellen“ + PDF download buttons. Endpoints: `POST /api/admin/invoices`, `GET /api/admin/invoices/[id]/download`, `GET /api/admin/credit-notes/[id]/download`. WinAnsi sanitizer guards against non-encodable chars. Live-tested: RE-2026-0001 + GN-2026-0001 generated, downloaded, text-verified (umlauts ✓).
@@ -60,7 +60,8 @@ Purpose: running log of client info, key decisions, and current status — read 
 - ✅ **Domain confirmed: hausku.com** — all `hausku.de` references updated to `hausku.com` (seed, locales, contact, imprint, admin default, DEPLOY-README).
 - ✅ **SMTP LIVE (2026-08-16):** `SMTP_USER`/`SMTP_PASS` (info@hausku.com mailbox) added to `.env` — test email verified. All automated emails send from info@hausku.com (order confirmation, contact form, order status, new-order admin alert). `SMTP_ADMIN_ALERT_TO="info@hausku.com"` (admin mailbox not created yet).
 
-## Recent Work (2026-08-15 → 2026-08-16)
+## Recent Work (2026-08-15 → 2026-09-19)
+- ✅ **Legal company block in all emails (2026-09-19):** email footer now carries the full Impressum block — NI Intellect UG (haftungsbeschränkt) · Roggenring 26, 23619 Hamberge · USt-IdNr. DE367665227 · Geschäftsführung: Nazia Iqbal · saleshub@niintellect.de (replaces the old „NI Intellect UG · hausku / info@hausku.com" footer). Implementation: new `footerCompanyBlock()` in `src/lib/email` renders from live store settings (`getStoreSettings()` — same single source of truth as invoice PDFs, so admin settings overrides apply); `emailLayout()` is now async (fallback to `DEFAULTS` on DB error). Covers all 5 email types: order confirmation, order status, return status, contact form, new-order admin alert. Related (same session): real company data wired into settings `DEFAULTS` + seed (incl. new `company_manager` key + admin settings field) and „Geschäftsführung" line on invoice/credit-note PDF sender blocks. Typecheck ✓.
 - ✅ **Emails LIVE + tracking (2026-08-16):** SMTP credentials in `.env` (test verified); order status emails (Shipped/Delivered/Cancelled/Refunded); new-order admin alert (→ info@ for now); tracking number + carrier field in admin order detail, tracking link in shipped emails.
 - ✅ **Admin settings functional (2026-08-16):** VAT + shipping (and shop info) now saved to DB from the admin settings page; cart/checkout/order API read from DB.
 - ✅ **Invoice + credit note PDFs (2026-08-16):** pdf-lib generator in `src/lib/invoices`, admin generate/download UI, auto-trigger on paid order + REFUNDED status. Test order #2 (Müller Schäfer) in DB has sample invoice `RE-2026-0001` + credit note `GN-2026-0001` — test data, can be deleted.
@@ -78,7 +79,7 @@ Purpose: running log of client info, key decisions, and current status — read 
 ## Recommended Next Steps (priority order)
 1. **Get real Stripe keys from client** — `.env` has placeholders (`sk_live_...`, `whsec_...`, `pk_live_...`). Without real keys, Stripe checkout can't be tested end-to-end (QA finding #3).
 2. **Wire PayPal + Klarna** — credentials (`PAYPAL_CLIENT_ID/SECRET`, `KLARNA_USERNAME/PASSWORD`) are ALREADY in `.env`, but checkout still fakes both methods: order is created then redirected straight to `/checkout/success` with NO payment taken. This is the biggest correctness gap. `src/lib/payments/index.ts` has TODO placeholders.
-3. **Finish Phase 4 legal text** — privacy/impressum/terms/returns page content (client final text pending) + fill Rücksendeadresse into returns page.
+3. **Close Phase 4 remnants** — legal page texts are implemented; remaining: client sign-off on the web-adapted AGB + GPSR structured fields (Correction TODO #4).
 4. **Continue Phase 5** — browser E2E (needs Stripe keys) + accessibility pass. Responsiveness + DE/EN done. Results: `docs/qa.md`.
 5. **Phase 6 deploy** to Hostinger (steps in DEPLOY-README.md) — NOT before PayPal/Klarna fake-checkout is fixed.
 6. Optional: create remaining mailboxes (admin@, sales@, support@) — `SMTP_ADMIN_ALERT_TO` can then point admin alerts to admin@hausku.com.

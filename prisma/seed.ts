@@ -281,9 +281,9 @@ async function main() {
         paidAt,
         createdAt,
         shippingName: demo.name,
-        shippingStreet: "Musterstraße 1",
-        shippingCity: "Berlin",
-        shippingPostal: "10115",
+        shippingStreet: "Roggenring 26",
+        shippingCity: "Hamberge",
+        shippingPostal: "23619",
         shippingCountry: "DE",
         items: {
           create: [
@@ -304,13 +304,19 @@ async function main() {
   console.log(`✅ ${demoOrders.length} sample paid orders created`);
 
   // ─── Settings ──────────────────────────────────────────
+  // Real company data from client-provided Impressum (2026-09). Keys must match
+  // SETTING_KEYS in src/lib/settings/index.ts (store_name/store_email were dead keys).
   const settings = [
     { key: "vat_rate", value: "19" },
+    { key: "vat_id", value: "DE367665227" },
     { key: "shipping_flat_rate", value: "4.99" },
     { key: "free_shipping_threshold", value: "30" },
-    { key: "store_name", value: "hausku" },
-    { key: "store_email", value: "info@hausku.com" },
-    { key: "company_name", value: "NI Intellect UG" },
+    { key: "shop_name", value: "hausku" },
+    { key: "company_name", value: "NI Intellect UG (haftungsbeschränkt)" },
+    { key: "company_email", value: "saleshub@niintellect.de" },
+    { key: "company_phone", value: "+49 176 45972009" },
+    { key: "company_address", value: "Roggenring 26, 23619 Hamberge, Deutschland" },
+    { key: "company_manager", value: "Nazia Iqbal" },
     { key: "return_days", value: "60" },
     { key: "warranty_years", value: "2" },
   ];

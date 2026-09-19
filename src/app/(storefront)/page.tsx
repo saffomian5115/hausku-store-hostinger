@@ -33,7 +33,7 @@ export default async function HomePage() {
   const { t, locale } = await getTranslations();
   const de = locale === "de";
 
-  const [bestsellers, snackbox, laptopCushion, lunchBox1400] =
+  const [bestsellers, snackbox, laptopCushion, lunchBox1400, reviewAgg] =
     await Promise.all([
       prisma.product.findMany({
         where: { active: true },
@@ -53,14 +53,23 @@ export default async function HomePage() {
         where: { slug: "brotdose-1400ml" },
         include: { category: true, variants: { where: { active: true } } },
       }),
+      prisma.review.aggregate({
+        where: { approved: true, rejected: false },
+        _avg: { rating: true },
+        _count: true,
+      }),
     ]);
+
+  const avgRating = reviewAgg._avg.rating
+    ? Math.round(reviewAgg._avg.rating * 10) / 10
+    : 0;
+  const reviewCount = reviewAgg._count;
 
   const tickerItems = [
     de ? "Kostenloser Versand ab 30 €" : "Free shipping over €30",
-    de ? "60 Tage Testzeit" : "60-day trial",
-    de ? "2 Jahre Garantie" : "2 year warranty",
-    de ? "Klimaneutraler Versand" : "Carbon-neutral shipping",
-    de ? "100% auslaufsicher" : "100% leak-proof",
+    de ? "30 Tage Testzeit" : "30-day trial",
+    de ? "Auslaufsicher" : "Leak-resistant",
+    de ? "Kostenloser Versand ab 30 €" : "Free shipping over €30",
   ];
 
   return (
@@ -169,7 +178,7 @@ export default async function HomePage() {
                     ))}
                   </div>
                   <span className="text-sm text-gray-500">
-                    4.8 {de ? "aus 47 Bewertungen" : "from 47 reviews"}
+                    {avgRating > 0 ? `${avgRating} ${de ? `aus ${reviewCount} Bewertung${reviewCount !== 1 ? "en" : ""}` : `from ${reviewCount} review${reviewCount !== 1 ? "s" : ""}`}` : de ? "Noch keine Bewertungen" : "No reviews yet"}
                   </span>
                 </div>
               </AnimatedSection>
@@ -208,9 +217,9 @@ export default async function HomePage() {
             </div>
 
             {[
-              { icon: ShieldCheck, title: de ? "2 Jahre Garantie" : "2-Year Warranty", tone: "bg-white" },
+              { icon: ShieldCheck, title: de ? "14 Tage Widerrufsrecht" : "14-Day Returns", tone: "bg-white" },
               { icon: Truck, title: de ? "Ab 30 € gratis" : "Free over €30", tone: "bg-lime-500 text-white" },
-              { icon: RefreshCcw, title: de ? "60 Tage testen" : "60-Day Trial", tone: "bg-white" },
+              { icon: RefreshCcw, title: de ? "30 Tage testen" : "30-Day Trial", tone: "bg-white" },
               { icon: CreditCard, title: de ? "Sichere Zahlung" : "Secure Checkout", tone: "bg-amber-100" },
             ].map((card, i) => (
               <div
@@ -404,10 +413,10 @@ export default async function HomePage() {
       <AnimatedSection animation="fadeUp">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 text-center md:text-left">
-            <StatCounter value={4.8} decimals={1} label={de ? "Ø Bewertung" : "avg. rating"} />
-            <StatCounter value={2} suffix={de ? " Jahre" : "-yr"} label={de ? "Garantie" : "warranty"} />
-            <StatCounter value={60} suffix=" " label={de ? "Tage Testzeit" : "day trial"} />
-            <StatCounter value={100} suffix="%" label={de ? "recycelbar" : "recyclable"} />
+            <StatCounter value={avgRating > 0 ? avgRating : 0} decimals={1} label={de ? "Ø Bewertung" : "avg. rating"} />
+            <StatCounter value={30} suffix=" " label={de ? "Tage Testzeit" : "day trial"} />
+            <StatCounter value={14} suffix=" " label={de ? "Tage Widerruf" : "day returns"} />
+            <StatCounter value={18} suffix="/8" label={de ? "Edelstahl" : "stainless steel"} />
           </div>
         </section>
       </AnimatedSection>

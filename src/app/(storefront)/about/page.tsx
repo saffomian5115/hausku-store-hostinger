@@ -67,7 +67,7 @@ export default function AboutPage() {
                 </div>
                 {/* Floating badge */}
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-lg px-6 py-4 border border-gray-100">
-                  <p className="text-sm font-bold text-gray-900">{locale === "de" ? "Made in Germany" : "Made in Germany"}</p>
+                  <p className="text-sm font-bold text-gray-900">{locale === "de" ? "Designed in Germany" : "Designed in Germany"}</p>
                   <p className="text-xs text-gray-500">{locale === "de" ? "🇩🇪 Deutsches Design" : "🇩🇪 German Design"}</p>
                 </div>
               </div>

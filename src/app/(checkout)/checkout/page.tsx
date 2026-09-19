@@ -483,9 +483,7 @@ export default function CheckoutPage() {
               >
                 {loading
                   ? "Wird verarbeitet..."
-                  : form.paymentMethod === "stripe"
-                    ? "Zur Kasse gehen"
-                    : "Bestellung aufgeben"}
+                  : "Kostenpflichtig bestellen"}
               </button>
 
               <p className="text-xs text-center text-gray-500 mt-4">

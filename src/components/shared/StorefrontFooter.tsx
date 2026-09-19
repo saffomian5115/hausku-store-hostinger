@@ -103,7 +103,7 @@ export default function StorefrontFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-white transition-colors">
+                <Link href="/terms#lieferzahlung" className="hover:text-white transition-colors">
                   {t("footer.shipping")}
                 </Link>
               </li>
@@ -129,6 +129,11 @@ export default function StorefrontFooter() {
               <li>
                 <Link href="/terms" className="hover:text-white transition-colors">
                   {t("footer.terms")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/returns" className="hover:text-white transition-colors">
+                  {t("legal.returns")}
                 </Link>
               </li>
             </ul>

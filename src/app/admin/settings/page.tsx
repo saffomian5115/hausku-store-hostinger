@@ -14,6 +14,7 @@ type SettingsForm = {
   companyEmail: string;
   companyPhone: string;
   companyAddress: string;
+  companyManager: string;
 };
 
 const EMPTY_FORM: SettingsForm = {
@@ -28,6 +29,7 @@ const EMPTY_FORM: SettingsForm = {
   companyEmail: "",
   companyPhone: "",
   companyAddress: "",
+  companyManager: "",
 };
 
 type Status = { type: "success" | "error"; message: string } | null;
@@ -60,6 +62,7 @@ export default function AdminSettingsPage() {
             companyEmail: s.companyEmail ?? "",
             companyPhone: s.companyPhone ?? "",
             companyAddress: s.companyAddress ?? "",
+            companyManager: s.companyManager ?? "",
           });
         }
       })
@@ -116,6 +119,7 @@ export default function AdminSettingsPage() {
           companyEmail: form.companyEmail,
           companyPhone: form.companyPhone,
           companyAddress: form.companyAddress,
+          companyManager: form.companyManager,
         }),
       });
 
@@ -307,6 +311,19 @@ export default function AdminSettingsPage() {
                 onChange={(e) => updateField("companyAddress", e.target.value)}
                 className={inputClass}
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Geschäftsführung</label>
+              <input
+                type="text"
+                value={form.companyManager}
+                onChange={(e) => updateField("companyManager", e.target.value)}
+                className={inputClass}
+                placeholder="Nazia Iqbal"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Wird auf Rechnungs-PDFs mitgedruckt.
+              </p>
             </div>
           </div>
         </div>

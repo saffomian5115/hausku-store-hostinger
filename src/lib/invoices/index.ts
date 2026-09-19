@@ -58,6 +58,8 @@ export interface InvoiceData {
     phone: string;
     address: string;
     vatId: string;
+    /** Geschäftsführer(in) — printed below the company name. */
+    manager?: string;
   };
 }
 
@@ -311,6 +313,18 @@ async function buildDocument(
     let y = PAGE_H - 74 - 22;
     drawText(page, bold, 9, MARGIN, y, data.company.name || "NI Intellect UG", BLACK);
     y -= 14;
+    if (data.company.manager) {
+      drawText(
+        page,
+        font,
+        8.5,
+        MARGIN,
+        y,
+        `Geschäftsführung: ${data.company.manager}`,
+        GRAY
+      );
+      y -= 13;
+    }
     if (data.company.address) {
       drawText(page, font, 8.5, MARGIN, y, data.company.address, GRAY);
       y -= 13;
@@ -563,6 +577,7 @@ export async function buildInvoiceData(
       phone: settings.companyPhone,
       address: settings.companyAddress,
       vatId: settings.vatId,
+      manager: settings.companyManager,
     },
   };
 }

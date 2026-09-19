@@ -8,7 +8,7 @@ import AnimatedSection from "@/components/shared/AnimatedSection";
 export default function ContactPage() {
   const { t, locale } = useLocale();
   const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [formData, setFormData] = useState({ topic: "", orderNumber: "", name: "", email: "", subject: "", message: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +17,10 @@ export default function ContactPage() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          topic: topicOptions.find((o) => o.value === formData.topic)?.label ?? "",
+        }),
       });
       if (!res.ok) {
         throw new Error("send failed");
@@ -27,6 +30,15 @@ export default function ContactPage() {
       setFormState("error");
     }
   };
+
+  const topicOptions = [
+    { value: "produktfrage", label: t("contact.formTopicProduct") },
+    { value: "bestellung", label: t("contact.formTopicOrder") },
+    { value: "versand", label: t("contact.formTopicShipping") },
+    { value: "rueckgabe", label: t("contact.formTopicReturn") },
+    { value: "reklamation", label: t("contact.formTopicComplaint") },
+    { value: "sonstiges", label: t("contact.formTopicOther") },
+  ];
 
   return (
     <>
@@ -74,7 +86,7 @@ export default function ContactPage() {
                       <span className="text-4xl mb-4 block">✅</span>
                       <p className="text-green-800 font-semibold text-lg">{t("contact.formSuccess")}</p>
                       <button
-                        onClick={() => { setFormState("idle"); setFormData({ name: "", email: "", subject: "", message: "" }); }}
+                        onClick={() => { setFormState("idle"); setFormData({ topic: "", orderNumber: "", name: "", email: "", subject: "", message: "" }); }}
                         className="mt-4 text-green-600 hover:text-green-700 font-medium underline"
                       >
                         {locale === "de" ? "Neue Nachricht" : "New message"}
@@ -82,6 +94,32 @@ export default function ContactPage() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">{t("contact.formTopic")} *</label>
+                          <select
+                            required
+                            value={formData.topic}
+                            onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 focus:outline-none transition-all text-gray-900 bg-white"
+                          >
+                            <option value="" disabled>{t("contact.formTopicPlaceholder")}</option>
+                            {topicOptions.map((opt) => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">{t("contact.formOrderNumber")}</label>
+                          <input
+                            type="text"
+                            value={formData.orderNumber}
+                            onChange={(e) => setFormData({ ...formData, orderNumber: e.target.value })}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 focus:outline-none transition-all text-gray-900"
+                            placeholder={t("contact.formOrderNumberPlaceholder")}
+                          />
+                        </div>
+                      </div>
                       <div className="grid sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1.5">{t("contact.formName")} *</label>
@@ -175,8 +213,8 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">{t("contact.infoEmail")}</h3>
-                        <a href="mailto:info@hausku.com" className="text-lime-600 hover:text-lime-700 font-medium transition-colors">
-                          info@hausku.com
+                        <a href="mailto:saleshub@niintellect.de" className="text-lime-600 hover:text-lime-700 font-medium transition-colors">
+                          saleshub@niintellect.de
                         </a>
                         <p className="text-xs text-gray-400 mt-1">{t("contact.responseTime")}</p>
                       </div>
@@ -191,8 +229,9 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">{t("contact.infoPhone")}</h3>
-                        <p className="text-gray-500">{t("contact.phonePlaceholder")}</p>
-                        <p className="text-xs text-gray-400 mt-1">{locale === "de" ? "Bitte vom Klient ergänzen" : "To be provided by client"}</p>
+                        <a href="tel:+4917645972009" className="text-lime-600 hover:text-lime-700 font-medium transition-colors">
+                          {t("contact.phonePlaceholder")}
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -206,7 +245,6 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">{t("contact.infoAddress")}</h3>
                         <p className="text-gray-500">{t("contact.addressPlaceholder")}</p>
-                        <p className="text-xs text-gray-400 mt-1">{locale === "de" ? "Bitte vom Klient ergänzen" : "To be provided by client"}</p>
                       </div>
                     </div>
                   </div>
@@ -220,7 +258,6 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">{t("contact.infoHours")}</h3>
                         <p className="text-gray-500">{t("contact.hoursPlaceholder")}</p>
-                        <p className="text-xs text-gray-400 mt-1">{locale === "de" ? "Bitte vom Klient ergänzen" : "To be provided by client"}</p>
                       </div>
                     </div>
                   </div>
