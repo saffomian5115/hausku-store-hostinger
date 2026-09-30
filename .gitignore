@@ -44,3 +44,6 @@ hausku-store-hostinger.zip
 *.tsbuildinfo
 next-env.d.ts
 public/invoices/
+
+# secret rotation notes (never commit)
+SECRETS-ROTATION-*.txt

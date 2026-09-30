@@ -52,12 +52,20 @@ CI/CD secrets, database backups) must be owned by NI Intellect UG.
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | optional | Only if client-side Stripe.js is added later |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | optional | Transactional emails (order confirmation, returns, contact). Emails are skipped silently when unset |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | optional | "Sign in with Google" |
+| `ADMIN_TOTP_SECRET` (Fallback) | optional | Statischer 2FA-Fallback-Code, **nur falls DB unzugänglich** — siehe Abschnitt 5 |
 
 ## 5. Admin panel
 
 - URL: `/admin` (login with `ADMIN_EMAIL` / `ADMIN_PASSWORD`)
 - Sessions are HMAC-signed cookies (`admin-session`, 24 h TTL)
 - All `/api/admin/*` routes require a valid session (`requireAdmin` guard)
+- **2FA (TOTP)**: einmalig unter Einstellungen → „Zwei-Faktor-Authentifizierung"
+  einrichten (Secret in Authenticator-App eintragen, mit Live-Code bestätigen).
+  Danach verlangt der Login zusätzlich den 6-stelligen Code. Secret liegt in
+  eigenen `settings`-Rows (`admin_2fa_*`), nie in den öffentlichen Store-Settings.
+  Notfall-Zugang ohne DB: `ADMIN_TOTP_SECRET` als Fallback setzen (gleiche
+  Base32-Semantik wie die App). Verlorenes Gerät: Secret-Row
+  `admin_2fa_secret` + `admin_2fa_enabled` per DB-Zugriff löschen.
 - Manage: products (incl. GPSR fields), categories, orders, returns, invoices,
   credit notes, reviews, store settings (company data — single source of truth
   for invoices and email footers)

@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthShell from "@/components/shared/AuthShell";
-import { Mail, Lock, Eye, EyeOff, Layers } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Layers, Smartphone } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [totp, setTotp] = useState("");
+  const [needs2fa, setNeeds2fa] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,13 +25,14 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/admin/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, totp }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
         setError(data.error || "Anmeldung fehlgeschlagen");
+        if (data.needs2fa) setNeeds2fa(true);
         setLoading(false);
         return;
       }
@@ -81,6 +84,33 @@ export default function AdminLoginPage() {
               />
             </div>
           </div>
+
+          {/* 2FA code field — appears once the server asks for the second factor */}
+          {needs2fa && (
+            <div className="auth-field-anim auth-field-2">
+              <label htmlFor="admin-totp" className="block text-sm font-medium text-gray-700 mb-1.5">
+                2FA-Code
+              </label>
+              <div className="relative">
+                <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                <input
+                  type="text"
+                  id="admin-totp"
+                  value={totp}
+                  onChange={(e) => setTotp(e.target.value.replace(/[^\d]/g, "").slice(0, 6))}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition-all tracking-[0.4em] text-center"
+                  placeholder="000000"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  autoFocus
+                  required
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1.5">
+                6-stelliger Code aus Ihrer Authenticator-App
+              </p>
+            </div>
+          )}
 
           {/* Password Field */}
           <div className="auth-field-anim auth-field-2">

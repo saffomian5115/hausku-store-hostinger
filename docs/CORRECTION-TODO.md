@@ -144,7 +144,8 @@
 - [ ] **CSRF review** — cookie-based state-changing endpoints (sameSite=lax madad karta hai, par explicit review recommended)
 - [ ] **Shared rate-limit store** — in-memory hai; multi-instance/serverless pe Redis/Upstash ya platform WAF
 - [ ] **DB backups automated + documented restore test** — manual process HANDOVER.md me doc'd
-- [ ] **2FA for admin** — agar supported ho
+- [x] **2FA for admin** — DONE (2026-09-30): TOTP (RFC 6238, SHA1/6 Ziffern/30 s) ohne neue npm-Dependencies. Enrollment im Admin-Panel unter Einstellungen → „Zwei-Faktor-Authentifizierung“ (Secret generieren → in Authenticator-App eintragen → mit Live-Code bestätigen). Danach verlangt der Admin-Login zusätzlich den 6-stelligen Code. Deaktivieren nur mit gültigem Code. Secret liegt in eigenen `settings`-Rows (`admin_2fa_*`) — NIEMALS in StoreSettings, weil GET /api/settings public ist.
+  - **Location:** `src/lib/totp.ts`, `src/lib/admin2fa.ts`, `src/app/api/admin/auth/2fa/route.ts`, `src/app/api/admin/auth/login/route.ts` (needs2fa-Step), `src/app/admin/login/page.tsx`, `src/app/admin/settings/page.tsx`
 - [ ] **Error logging/monitoring** (Sentry ya similar) + uptime check
 - [ ] **Staging environment**
 - [ ] **All production assets owned by NI Intellect UG** — HANDOVER.md checklist me hai

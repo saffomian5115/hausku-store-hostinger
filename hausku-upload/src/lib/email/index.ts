@@ -181,14 +181,18 @@ const SMTP_PASS = process.env.SMTP_PASS || "";
 const SMTP_FROM = process.env.SMTP_FROM || "info@hausku.com";
 const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || "hausku";
 
-let transporter: nodemailer.Transporter | null = null;
+// nodemailer v10 ships its own types and no longer exposes a global
+// `nodemailer.Transporter` namespace — derive the type from the factory instead.
+type Transporter = ReturnType<typeof nodemailer.createTransport>;
+
+let transporter: Transporter | null = null;
 
 /** Whether SMTP credentials are configured (emails will actually be sent). */
 export function isEmailConfigured(): boolean {
   return Boolean(SMTP_USER && SMTP_PASS);
 }
 
-function getTransporter(): nodemailer.Transporter | null {
+function getTransporter(): Transporter | null {
   if (!isEmailConfigured()) {
     return null;
   }
