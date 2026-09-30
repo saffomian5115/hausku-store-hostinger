@@ -1,0 +1,68 @@
+════════════════════════════════════════════════════════
+ HAUSKU — UPLOAD PACKAGE (2026-09-20)
+════════════════════════════════════════════════════════
+
+Ye folder ready-to-upload source hai (218 files).
+.env / node_modules / .next jaan-boojh ke exclude hain.
+
+⚠️  IMPORTANT — BRACKETS WALI FILES KO MAT CHHEDNA:
+    src/app/(checkout), (storefront), [slug], [id]
+    Ye Next.js ki routing conventions hain — YEHI ASLI
+    NAAM HAIN, corrupted nahi! Build inhi ke bina fail hoga.
+
+────────────────────────────────────────────────────────
+ ZIP KAISE BANAYE (Windows):
+────────────────────────────────────────────────────────
+ 1. 'hausku-upload' folder ke ANDAR ki sab cheezein
+    select karo (Ctrl+A) — folder ko nahi, CONTENT ko.
+ 2. Right-click → Send to → Compressed (zipped) folder
+ 3. Naam do: hausku-store.zip
+
+────────────────────────────────────────────────────────
+ SERVER PE (SSH / hPanel Terminal):
+────────────────────────────────────────────────────────
+ 1. Zip upload karo (File Manager ya SFTP) — e.g. /home/u975689130/
+
+ 2. SSH se extract karo (File Manager se NAHI — wahi
+    permission problem dubara aa jayegi):
+
+        cd /home/u975689130/domains/hausku.com/hbuilds
+        rm -rf source
+        mkdir source && cd source
+        unzip ~/hausku-store.zip
+
+ 3. Permissions fix (EACCES error ka asli ilaaj):
+
+        find . -type d -exec chmod 755 {} +
+        find . -type f -exec chmod 644 {} +
+
+ 4. .env banao (zip me nahi hai — secrets):
+
+        nano .env
+        # Template: docs/DEPLOYMENT-GUIDE.md → Section 3
+        # ⚠️ AUTH_SECRET zaroor set karo:
+        #    openssl rand -base64 32
+
+ 5. Install + DB + Build:
+
+        npm ci
+        npx prisma db push
+        npx prisma db seed
+        npm run build
+
+ 6. Start:
+
+        pm2 start npm --name hausku -- start
+        pm2 save
+
+────────────────────────────────────────────────────────
+ EXPECTED (error nahi hai):
+────────────────────────────────────────────────────────
+ • npm audit: 10 vulnerabilities  → dev-deps ke hain,
+   production ke liye theek, baad me fix karenge
+ • Stripe checkout fail  → placeholder keys (client se
+   test keys pending — client-pending/client-request.pdf)
+
+Full guide: docs/DEPLOYMENT-GUIDE.md
+Plan B (local build): docs/PREBUILT-DEPLOY.md
+════════════════════════════════════════════════════════

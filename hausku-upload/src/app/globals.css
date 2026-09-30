@@ -1,0 +1,334 @@
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/fraunces/opsz.css";
+@import "lenis/dist/lenis.css";
+@import "tailwindcss";
+
+/* ═══ Design tokens ═══ */
+@theme {
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+
+  /* Smooth, buttery easing curves — use as ease-out-quart / ease-out-expo */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ═══ HAUSKU forest green palette (Correction #24) ═══
+     The codebase was built on Tailwind's lime/green/emerald scales. Instead
+     of renaming 350+ class occurrences, the scales are remapped here to the
+     client-approved brand ramp:
+       Primary  Forest Green  #2F6B4F
+       Hover    Deep Forest   #25543E
+       Second.  Sage Green    #79A97F
+       Second.  Soft Sage     #DDEBD9
+     `lime-*` and `green-*` map to the forest ramp; `emerald-*` mirrors it
+     one step darker so mixed gradient stops stay inside the palette.
+     Use lime-* for primary/brand elements (buttons, links, accents). */
+  --color-lime-50: #f2f7f3;
+  --color-lime-100: #e3f0e5;
+  --color-lime-200: #ddebd9;
+  --color-lime-300: #a9c9ad;
+  --color-lime-400: #79a97f;
+  --color-lime-500: #2f6b4f;
+  --color-lime-600: #2f6b4f;
+  --color-lime-700: #25543e;
+  --color-lime-800: #1d4232;
+  --color-lime-900: #152f24;
+
+  --color-green-50: #f2f7f3;
+  --color-green-100: #e3f0e5;
+  --color-green-200: #ddebd9;
+  --color-green-300: #a9c9ad;
+  --color-green-400: #79a97f;
+  --color-green-500: #2f6b4f;
+  --color-green-600: #2f6b4f;
+  --color-green-700: #25543e;
+  --color-green-800: #1d4232;
+  --color-green-900: #152f24;
+
+  --color-emerald-50: #f2f7f3;
+  --color-emerald-100: #ddebd9;
+  --color-emerald-200: #cfe3d1;
+  --color-emerald-300: #a9c9ad;
+  --color-emerald-400: #6d9d75;
+  --color-emerald-500: #4a7f5e;
+  --color-emerald-600: #2f6b4f;
+  --color-emerald-700: #25543e;
+  --color-emerald-800: #1d4232;
+  --color-emerald-900: #152f24;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fafaf7; /* Main Background from brand palette */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgb(47 107 79 / 0.25);
+}
+
+/* ═══ Smooth expand animation for search bar ═══ */
+@keyframes expand-search {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 320px;
+    opacity: 1;
+  }
+}
+
+.animate-expand-search {
+  animation: expand-search 0.3s ease-out forwards;
+}
+
+/* Slide-down animation for search suggestions dropdown */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══ Scroll-triggered section animations ═══ */
+.animate-on-scroll {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: opacity, transform;
+}
+
+.anim-fadeUp.animate-on-scroll {
+  transform: translateY(40px);
+}
+.anim-fadeIn.animate-on-scroll {
+  transform: none;
+}
+.anim-slideLeft.animate-on-scroll {
+  transform: translateX(-40px);
+}
+.anim-slideRight.animate-on-scroll {
+  transform: translateX(40px);
+}
+.anim-scaleIn.animate-on-scroll {
+  transform: scale(0.96);
+}
+
+.animate-on-scroll.animate-in-view {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* ═══ Hero entrance animation ═══ */
+@keyframes heroZoom {
+  from {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.animate-hero-zoom {
+  animation: heroZoom 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hero background container */
+.hero-bg {
+  background-color: #0c2a1c; /* deep forest green base */
+  isolation: isolate;
+}
+
+/* Subtle hero product float — gentle, not bouncy */
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-hero-float {
+  animation: heroFloat 6s ease-in-out infinite;
+}
+
+/* ═══ Shimmer loading effect ═══ */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ═══ Auth Page Load Animations ═══ */
+/* Card slide-up + fade */
+@keyframes authCardUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.auth-card-anim {
+  animation: authCardUp 0.7s ease-out 0.2s both;
+}
+
+/* Staggered field fade-in */
+@keyframes authFieldIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.auth-field-anim {
+  animation: authFieldIn 0.5s ease-out both;
+}
+.auth-field-0 {
+  animation-delay: 0.25s;
+}
+.auth-field-1 {
+  animation-delay: 0.4s;
+}
+.auth-field-2 {
+  animation-delay: 0.55s;
+}
+.auth-field-3 {
+  animation-delay: 0.7s;
+}
+.auth-field-4 {
+  animation-delay: 0.85s;
+}
+.auth-field-5 {
+  animation-delay: 1s;
+}
+
+/* ═══ Reduced motion: respect user preference ═══ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   NEW HOMEPAGE ADDITIONS (marquee ticker, morphing blob,
+   grain texture, floating badges, swash underline)
+   ══════════════════════════════════════════════════════════ */
+
+/* Hide scrollbars on the horizontal product rail / mobile filter rows */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══ Infinite marquee (ticker bar, section divider, testimonials) ═══ */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* ═══ Organic morphing blob (hero signature element) ═══ */
+@keyframes blobMorph {
+  0%, 100% {
+    border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%;
+  }
+  25% {
+    border-radius: 58% 42% 35% 65% / 55% 62% 38% 45%;
+  }
+  50% {
+    border-radius: 65% 35% 48% 52% / 38% 55% 45% 62%;
+  }
+  75% {
+    border-radius: 38% 62% 55% 45% / 62% 42% 58% 38%;
+  }
+}
+.animate-blob-morph {
+  border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%;
+  animation: blobMorph 12s ease-in-out infinite;
+}
+
+/* Subtle grain texture, used with mix-blend-mode:overlay on the blob */
+.bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  border-radius: inherit;
+}
+
+/* Slow-spinning dashed orbit ring behind the hero product */
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spinSlow 60s linear infinite;
+}
+
+/* Floating fabric-tag badges around the hero product */
+@keyframes badgeFloat {
+  0%, 100% { transform: translateY(0) rotate(var(--tag-rot, -6deg)); }
+  50% { transform: translateY(-10px) rotate(var(--tag-rot, -6deg)); }
+}
+.animate-badge-float {
+  animation: badgeFloat 5s ease-in-out infinite;
+}
+
+/* Underline swash draw-in for the highlighted hero word */
+@keyframes swashDraw {
+  from { stroke-dashoffset: 340; }
+  to { stroke-dashoffset: 0; }
+}
+.animate-swash path {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  animation: swashDraw 1.1s 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* Respect reduced motion for all of the above */
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob-morph,
+  .animate-spin-slow,
+  .animate-badge-float,
+  .animate-swash path {
+    animation: none !important;
+  }
+}

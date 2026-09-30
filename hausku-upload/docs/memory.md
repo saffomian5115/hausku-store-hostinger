@@ -1,0 +1,93 @@
+# Project Memory / Status Log — hausku E-Commerce Web Application
+
+Purpose: running log of client info, key decisions, and current status — read this first when resuming work on this project (especially useful for AI coding assistant context continuity across sessions).
+
+## Client Info
+- Business: NI Intellect UG
+- Brand: hausku
+- Contact: Waqar Ali Anjam
+- Market: Germany, general household/kitchen products (e.g. laptop cushions, lunch boxes, snack organizers)
+- Sells on Amazon/eBay already; this is their first independent web store
+- Reference site shown by client: blockhuette.net (note: that site is built on Shopify — client's expectations of polish may be shaped by this; our custom build should account for that)
+
+## Key Decisions Made
+- Tech stack: Next.js + MySQL, hosted entirely on client's existing Hostinger Business plan (Node.js supported — confirmed).
+- Payment gateways: Stripe + PayPal + Klarna (all three).
+- VAT: must be admin-configurable, not hardcoded (client currently at 19% but wants flexibility).
+- Checkout: guest checkout + optional account creation, both supported.
+- Shipping: free above €30, flat rate below.
+- Legal scope: Privacy Policy (GDPR), Impressum, Widerrufsrecht, GPSR — dev builds pages/workflow, client owns final legal text accuracy.
+- Source code handover: included unconditionally in the agreement.
+- Admin: single user only, no roles/permissions system needed.
+- Invoices & credit notes: auto-generated, downloadable PDFs.
+
+## Pricing Agreement
+- No fixed price — final amount mutually agreed after completion based on quality/quantity of work delivered.
+- Minimum guaranteed amount: €100.
+- 40% of minimum (€40) requested upfront to officially start work.
+- Monthly maintenance after free 30-day support: €35-50/month (optional, client's choice).
+
+## Status (updated 2026-09-19)
+
+### Development progress
+- [x] Proposal drafted, revised, and accepted by client
+- [x] Kickoff message sent requesting 40% upfront (€40) — upfront payment status TBC
+- [x] **Phase 1 — Planning & Design: COMPLETE** (Next.js skeleton, Prisma schema, DE/EN locales, storefront + admin shells, shared components, API structure, build verified)
+- [x] **Phase 2 — Core Development: COMPLETE** (catalog + categories with filter/sort, product detail with size/color variants, homepage featured products, seed script, cart with free-shipping progress, search with Cmd+K, guest checkout with stock check, customer accounts with order history + addresses, admin panel: product CRUD + variants + image upload, order management, customers, dashboard, admin auth)
+- [~] **Phase 3 — Payment & Integrations: PARTIAL**
+  - [x] Stripe integration (checkout sessions, webhook, idempotent order processing)
+  - [x] **Email integration (2026-08-06 → LIVE 2026-08-16):** nodemailer + Hostinger SMTP (`src/lib/email`). Order confirmation emails sent after successful Stripe payment (webhook + success-page fallback, idempotent); contact form sends to info@hausku.com (`/api/contact`). **SMTP credentials now in `.env` (2026-08-16) — test email verified working.**
+  - [x] **Order status emails (2026-08-16):** `sendOrderStatusEmail()` — Shipped 📦 / Delivered ✅ / Cancelled ❌ / Refunded 💶 — wired into admin order status route `PUT /api/admin/orders/[id]`, sends only on actual status changes. Reply-to info@hausku.com.
+  - [x] **Tracking info (2026-08-16):** Order schema + admin order detail page now have `trackingNumber` + `trackingCarrier` (DHL/Hermes/DPD/GLS/Deutsche Post). Shipped emails include the tracking number + a „Sendung verfolgen“ button (URL built via `getTrackingUrl` in `src/lib/email`). Same-status PUTs allowed for saving tracking without changing status.
+  - [x] **New-order admin alert (2026-08-16):** `sendNewOrderAdminAlert()` fires on **paid** orders (in `processPaidOrder`) — internal notification with order number, customer, item count, amount. Currently to `info@hausku.com` (`SMTP_ADMIN_ALERT_TO`).
+  - [ ] PayPal integration — not started
+  - [ ] Klarna integration — not started
+  - [x] **VAT + shipping configurable (2026-08-16):** `src/lib/settings` (get/save over Setting table) is the single source of truth. Admin settings page now loads + saves (VAT %, VAT ID, free-shipping threshold, flat rate, shop info). Cart, checkout, and order API all read VAT/shipping from DB — no hardcoded 19%/€30/€4.99 anymore. Public `/api/settings` + admin `/api/admin/settings` (proxy-protected). Tested: save → reflected in public API → restored.
+- [~] **Phase 4 — Legal & Compliance: PARTIAL**
+  - [x] **Legal pages implemented from client texts (2026-09):** /imprint, /terms (AGB Teil I + Kundeninformationen Teil II), /privacy, /returns built out from the client-provided `legal pages/` folder (Impressum.txt, AGB.txt, Widerrufsrecht.txt) — real Impressum data (NI Intellect UG (haftungsbeschränkt), Roggenring 26 Hamberge, Amtsgericht Lübeck HRB 24694HL, USt-IdNr. DE367665227, Geschäftsführerin Nazia Iqbal), full Widerrufsbelehrung + Muster-Widerrufsformular with PDF download (`/api/legal/withdrawal-form`, de/en), contact page real data. ⚠️ AGB source was eBay-specific — adapted for the web shop, **client sign-off still pending**.
+  - [x] Returns/Widerrufsrecht page built + **return request flow functional** (2026-08-16); page legal text (Widerrufsbelehrung / Musterformular) now implemented from client text — see legal-pages line above
+  - [x] GPSR fields built (manufacturer + safetyWarnings in schema, admin product form, product page display)
+  - [x] Cookie consent banner built
+  - [x] **Invoice + credit note PDFs (2026-08-16):** `src/lib/invoices` implemented with **pdf-lib** (pure JS, no native deps). German invoice layout (HAUSKU header, company info from settings, customer address, item table, VAT breakdown, legal footer); credit notes reference the invoice + reason. Numbers `RE-YYYY-XXXX` / `GN-YYYY-XXXX` (unique-safe retry). Saved to `public/invoices/` (gitignored). Auto-generated: invoice on paid order (best-effort in `processPaidOrder`), credit note when admin sets REFUNDED. Admin order detail page has „Rechnung erstellen“ / „Gutschrift erstellen“ + PDF download buttons. Endpoints: `POST /api/admin/invoices`, `GET /api/admin/invoices/[id]/download`, `GET /api/admin/credit-notes/[id]/download`. WinAnsi sanitizer guards against non-encodable chars. Live-tested: RE-2026-0001 + GN-2026-0001 generated, downloaded, text-verified (umlauts ✓).
+  - [x] **Customer invoice download in account (2026-08-16):** order history (`/account/orders`) shows „Rechnung (PDF)“ / „Gutschrift (PDF)“ download links per order. New customer routes `GET /api/customers/[id]/invoices/[invoiceId]/download` + `GET /api/customers/[id]/credit-notes/[creditNoteId]/download` — both verify the storefront `session` cookie AND that the PDF belongs to an order of that customer (401/404 otherwise). `GET /api/customers/[id]/orders` now includes invoice + creditNote info and also requires session ownership. Helper: `src/lib/customerSession.ts`. Live-tested: 200 PDFs authorized, 401 no session / wrong customer, 404 foreign invoice.
+  - [x] **Returns / Widerruf flow (2026-08-16):** `ReturnRequest` model (`RET-YYYY-XXXX`, status flow PENDING → APPROVED|REJECTED → RECEIVED → REFUNDED). Customer: „Retoure anfordern“ button on DELIVERED orders in `/account/orders` — select items + reason, one active request per order enforced. Admin: new `/admin/returns` list + detail pages (nav link „Retouren“), status transitions + internal note (gemailt to customer), auto credit note on REFUNDED. Emails: `sendReturnStatusEmail()` on every status change. Live-tested: create → duplicate blocked → approve → received → refunded → auto credit note GN-2026-0002, all 4 emails sent. `src/lib/returns`, `POST/GET /api/customers/[id]/returns`, `GET /api/admin/returns`, `GET/PUT /api/admin/returns/[id]`.
+- [~] **Phase 5 — Testing & QA: STARTED (2026-08-16)** — functional testing of cart/checkout/payments done, **2 critical bugs fixed** (public order-list PII leak; paid-order status stuck on lowercase `paid`). **Responsiveness + DE/EN switch testing DONE (2026-08-16):** 11 pages × 3 viewports (390/768/1440) all clean after fixing 3 issues (admin layout not mobile-responsive; storefront nav overflow at exactly 768px; `html lang` hardcoded de). Full results: `docs/qa.md`. Browser E2E still blocked on real Stripe keys (placeholders in `.env`).
+- [ ] **Phase 6 — Deployment & Handover: not started** (deploy package ready — see `DEPLOY-README.md`)
+
+### Email / Hostinger
+- Hostinger Business hosting + business email active.
+- 5 mailboxes available; 1 created so far: **info@hausku.com**.
+- ✅ **Domain confirmed: hausku.com** — all `hausku.de` references updated to `hausku.com` (seed, locales, contact, imprint, admin default, DEPLOY-README).
+- ✅ **SMTP LIVE (2026-08-16):** `SMTP_USER`/`SMTP_PASS` (info@hausku.com mailbox) added to `.env` — test email verified. All automated emails send from info@hausku.com (order confirmation, contact form, order status, new-order admin alert). `SMTP_ADMIN_ALERT_TO="info@hausku.com"` (admin mailbox not created yet).
+
+## Recent Work (2026-08-15 → 2026-09-19)
+- ✅ **Legal company block in all emails (2026-09-19):** email footer now carries the full Impressum block — NI Intellect UG (haftungsbeschränkt) · Roggenring 26, 23619 Hamberge · USt-IdNr. DE367665227 · Geschäftsführung: Nazia Iqbal · saleshub@niintellect.de (replaces the old „NI Intellect UG · hausku / info@hausku.com" footer). Implementation: new `footerCompanyBlock()` in `src/lib/email` renders from live store settings (`getStoreSettings()` — same single source of truth as invoice PDFs, so admin settings overrides apply); `emailLayout()` is now async (fallback to `DEFAULTS` on DB error). Covers all 5 email types: order confirmation, order status, return status, contact form, new-order admin alert. Related (same session): real company data wired into settings `DEFAULTS` + seed (incl. new `company_manager` key + admin settings field) and „Geschäftsführung" line on invoice/credit-note PDF sender blocks. Typecheck ✓.
+- ✅ **Emails LIVE + tracking (2026-08-16):** SMTP credentials in `.env` (test verified); order status emails (Shipped/Delivered/Cancelled/Refunded); new-order admin alert (→ info@ for now); tracking number + carrier field in admin order detail, tracking link in shipped emails.
+- ✅ **Admin settings functional (2026-08-16):** VAT + shipping (and shop info) now saved to DB from the admin settings page; cart/checkout/order API read from DB.
+- ✅ **Invoice + credit note PDFs (2026-08-16):** pdf-lib generator in `src/lib/invoices`, admin generate/download UI, auto-trigger on paid order + REFUNDED status. Test order #2 (Müller Schäfer) in DB has sample invoice `RE-2026-0001` + credit note `GN-2026-0001` — test data, can be deleted.
+- ✅ **Customer invoice downloads (2026-08-16):** `/account/orders` now shows per-order „Rechnung (PDF)“ + „Gutschrift (PDF)“ links; customer download routes with session + ownership checks; orders API secured (session required). Test customer `demo@hausku.com` / `Demo1234!` created and attached to test order #2 for browser verification — test data, can be deleted.
+- ✅ **Returns/Widerruf flow (2026-08-16):** full return-request process — customer requests from order history (items + reason), admin approves/rejects/tracks/refunds in new Retouren panel, status emails, auto credit note on refund. Test data: return `RET-2026-0001` on order #2 is REFUNDED with credit note `GN-2026-0002` (reason „Retoure RET-2026-0001“) — can be deleted.
+- ✅ **Homepage redesign** — new HeroBlob, Marquee, ProductRail, StatCounter components + editorial sections (commits `23532e6`, `62d8a8f`)
+- ✅ **UX polish — smooth scroll + animations:** Lenis smooth-scroll library added (`src/components/shared/SmoothScroll.tsx`, wrapped in storefront layout); new easing tokens `ease-out-quart` / `ease-out-expo` in `globals.css`; ProductCard + homepage bento/testimonial cards got smooth hover transitions. Wheel/trackpad scroll is now buttery; reduced-motion users automatically get native scroll.
+- ✅ **Responsiveness + DE/EN QA fixes (2026-08-16):** admin layout now mobile-responsive (sidebar `md+`, sticky mobile top bar + scrollable nav pills — `src/app/admin/layout.tsx`); storefront nav center links now `lg` breakpoint + mobile hamburger `lg:hidden` (fixed 768px overflow); root layout `html lang` reads `hausku_locale` cookie. Browser-verified 11 pages × 3 viewports all clean, DE→EN switch + `lang` attr verified. See `docs/qa.md` § Responsiveness.
+- ✅ **Fly-to-cart animation FIXED (2026-08-16):** add-to-cart / like heart float animation was broken — element teleported instantly and vanished. Root cause: the global `prefers-reduced-motion` rule in `globals.css` (`transition-duration: 0.01ms !important`) overrode the fly element's inline CSS transition (user's Windows has animations disabled → `prefers-reduced-motion: reduce` is true even in their real Chrome). Fix: `FlyItem` now uses the **Web Animations API** (`el.animate()`, 600ms) which is immune to CSS transition overrides; added visible-target picker (desktop vs hidden mobile duplicate) + no-target fallback so the add/like action always lands; added `id="product-main-image"` to `ProductGallery` (detail-page fly); added `data-fly-target` to mobile cart/wishlist links. Browser-verified (headless Chrome CDP): catalog add-to-cart, heart, and detail-page add-to-cart all animate the full 600ms and land cleanly — **desktop AND mobile viewport (390px)**: visible-target picker selects the mobile cart/wishlist links (desktop buttons are display:hidden), fly flies to the correct top-right header icon in all three flows.
+- ✅ **Google OAuth login/register** (`/api/auth/google`) — commit `4315f4b`
+- ✅ **Wishlist** (heart/like) — API + context + storefront icons
+- ✅ **Newsletter form** — component + API
+- ✅ **English translations** (en.json) + language switcher
+
+## Recommended Next Steps (priority order)
+1. **Get real Stripe keys from client** — `.env` has placeholders (`sk_live_...`, `whsec_...`, `pk_live_...`). Without real keys, Stripe checkout can't be tested end-to-end (QA finding #3).
+2. **Wire PayPal + Klarna** — credentials (`PAYPAL_CLIENT_ID/SECRET`, `KLARNA_USERNAME/PASSWORD`) are ALREADY in `.env`, but checkout still fakes both methods: order is created then redirected straight to `/checkout/success` with NO payment taken. This is the biggest correctness gap. `src/lib/payments/index.ts` has TODO placeholders.
+3. **Close Phase 4 remnants** — legal page texts are implemented; remaining: client sign-off on the web-adapted AGB + GPSR structured fields (Correction TODO #4).
+4. **Continue Phase 5** — browser E2E (needs Stripe keys) + accessibility pass. Responsiveness + DE/EN done. Results: `docs/qa.md`.
+5. **Phase 6 deploy** to Hostinger (steps in DEPLOY-README.md) — NOT before PayPal/Klarna fake-checkout is fixed.
+6. Optional: create remaining mailboxes (admin@, sales@, support@) — `SMTP_ADMIN_ALERT_TO` can then point admin alerts to admin@hausku.com.
+
+## Open Questions / To Revisit Later
+- design.md to be created once logo/brand colors are received from client
+- Confirm exact upfront payment method (PayPal suggested to avoid wire transfer fees eating into the €40)
+- Confirm final product count (10-12 discussed, not yet locked)
+- Confirm shipping destinations: Germany-only, or wider EU
+- ~~Confirm real domain~~ → **DONE: hausku.com**
+- Distribute remaining 4 mailboxes (e.g. admin@, sales@, support@) — optional
