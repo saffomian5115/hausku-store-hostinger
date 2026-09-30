@@ -4,12 +4,14 @@ This folder is ready to upload to your Hostinger Business hosting account.
 
 ## What's inside
 
-- Full Next.js 16 source code (`src/`, `public/`)
+- Full Next.js 16.3.3 source code (`src/`, `public/`) — security release 2026-09-30
 - Prisma schema + seed (`prisma/`)
-- Production `.env` pre-configured with your Hostinger MySQL database:
-  - DB: `u975689130_hausku`
-  - User: `u975689130_hausku_user`
-  - Host: `localhost:3306` (Hostinger MySQL is local to the hosting account)
+- **No `.env` in this package** — create it on the server (secrets): template in
+  `docs/DEPLOYMENT-GUIDE.md` §3. DB: `u975689130_hausku`, user
+  `u975689130_hausku_user`, host `localhost:3306` (Hostinger MySQL is local to
+  the hosting account). ⚠️ Is release me `AUTH_SECRET`, `ADMIN_PASSWORD` aur
+  `ADMIN_TOTP_SECRET` naye values ke saath set karna zaroori hai —
+  `UPLOAD-INSTRUCTIONS.txt` step 4 dekhen.
 - `DEPLOY-README.md` (this file)
 
 > ⚠️ **Do NOT upload** `node_modules/` or `.next/` — they are excluded. Install

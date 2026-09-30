@@ -1,0 +1,111 @@
+════════════════════════════════════════════════════════
+ HAUSKU — UPLOAD PACKAGE (2026-09-30) — SECURITY RELEASE
+════════════════════════════════════════════════════════
+
+Ye folder ready-to-upload source hai.
+.env / node_modules / .next jaan-boojh ke exclude hain.
+
+🔒 IS RELEASE ME KYA NAYA HAI (Hostinger vulnerabilities fix):
+  • next        16.2.11 → 16.3.3   (2× CRITICAL RCE patched)
+  • sharp        0.34.5 → 0.35.5   (High patched)
+  • nodemailer   9.0.4  → 10.0.12  (High patched)
+  • postcss      8.5.25 → 8.5.28   (High patched)
+  • deepmerge-ts 7.1.5  → 8.0.2    (High patched — npm override)
+  • npm audit ab: 0 vulnerabilities (dev deps included)
+  • Admin 2FA (TOTP) implement — deploy ke baad enable karna zaroori
+  • Test results: 35/35 pass, build OK (65 pages)
+
+⚠️  IMPORTANT — BRACKETS WALI FILES KO MAT CHHEDNA:
+    src/app/(checkout), (storefront), [slug], [id]
+    Ye Next.js ki routing conventions hain — YEHI ASLI
+    NAAM HAIN, corrupted nahi! Build inhi ke bina fail hoga.
+
+────────────────────────────────────────────────────────
+ ZIP KAISE BANAYE (Windows):
+────────────────────────────────────────────────────────
+ 1. 'hausku-deploy-2026-09-30' folder ke ANDAR ki sab
+    cheezein select karo (Ctrl+A) — folder ko nahi, CONTENT ko.
+    (Hidden files bhi: View → Hidden items ON — .gitignore aayega)
+ 2. Right-click → Send to → Compressed (zipped) folder
+ 3. Naam do: hausku-store.zip
+
+────────────────────────────────────────────────────────
+ SERVER PE (SSH / hPanel Terminal):
+────────────────────────────────────────────────────────
+ 1. Zip upload karo (File Manager ya SFTP) — e.g. /home/u975689130/
+
+ 2. SSH se extract karo (File Manager se NAHI — wahi
+    permission problem dubara aa jayegi):
+
+        cd /home/u975689130/domains/hausku.com/hbuilds
+        rm -rf source
+        mkdir source && cd source
+        unzip ~/hausku-store.zip
+
+ 3. Permissions fix (EACCES error ka asli ilaaj):
+
+        find . -type d -exec chmod 755 {} +
+        find . -type f -exec chmod 644 {} +
+
+ 4. .env banao (zip me nahi hai — secrets):
+
+        nano .env
+        # Template: docs/DEPLOYMENT-GUIDE.md → Section 3
+        #
+        # ⚠️ SECURITY RELEASE ME YE ZAROOR SET KARO:
+        #   AUTH_SECRET          openssl rand -base64 32
+        #   ADMIN_PASSWORD       (nayi strong value — purani
+        #                         password compromised maan lo)
+        #   ADMIN_TOTP_SECRET    openssl rand -base64 32 —
+        #                        2FA break-glass fallback
+        #   (ye 3 values aapke paas SECRETS-ROTATION file me bhi
+        #    hain jo code ke saath nahi bheji gayi)
+        #
+        #   SMTP_PASS / STRIPE keys bhi rotate karna recommended
+        #   (Hostinger email panel / Stripe dashboard se).
+
+ 5. Install + DB + Build:
+
+        npm ci
+        npx prisma db push
+        npx prisma db seed
+        npm run build
+
+ 6. Start (purana pm2 process pehle delete karo):
+
+        pm2 delete hausku 2>/dev/null; true
+        pm2 start npm --name hausku -- start
+        pm2 save
+
+────────────────────────────────────────────────────────
+ DEPLOY KE BAAD — 2FA ENABLE KARNA ZAROORI:
+────────────────────────────────────────────────────────
+ 1. /admin pe login (naya password) — 2FA abhi OFF hai
+ 2. Einstellungen → "Zwei-Faktor-Authentifizierung (2FA)"
+ 3. "2FA jetzt einrichten" → 32-char Base32 key apni
+    Authenticator app (Google/Microsoft/Authy/1Password) me
+    "Schlüssel eingeben" se daalo
+ 4. App ka current 6-digit code daal ke "2FA aktivieren"
+ 5. Ab login = password + code (har baar)
+
+────────────────────────────────────────────────────────
+ EXPECTED (error nahi hai):
+────────────────────────────────────────────────────────
+ • npm audit: 0 vulnerabilities ✅ (pehle 10 the — poora clean)
+ • Stripe checkout fail  → placeholder keys (client se
+   test keys pending — client-pending/client-request.pdf)
+
+────────────────────────────────────────────────────────
+ LOG AUDIT (purane vulnerability ka proof chahiye to):
+────────────────────────────────────────────────────────
+        grep "_next/image" ~/logs/access.log | awk '{print $1}' \
+          | sort | uniq -c | sort -rn | head -20
+        grep -cE "_next/image.*url=(http|%2F%2F)" ~/logs/access.log
+
+ 2nd command ka output 0 ya chhota = koi injection try nahi hua.
+ Bada number = wo IP hPanel firewall me block karo.
+ Uske baad hPanel → Vulnerabilities → Rescan chalao.
+
+Full guide: docs/DEPLOYMENT-GUIDE.md
+Plan B (local build): docs/PREBUILT-DEPLOY.md
+════════════════════════════════════════════════════════
