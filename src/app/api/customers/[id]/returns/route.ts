@@ -115,7 +115,7 @@ export async function POST(
     // Confirmation email to the customer (best-effort)
     const order = await prisma.order.findUnique({
       where: { id: orderId },
-      select: { orderNumber: true, guestEmail: true, guestName: true, locale: true },
+      select: { orderNumber: true, guestEmail: true, guestName: true },
     });
     await sendReturnStatusEmail({
       returnNumber: returnRequest.returnNumber,
@@ -123,7 +123,6 @@ export async function POST(
       customerEmail: session.email,
       customerName: session.name,
       status: "PENDING",
-      locale: order?.locale,
     });
 
     return NextResponse.json({ returnRequest }, { status: 201 });

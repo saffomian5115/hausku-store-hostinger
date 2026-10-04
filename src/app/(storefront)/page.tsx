@@ -30,8 +30,7 @@ import {
 } from "lucide-react";
 
 export default async function HomePage() {
-  const { t, locale } = await getTranslations();
-  const de = locale === "de";
+  const { t } = await getTranslations();
 
   const [bestsellers, snackbox, laptopCushion, lunchBox1400, reviewAgg] =
     await Promise.all([
@@ -66,10 +65,10 @@ export default async function HomePage() {
   const reviewCount = reviewAgg._count;
 
   const tickerItems = [
-    de ? "Kostenloser Versand ab 30 €" : "Free shipping over €30",
-    de ? "30 Tage Testzeit" : "30-day trial",
-    de ? "Auslaufsicher" : "Leak-resistant",
-    de ? "Kostenloser Versand ab 30 €" : "Free shipping over €30",
+    "Kostenloser Versand ab 30 €",
+    "30 Tage Testzeit",
+    "Auslaufsicher",
+    "Kostenloser Versand ab 30 €",
   ];
 
   return (
@@ -105,17 +104,17 @@ export default async function HomePage() {
                     <Sparkles className="w-3.5 h-3.5 text-white" />
                   </span>
                   <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-                    {de ? "Neu gedacht für dein Zuhause" : "Reimagined for your home"}
+                    Neu gedacht für dein Zuhause
                   </span>
                 </span>
               </AnimatedSection>
 
               <AnimatedSection animation="fadeUp" delay={100}>
                 <h1 className="font-display text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-[4.2rem] font-semibold tracking-tight text-gray-900">
-                  {de ? "Alltag, der sich" : "Everyday things,"}
+                  Alltag, der sich
                   <br />
                   <span className="relative inline-block">
-                    {de ? "gut anfühlt" : "made to last"}
+                    gut anfühlt
                     <svg
                       className="animate-swash absolute left-0 -bottom-2 w-full h-4"
                       viewBox="0 0 340 24"
@@ -135,9 +134,7 @@ export default async function HomePage() {
 
               <AnimatedSection animation="fadeUp" delay={200}>
                 <p className="text-lg text-gray-600 leading-relaxed mt-7 max-w-md">
-                  {de
-                    ? "Edelstahl-Brotdosen, Snackboxen und Lapdesks — durchdacht designt, nachhaltig gemacht und für Jahre gebaut, nicht für eine Saison."
-                    : "Stainless-steel lunch boxes, snack organizers and lapdesks — thoughtfully designed, sustainably made, and built for years, not a season."}
+                  Edelstahl-Brotdosen, Snackboxen und Lapdesks — durchdacht designt, nachhaltig gemacht und für Jahre gebaut, nicht für eine Saison.
                 </p>
               </AnimatedSection>
 
@@ -147,14 +144,14 @@ export default async function HomePage() {
                     href="/catalog"
                     className="group inline-flex items-center gap-2 bg-gray-900 hover:bg-lime-500 text-white font-semibold pl-7 pr-6 py-4 rounded-full transition-colors duration-300 shadow-lg shadow-gray-900/10"
                   >
-                    {de ? "Jetzt entdecken" : "Shop the collection"}
+                    Jetzt entdecken
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                   <Link
                     href="/about"
                     className="inline-flex items-center gap-1.5 text-gray-700 font-semibold hover:text-lime-600 transition-colors border-b-2 border-transparent hover:border-lime-500 pb-1"
                   >
-                    {de ? "Unsere Geschichte" : "Our story"}
+                    Unsere Geschichte
                     <ArrowUpRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -178,7 +175,7 @@ export default async function HomePage() {
                     ))}
                   </div>
                   <span className="text-sm text-gray-500">
-                    {avgRating > 0 ? `${avgRating} ${de ? `aus ${reviewCount} Bewertung${reviewCount !== 1 ? "en" : ""}` : `from ${reviewCount} review${reviewCount !== 1 ? "s" : ""}`}` : de ? "Noch keine Bewertungen" : "No reviews yet"}
+                    {avgRating > 0 ? `${avgRating} aus ${reviewCount} Bewertung${reviewCount !== 1 ? "en" : ""}` : "Noch keine Bewertungen"}
                   </span>
                 </div>
               </AnimatedSection>
@@ -202,25 +199,23 @@ export default async function HomePage() {
               <Globe2 className="w-7 h-7 text-lime-400 relative" />
               <div className="relative">
                 <p className="text-white font-display text-2xl md:text-3xl font-medium leading-snug mb-2">
-                  {de
-                    ? "Klimabewusst produziert, für den Alltag gebaut."
-                    : "Made with the climate in mind, built for daily life."}
+                  Klimabewusst produziert, für den Alltag gebaut.
                 </p>
                 <Link
                   href="/about"
                   className="inline-flex items-center gap-1 text-lime-300 text-sm font-semibold hover:text-lime-200 transition-colors"
                 >
-                  {de ? "Mehr erfahren" : "Learn more"}
+                  Mehr erfahren
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
 
             {[
-              { icon: ShieldCheck, title: de ? "14 Tage Widerrufsrecht" : "14-Day Returns", tone: "bg-white" },
-              { icon: Truck, title: de ? "Ab 30 € gratis" : "Free over €30", tone: "bg-lime-500 text-white" },
-              { icon: RefreshCcw, title: de ? "30 Tage testen" : "30-Day Trial", tone: "bg-white" },
-              { icon: CreditCard, title: de ? "Sichere Zahlung" : "Secure Checkout", tone: "bg-amber-100" },
+              { icon: ShieldCheck, title: "14 Tage Widerrufsrecht", tone: "bg-white" },
+              { icon: Truck, title: "Ab 30 € gratis", tone: "bg-lime-500 text-white" },
+              { icon: RefreshCcw, title: "30 Tage testen", tone: "bg-white" },
+              { icon: CreditCard, title: "Sichere Zahlung", tone: "bg-amber-100" },
             ].map((card, i) => (
               <div
                 key={i}
@@ -244,10 +239,10 @@ export default async function HomePage() {
               <div className="flex items-end justify-between mb-10 gap-4">
                 <div>
                   <span className="text-xs font-bold text-lime-600 uppercase tracking-widest">
-                    {de ? "Sortiment" : "The edit"}
+                    Sortiment
                   </span>
                   <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 mt-2">
-                    {de ? "Beliebt & bewährt" : "Popular & proven"}
+                    Beliebt & bewährt
                   </h2>
                 </div>
                 <Link
@@ -328,7 +323,7 @@ export default async function HomePage() {
                     href={`/product/${snackbox.slug}`}
                     className="inline-flex items-center bg-lime-500 hover:bg-lime-600 text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-200 shadow-lg shadow-lime-500/25 hover:-translate-y-0.5"
                   >
-                    {de ? "Jetzt personalisieren" : "Customize now"}
+                    Jetzt personalisieren
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
                   <span className="text-2xl font-bold text-gray-900">
@@ -413,10 +408,10 @@ export default async function HomePage() {
       <AnimatedSection animation="fadeUp">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 text-center md:text-left">
-            <StatCounter value={avgRating > 0 ? avgRating : 0} decimals={1} label={de ? "Ø Bewertung" : "avg. rating"} />
-            <StatCounter value={30} suffix=" " label={de ? "Tage Testzeit" : "day trial"} />
-            <StatCounter value={14} suffix=" " label={de ? "Tage Widerruf" : "day returns"} />
-            <StatCounter value={18} suffix="/8" label={de ? "Edelstahl" : "stainless steel"} />
+            <StatCounter value={avgRating > 0 ? avgRating : 0} decimals={1} label="Ø Bewertung" />
+            <StatCounter value={30} suffix=" " label="Tage Testzeit" />
+            <StatCounter value={14} suffix=" " label="Tage Widerruf" />
+            <StatCounter value={18} suffix="/8" label="Edelstahl" />
           </div>
         </section>
       </AnimatedSection>
@@ -503,16 +498,16 @@ export default async function HomePage() {
 
           {[
             [
-              { name: "Ludolph C.", title: de ? "Super Qualität" : "Great quality", text: de ? "Super hochwertig. Sogar eine Ersatzdichtung dabei." : "Really well made. Even comes with a spare seal." },
-              { name: "Shakeel H.", title: de ? "Sehr zufrieden!" : "Very happy!", text: de ? "Mein Kind benutzt diese Edelstahl-Brotdose täglich." : "My kid uses this stainless lunchbox daily." },
-              { name: "danescu a.", title: "Tip top", text: de ? "Die Box hat einen einfachen und praktischen Deckelverschluss." : "The box has a simple, practical lid latch." },
-              { name: "Petra W.", title: de ? "Absolute Empfehlung" : "Highly recommend", text: de ? "Endlich eine Marke, die hält was sie verspricht." : "Finally a brand that keeps its promises." },
+              { name: "Ludolph C.", title: "Super Qualität", text: "Super hochwertig. Sogar eine Ersatzdichtung dabei." },
+              { name: "Shakeel H.", title: "Sehr zufrieden!", text: "Mein Kind benutzt diese Edelstahl-Brotdose täglich." },
+              { name: "danescu a.", title: "Tip top", text: "Die Box hat einen einfachen und praktischen Deckelverschluss." },
+              { name: "Petra W.", title: "Absolute Empfehlung", text: "Endlich eine Marke, die hält was sie verspricht." },
             ],
             [
-              { name: "Jonas B.", title: de ? "Top Verarbeitung" : "Top build quality", text: de ? "Man merkt sofort die Liebe zum Detail." : "You notice the attention to detail immediately." },
-              { name: "Meike S.", title: de ? "Alltagstauglich" : "Everyday-proof", text: de ? "Nutze die Snackbox jedes Wochenende." : "I use the snack box every single weekend." },
-              { name: "Dominik R.", title: de ? "Schneller Versand" : "Fast shipping", text: de ? "Zwei Tage nach Bestellung war alles da." : "Everything arrived two days after ordering." },
-              { name: "Aylin K.", title: de ? "Schönes Design" : "Beautiful design", text: de ? "Sieht auf jedem Küchentisch gut aus." : "Looks great on any kitchen table." },
+              { name: "Jonas B.", title: "Top Verarbeitung", text: "Man merkt sofort die Liebe zum Detail." },
+              { name: "Meike S.", title: "Alltagstauglich", text: "Nutze die Snackbox jedes Wochenende." },
+              { name: "Dominik R.", title: "Schneller Versand", text: "Zwei Tage nach Bestellung war alles da." },
+              { name: "Aylin K.", title: "Schönes Design", text: "Sieht auf jedem Küchentisch gut aus." },
             ],
           ].map((row, rowIdx) => (
             <Marquee key={rowIdx} speed={rowIdx === 0 ? 38 : 44} reverse={rowIdx === 1} className="mb-5 last:mb-0">
@@ -546,7 +541,7 @@ export default async function HomePage() {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <span className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-lime-300 mb-6">
               <Leaf className="w-3.5 h-3.5" />
-              {de ? "Der grüne Newsletter" : "The green newsletter"}
+              Der grüne Newsletter
             </span>
             <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
               {t("home.newsletterTitle")}

@@ -7,7 +7,7 @@ import {
   type PDFPage,
 } from "pdf-lib";
 
-// GET /api/legal/withdrawal-form?lang=de|en — Muster-Widerrufsformular als PDF
+// GET /api/legal/withdrawal-form — Muster-Widerrufsformular als PDF (deutsch)
 
 const DARK_GREEN = rgb(0.184, 0.42, 0.31);
 const BLACK = rgb(0.12, 0.12, 0.12);
@@ -17,8 +17,6 @@ const WHITE = rgb(1, 1, 1);
 const PAGE_W = 595.28; // A4
 const PAGE_H = 841.89;
 const MARGIN = 50;
-
-type Lang = "de" | "en";
 
 function wrap(text: string, font: PDFFont, size: number, maxWidth: number): string[] {
   const words = text.split(/\s+/);
@@ -37,11 +35,8 @@ function wrap(text: string, font: PDFFont, size: number, maxWidth: number): stri
   return lines;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    const lang: Lang = request.nextUrl.searchParams.get("lang") === "en" ? "en" : "de";
-    const de = lang === "de";
-
     const pdfDoc = await PDFDocument.create();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -88,49 +83,33 @@ export async function GET(request: NextRequest) {
 
     y = PAGE_H - 74 - 40;
 
-    drawLines(de ? "Muster-Widerrufsformular" : "Model Withdrawal Form", {
+    drawLines("Muster-Widerrufsformular", {
       size: 18,
       bold: true,
       gap: 10,
     });
 
     drawLines(
-      de
-        ? "(Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück.)"
-        : "(If you want to withdraw from the contract, please fill out this form and send it back.)",
+      "(Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück.)",
       { size: 10, color: GRAY, gap: 10 }
     );
 
-    const company = de
-      ? "An NI Intellect UG (haftungsbeschränkt), Roggenring 26, 23619 Hamberge, E-Mail-Adresse: saleshub@niintellect.de:"
-      : "To NI Intellect UG (haftungsbeschränkt), Roggenring 26, 23619 Hamberge, e-mail address: saleshub@niintellect.de:";
-
-    const items = de
-      ? [
-          company,
-          "Hiermit widerrufe(n) ich/ wir (*) den von mir/ uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/ die Erbringung der folgenden Dienstleistung (*)",
-          "Bestellt am (*)/ erhalten am (*)",
-          "Name des/ der Verbraucher(s)",
-          "Anschrift des/ der Verbraucher(s)",
-          "Unterschrift des/ der Verbraucher(s) (nur bei Mitteilung auf Papier)",
-          "Datum",
-        ]
-      : [
-          company,
-          "Hereby I/we (*) revoke the contract concluded by me/us (*) for the purchase of the following goods (*)/ the provision of the following service (*)",
-          "Ordered on (*)/ received on (*)",
-          "Name of the consumer(s)",
-          "Address of the consumer(s)",
-          "Signature of the consumer(s) (only for notification on paper)",
-          "Date",
-        ];
+    const items = [
+      "An NI Intellect UG (haftungsbeschränkt), Roggenring 26, 23619 Hamberge, E-Mail-Adresse: saleshub@niintellect.de:",
+      "Hiermit widerrufe(n) ich/ wir (*) den von mir/ uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/ die Erbringung der folgenden Dienstleistung (*)",
+      "Bestellt am (*)/ erhalten am (*)",
+      "Name des/ der Verbraucher(s)",
+      "Anschrift des/ der Verbraucher(s)",
+      "Unterschrift des/ der Verbraucher(s) (nur bei Mitteilung auf Papier)",
+      "Datum",
+    ];
 
     for (const item of items) {
       drawLines(`–  ${item}`, { size: 11, gap: 12 });
     }
 
     y -= 10;
-    drawLines(de ? "(*) Unzutreffendes streichen." : "(*) Delete as appropriate.", {
+    drawLines("(*) Unzutreffendes streichen.", {
       size: 9,
       color: GRAY,
     });
@@ -140,7 +119,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse(bytes as unknown as BodyInit, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="widerrufsformular-${lang}.pdf"`,
+        "Content-Disposition": `attachment; filename="widerrufsformular.pdf"`,
         "Cache-Control": "public, max-age=3600",
       },
     });

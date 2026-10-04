@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getStoreSettings } from "@/lib/settings";
+import { getAdminSession } from "@/lib/adminAuth";
 
 type OrderItemInput = {
   variantId: number;
@@ -35,19 +36,7 @@ export async function GET(request: NextRequest) {
   try {
     // This endpoint exposes customer PII (names, emails, addresses) and is
     // used by the admin order list — require an active admin session.
-    const session = request.cookies.get("admin-session");
-    let authorized = false;
-    if (session?.value) {
-      try {
-        const sessionData = JSON.parse(
-          Buffer.from(session.value, "base64").toString()
-        );
-        authorized = sessionData.expires > Date.now();
-      } catch {
-        authorized = false;
-      }
-    }
-    if (!authorized) {
+    if (!getAdminSession(request)) {
       return NextResponse.json(
         { error: "Nicht autorisiert" },
         { status: 401 }
@@ -208,18 +197,13 @@ export async function POST(request: NextRequest) {
     const total = parseFloat((subtotal + shippingCost + vatAmount).toFixed(2));
 
     // ─── Create order in transaction ───────────────────────
-    // Store the customer's storefront language so transactional emails
-    // (confirmation, shipping, refund…) are sent in the right language.
-    const orderLocale =
-      request.cookies.get("hausku_locale")?.value === "en" ? "en" : "de";
-
     const order = await prisma.$transaction(async (tx) => {
       // Create the order
       const newOrder = await tx.order.create({
         data: {
           orderNumber: generateOrderNumber(),
           status: "PENDING",
-          locale: orderLocale,
+          locale: "de",
           subtotal,
           shippingCost,
           vatRate,

@@ -6,7 +6,7 @@ import { useLocale } from "@/components/shared/LocaleContext";
 import AnimatedSection from "@/components/shared/AnimatedSection";
 
 export default function ContactPage() {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const [formState, setFormState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [formData, setFormData] = useState({ topic: "", orderNumber: "", name: "", email: "", subject: "", message: "" });
 
@@ -89,7 +89,7 @@ export default function ContactPage() {
                         onClick={() => { setFormState("idle"); setFormData({ topic: "", orderNumber: "", name: "", email: "", subject: "", message: "" }); }}
                         className="mt-4 text-green-600 hover:text-green-700 font-medium underline"
                       >
-                        {locale === "de" ? "Neue Nachricht" : "New message"}
+                        Neue Nachricht
                       </button>
                     </div>
                   ) : (
@@ -129,7 +129,7 @@ export default function ContactPage() {
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 focus:outline-none transition-all text-gray-900"
-                            placeholder={locale === "de" ? "Ihr Name" : "Your name"}
+                            placeholder="Ihr Name"
                           />
                         </div>
                         <div>
@@ -152,7 +152,7 @@ export default function ContactPage() {
                           value={formData.subject}
                           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 focus:outline-none transition-all text-gray-900"
-                          placeholder={locale === "de" ? "Betreff Ihrer Nachricht" : "Subject of your message"}
+                          placeholder="Betreff Ihrer Nachricht"
                         />
                       </div>
                       <div>
@@ -163,7 +163,7 @@ export default function ContactPage() {
                           value={formData.message}
                           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 focus:outline-none transition-all text-gray-900 resize-none"
-                          placeholder={locale === "de" ? "Ihre Nachricht an uns..." : "Your message to us..."}
+                          placeholder="Ihre Nachricht an uns..."
                         />
                       </div>
                       <button
@@ -268,7 +268,7 @@ export default function ContactPage() {
                     className="flex items-center justify-center gap-2 w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold px-6 py-3.5 rounded-xl transition-all duration-200 mt-8"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                    {locale === "de" ? "Zurück zur Startseite" : "Back to Home"}
+                    Zurück zur Startseite
                   </Link>
                 </div>
               </AnimatedSection>

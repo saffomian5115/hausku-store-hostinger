@@ -11,7 +11,7 @@ import { CATEGORIES, getCategoryName, CategoryIconSvg } from "@/lib/categories";
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
-  const { t, locale, switchLocale } = useLocale();
+  const { t } = useLocale();
 
   return (
     <>
@@ -68,30 +68,6 @@ export default function MobileNav() {
           <SearchBar />
         </div>
 
-        {/* Language Switcher */}
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-gray-100">
-          <span className="text-xs font-semibold text-gray-400 uppercase">{t("nav.language")}</span>
-          <div className="flex border border-gray-200 rounded-lg overflow-hidden">
-            <button
-              onClick={() => switchLocale("de")}
-              className={`px-3 py-1.5 text-xs font-bold transition-all ${
-                locale === "de" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              DE
-            </button>
-            <div className="w-px bg-gray-200" />
-            <button
-              onClick={() => switchLocale("en")}
-              className={`px-3 py-1.5 text-xs font-bold transition-all ${
-                locale === "en" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-
         {/* Navigation Links */}
         <nav className="p-4 space-y-1">
           <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 text-gray-900 font-semibold transition-all">
@@ -134,7 +110,7 @@ export default function MobileNav() {
               <span className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
                 <CategoryIconSvg icon={cat.icon} className="w-4 h-4 text-gray-700" />
               </span>
-              {getCategoryName(cat, locale)}
+              {getCategoryName(cat)}
             </Link>
           ))}
 

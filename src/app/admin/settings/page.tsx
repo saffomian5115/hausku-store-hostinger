@@ -250,17 +250,6 @@ export default function AdminSettingsPage() {
                 className={inputClass}
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Standard-Sprache</label>
-              <select
-                value={form.defaultLanguage}
-                onChange={(e) => updateField("defaultLanguage", e.target.value)}
-                className={inputClass}
-              >
-                <option value="de">Deutsch</option>
-                <option value="en">English</option>
-              </select>
-            </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-1">Shop-Beschreibung</label>
               <textarea

@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "@/lib/i18n";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { locale, t } = await getTranslations();
+  const { t } = await getTranslations();
   return {
     title: `${t("imprint.title")} | hausku`,
     description:
-      locale === "de"
-        ? "Impressum der NI Intellect UG (haftungsbeschränkt) — Angaben gemäß § 5 DDG."
-        : "Imprint of NI Intellect UG (haftungsbeschränkt) — information according to § 5 DDG.",
+      "Impressum der NI Intellect UG (haftungsbeschränkt) — Angaben gemäß § 5 DDG.",
     robots: { index: true, follow: true },
   };
 }

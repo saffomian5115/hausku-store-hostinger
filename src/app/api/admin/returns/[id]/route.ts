@@ -93,7 +93,6 @@ export async function PUT(
             guestEmail: true,
             guestName: true,
             status: true,
-            locale: true,
           },
         },
         customer: { select: { email: true, name: true } },
@@ -154,7 +153,6 @@ export async function PUT(
         customerName: existing.customer?.name || existing.order?.guestName,
         status: status as ReturnStatus,
         adminNote: adminNote !== undefined ? data.adminNote : undefined,
-        locale: existing.order?.locale,
       });
 
       // Auto-generate a credit note once a return is refunded (best-effort)

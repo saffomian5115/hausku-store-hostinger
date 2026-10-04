@@ -86,12 +86,9 @@ export async function POST(request: NextRequest) {
     setSessionCookie(response, token);
 
     // Welcome email (Correction #20) — fire-and-forget, never blocks signup
-    const locale =
-      request.cookies.get("hausku_locale")?.value === "en" ? "en" : "de";
     void sendWelcomeEmail({
       email: customer.email,
       name: customer.name,
-      locale,
     }).catch((err) => console.error("[email] welcome email failed:", err));
 
     return response;

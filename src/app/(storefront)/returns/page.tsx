@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "@/lib/i18n";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { locale, t } = await getTranslations();
+  const { t } = await getTranslations();
   return {
     title: `${t("returns.title")} | hausku`,
     description:
-      locale === "de"
-        ? "Widerrufsbelehrung und Muster-Widerrufsformular der NI Intellect UG (haftungsbeschränkt)."
-        : "Cancellation policy and model withdrawal form of NI Intellect UG (haftungsbeschränkt).",
+      "Widerrufsbelehrung und Muster-Widerrufsformular der NI Intellect UG (haftungsbeschränkt).",
     robots: { index: true, follow: true },
   };
 }
@@ -23,7 +21,7 @@ function FormLine({ text }: { text: string }) {
 }
 
 export default async function ReturnsPage() {
-  const { t, locale } = await getTranslations();
+  const { t } = await getTranslations();
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -75,7 +73,7 @@ export default async function ReturnsPage() {
 
         <div className="mt-8">
           <a
-            href={locale === "de" ? "/api/legal/withdrawal-form?lang=de" : "/api/legal/withdrawal-form?lang=en"}
+            href="/api/legal/withdrawal-form?lang=de"
             download
             className="inline-flex items-center gap-2 bg-lime-500 hover:bg-lime-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-lime-500/25"
           >

@@ -40,6 +40,7 @@ export async function createStripeCheckoutSession(params: {
   }>;
   customerEmail: string;
   shippingCost: number;
+  vatAmount: number;
   vatRate: number;
   successUrl: string;
   cancelUrl: string;
@@ -50,6 +51,7 @@ export async function createStripeCheckoutSession(params: {
     items,
     customerEmail,
     shippingCost,
+    vatAmount,
     vatRate,
     successUrl,
     cancelUrl,
@@ -77,9 +79,24 @@ export async function createStripeCheckoutSession(params: {
         currency: "eur",
         product_data: {
           name: "Versandkosten",
-          description: `MwSt. (${vatRate}%) inbegriffen`,
         },
         unit_amount: Math.round(shippingCost * 100),
+      },
+      quantity: 1,
+    });
+  }
+
+  // Add VAT (MwSt.) as its own line item so the charged amount matches the
+  // order total (subtotal + shipping + VAT). Without this Stripe only charged
+  // the net product price. Product/shipping amounts above are stored net.
+  if (vatAmount > 0) {
+    lineItems.push({
+      price_data: {
+        currency: "eur",
+        product_data: {
+          name: `MwSt. (${vatRate}%)`,
+        },
+        unit_amount: Math.round(vatAmount * 100),
       },
       quantity: 1,
     });

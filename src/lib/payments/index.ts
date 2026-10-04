@@ -82,6 +82,7 @@ export async function createPayment(
     items,
     customerEmail: order.guestEmail || "",
     shippingCost: Number(order.shippingCost),
+    vatAmount: Number(order.vatAmount),
     vatRate: Number(order.vatRate),
     successUrl: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancelUrl: `${appUrl}/checkout?cancelled=true`,
@@ -129,7 +130,6 @@ async function processPaidOrder(orderId: number): Promise<void> {
     orderNumber: order.orderNumber,
     customerEmail: order.guestEmail || "",
     customerName: order.guestName,
-    locale: order.locale,
     items: order.items.map((item) => ({
       productName: item.productName,
       variantLabel: item.variantLabel,

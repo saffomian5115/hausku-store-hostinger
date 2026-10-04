@@ -200,7 +200,6 @@ export async function PUT(
           order.trackingCarrier,
           order.trackingNumber
         ),
-        locale: existing.locale,
       });
     }
 

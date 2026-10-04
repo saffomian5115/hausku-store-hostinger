@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { CartProvider } from "@/components/storefront/CartContext";
 import { WishlistProvider } from "@/components/storefront/WishlistContext";
 import { AuthProvider } from "@/components/storefront/AuthContext";
@@ -56,10 +55,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("hausku_locale")?.value === "en" ? "en" : "de";
   return (
-    <html lang={locale}>
+    <html lang="de">
       <body>
         <Analytics />
         <AuthProvider>

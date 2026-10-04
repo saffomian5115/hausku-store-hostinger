@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
       message,
       topic: typeof topic === "string" ? topic : undefined,
       orderNumber: typeof orderNumber === "string" ? orderNumber.trim() || undefined : undefined,
-      locale: request.cookies.get("hausku_locale")?.value,
     });
 
     if (!sent) {

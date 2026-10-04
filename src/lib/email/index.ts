@@ -13,14 +13,7 @@ import nodemailer from "nodemailer";
 import { formatPrice } from "@/lib/format";
 import { getStoreSettings, DEFAULTS, type StoreSettings } from "@/lib/settings";
 
-// ─── Email localization (Correction #20) ──────────────────
-
-export type EmailLocale = "de" | "en";
-
-/** Resolve a locale-ish string to a supported email language. */
-export function resolveEmailLocale(value?: string | null): EmailLocale {
-  return value === "en" ? "en" : "de"; // German = default (German shop)
-}
+// ─── Email localization (German) ──────────────────────────
 
 const E = {
   de: {
@@ -94,80 +87,6 @@ const E = {
         subject: (n: string) => `Rückerstattung für Retoure ${n} 💶`,
         title: "Ihre Rückerstattung wurde veranlasst",
         body: "Der Betrag für Ihre Retoure wurde erstattet. Je nach Bank kann es 3–5 Werktage dauern, bis das Geld sichtbar ist.",
-      },
-    } as Record<string, { subject: (n: string) => string; title: string; body: string }>,
-  },
-  en: {
-    greetingName: (n: string) => `Hello ${n},`,
-    greetingGeneric: "Hello dear customer,",
-    itemsHeadArticle: "Item",
-    itemsHeadSum: "Total",
-    subtotal: "Subtotal",
-    shipping: "Shipping",
-    free: "Free",
-    vat: (r: number) => `VAT (${r}%)`,
-    total: "Total",
-    shippingAddress: "Delivery address",
-    orderNumber: "Order number",
-    returnNumber: "Return number",
-    trackingNumber: "Tracking number",
-    trackButton: "Track shipment",
-    questionsLine: (m: string) =>
-      `If you have any questions, simply reply to this email or write to us at ${m}.`,
-    willPrepare: "we have received your order {order} and are happy to prepare it for you.",
-    thanksTitle: "Thank you for your order! 🎉",
-    yourOrder: "Your order",
-    subjectOrder: (n: string) => `Your order ${n} at hausku`,
-    separateShippingEmail:
-      "You will receive a separate email as soon as your order has been shipped.",
-    note: "Note",
-    orderStatus: {
-      SHIPPED: {
-        subject: "Your order is on its way 📦",
-        title: "Your order has been shipped!",
-        body: "Your order has just been shipped and is on its way to you.",
-      },
-      DELIVERED: {
-        subject: "Your order has been delivered ✅",
-        title: "Your order has arrived!",
-        body: "We hope you enjoy your new HAUSKU products. We are always here for you if you have any questions.",
-      },
-      CANCELLED: {
-        subject: "Your order has been cancelled",
-        title: "Your order has been cancelled",
-        body: "Your order has been cancelled. If you have already paid, the amount will be refunded shortly.",
-      },
-      REFUNDED: {
-        subject: "Refund for your order",
-        title: "Your refund has been processed",
-        body: "The amount for your order has been refunded. Depending on your bank, it may take 3–5 business days for the money to become visible.",
-      },
-    } as Record<string, { subject: string; title: string; body: string }>,
-    returnStatus: {
-      PENDING: {
-        subject: (n: string) => `Your return ${n} has been received 📬`,
-        title: "We have received your return",
-        body: "Your return has been recorded. We will review the request and usually get back to you within 1–2 business days.",
-      },
-      APPROVED: {
-        subject: (n: string) => `Return ${n} approved ✅`,
-        title: "Your return has been approved",
-        body: "You can now send the items back. Please include all items in full and use the return address from your order confirmation.",
-      },
-      REJECTED: {
-        subject: (n: string) => `Return ${n} rejected`,
-        title: "Your return could not be approved",
-        body: "Unfortunately, we cannot approve your return. You can find details in this email.",
-      },
-      RECEIVED: {
-        subject: (n: string) => `Your return ${n} has arrived 📦`,
-        title: "Your return has reached us",
-        body: "We have received your return shipment and are reviewing it. The refund will be issued as soon as the review is complete.",
-      },
-      REFUNDED: {
-        subject: (n: string) => `Refund for return ${n} 💶`,
-        title: "Your refund has been initiated",
-        body: "The amount for your return has been refunded. Depending on your bank, it may take 3–5 business days for the money to become visible.",
       },
     } as Record<string, { subject: (n: string) => string; title: string; body: string }>,
   },
@@ -332,15 +251,13 @@ export interface ContactNotificationInput {
   message: string;
   topic?: string;
   orderNumber?: string;
-  locale?: string | null;
 }
 
 /** Notify the store about a new contact form submission. */
 export async function sendContactNotification(
   input: ContactNotificationInput
 ): Promise<boolean> {
-  const langTag = resolveEmailLocale(input.locale) === "en" ? "EN" : "DE";
-  const subject = `[${langTag}] Kontaktformular: ${input.subject || "Neue Nachricht"}`;
+  const subject = `[DE] Kontaktformular: ${input.subject || "Neue Nachricht"}`;
   const html = await emailLayout(
     "Neue Kontaktanfrage",
     `
@@ -415,7 +332,6 @@ export interface OrderEmailData {
   shippingCity?: string | null;
   shippingPostal?: string | null;
   shippingCountry?: string | null;
-  locale?: string | null;
 }
 
 /** Send the order confirmation email to the customer. */
@@ -427,7 +343,7 @@ export async function sendOrderConfirmationEmail(
     return false;
   }
 
-  const L = E[resolveEmailLocale(data.locale)];
+  const L = E.de;
 
   const itemsHtml = data.items
     .map((item) => {
@@ -568,7 +484,6 @@ export interface OrderStatusEmailData {
   status: "SHIPPED" | "CANCELLED" | "DELIVERED" | "REFUNDED";
   trackingNumber?: string | null;
   trackingUrl?: string | null;
-  locale?: string | null;
 }
 
 type OrderStatus = OrderStatusEmailData["status"];
@@ -593,7 +508,7 @@ export async function sendOrderStatusEmail(
     return false;
   }
 
-  const L = E[resolveEmailLocale(data.locale)];
+  const L = E.de;
   const content = L.orderStatus[data.status];
   const emoji = STATUS_EMOJI[data.status];
   const greeting = data.customerName
@@ -656,7 +571,6 @@ export interface ReturnStatusEmailData {
   customerName?: string | null;
   status: "PENDING" | "APPROVED" | "REJECTED" | "RECEIVED" | "REFUNDED";
   adminNote?: string | null;
-  locale?: string | null;
 }
 
 type ReturnStatus = ReturnStatusEmailData["status"];
@@ -680,7 +594,7 @@ export async function sendReturnStatusEmail(
     return false;
   }
 
-  const L = E[resolveEmailLocale(data.locale)];
+  const L = E.de;
   const content = L.returnStatus[data.status];
   const emoji = RETURN_STATUS_EMOJI[data.status];
   const subject = content.subject(data.returnNumber);
@@ -740,19 +654,16 @@ export async function sendReturnStatusEmail(
 export async function sendWelcomeEmail(input: {
   email: string;
   name?: string | null;
-  locale?: string | null;
 }): Promise<boolean> {
-  const L = E[resolveEmailLocale(input.locale)];
+  const L = E.de;
   const greeting = input.name
     ? L.greetingName(escapeHtml(input.name))
     : L.greetingGeneric;
 
-  const isDe = resolveEmailLocale(input.locale) === "de";
   const title = "Willkommen bei HAUSKU! 🌿";
-  const body = isDe
-    ? "Ihr Konto wurde erfolgreich erstellt. Sie können jetzt schneller zur Kasse gehen, Ihre Bestellungen verfolgen und Ihre Adressen verwalten."
-    : "Your account has been created successfully. You can now check out faster, track your orders and manage your addresses.";
-  const shopCta = isDe ? "Jetzt shoppen" : "Start shopping";
+  const body =
+    "Ihr Konto wurde erfolgreich erstellt. Sie können jetzt schneller zur Kasse gehen, Ihre Bestellungen verfolgen und Ihre Adressen verwalten.";
+  const shopCta = "Jetzt shoppen";
 
   const html = await emailLayout(
     title,
@@ -790,18 +701,15 @@ export async function sendPasswordResetEmail(input: {
   email: string;
   name?: string | null;
   resetUrl: string;
-  locale?: string | null;
 }): Promise<boolean> {
-  const isDe = resolveEmailLocale(input.locale) === "de";
-  const L = E[resolveEmailLocale(input.locale)];
+  const L = E.de;
   const greeting = input.name
     ? L.greetingName(escapeHtml(input.name))
     : L.greetingGeneric;
-  const title = isDe ? "Passwort zurücksetzen" : "Reset your password";
-  const body = isDe
-    ? "Sie haben das Zurücksetzen Ihres Passworts angefordert. Der Link ist 1 Stunde gültig. Falls Sie das nicht waren, können Sie diese E-Mail ignorieren."
-    : "You requested a password reset. The link is valid for 1 hour. If this wasn't you, you can safely ignore this email.";
-  const cta = isDe ? "Passwort setzen" : "Set new password";
+  const title = "Passwort zurücksetzen";
+  const body =
+    "Sie haben das Zurücksetzen Ihres Passworts angefordert. Der Link ist 1 Stunde gültig. Falls Sie das nicht waren, können Sie diese E-Mail ignorieren.";
+  const cta = "Passwort setzen";
 
   const html = await emailLayout(
     title,

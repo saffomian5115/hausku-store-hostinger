@@ -5,7 +5,7 @@ import { useLocale } from "@/components/shared/LocaleContext";
 import AnimatedSection from "@/components/shared/AnimatedSection";
 
 export default function AboutPage() {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
 
   return (
     <>
@@ -61,14 +61,14 @@ export default function AboutPage() {
                   <div className="text-center p-8">
                     <span className="text-7xl mb-4 block">🌱</span>
                     <p className="text-2xl font-bold text-lime-700">
-                      {locale === "de" ? "Nachhaltigkeit trifft Design" : "Sustainability meets Design"}
+                      Nachhaltigkeit trifft Design
                     </p>
                   </div>
                 </div>
                 {/* Floating badge */}
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-lg px-6 py-4 border border-gray-100">
-                  <p className="text-sm font-bold text-gray-900">{locale === "de" ? "Designed in Germany" : "Designed in Germany"}</p>
-                  <p className="text-xs text-gray-500">{locale === "de" ? "🇩🇪 Deutsches Design" : "🇩🇪 German Design"}</p>
+                  <p className="text-sm font-bold text-gray-900">Designed in Germany</p>
+                  <p className="text-xs text-gray-500">🇩🇪 Deutsches Design</p>
                 </div>
               </div>
             </AnimatedSection>
@@ -144,9 +144,7 @@ export default function AboutPage() {
                 ))}
               </div>
               <p className="text-sm text-gray-400 italic">
-                {locale === "de"
-                  ? "👥 Team-Fotos können hier hinzugefügt werden, sobald der Kunde sie bereitstellt."
-                  : "👥 Team photos can be added here once the client provides them."}
+                👥 Team-Fotos können hier hinzugefügt werden, sobald der Kunde sie bereitstellt.
               </p>
             </div>
           </div>

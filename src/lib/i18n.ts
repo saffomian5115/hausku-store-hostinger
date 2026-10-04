@@ -1,25 +1,19 @@
-import { cookies } from "next/headers";
-import { t as clientT, type Locale, defaultLocale } from "@/locales";
+import { t as clientT, defaultLocale } from "@/locales";
 
-// Server-side: read locale from cookie
-export async function getLocale(): Promise<Locale> {
-  const cookieStore = await cookies();
-  const saved = cookieStore.get("hausku_locale")?.value;
-  if (saved === "en" || saved === "de") return saved;
+// German-only storefront: locale is fixed.
+export async function getLocale() {
   return defaultLocale;
 }
 
 // Server-side translation function
 export async function t(key: string): Promise<string> {
-  const locale = await getLocale();
-  return clientT(locale, key);
+  return clientT(defaultLocale, key);
 }
 
-// Get translations object for a locale (useful for server components)
+// Get translations object (useful for server components)
 export async function getTranslations() {
-  const locale = await getLocale();
   return {
-    locale,
-    t: (key: string) => clientT(locale, key),
+    locale: defaultLocale,
+    t: (key: string) => clientT(defaultLocale, key),
   };
 }

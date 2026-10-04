@@ -1,33 +1,33 @@
 export interface Category {
   slug: string;
   icon: string;
-  name: { de: string; en: string };
-  desc: { de: string; en: string };
+  name: string;
+  desc: string;
 }
 
 export const CATEGORIES: Category[] = [
   {
     slug: "kueche",
     icon: "kitchen",
-    name: { de: "Küche", en: "Kitchen" },
-    desc: { de: "Brotdosen & mehr", en: "Lunch boxes & more" },
+    name: "Küche",
+    desc: "Brotdosen & mehr",
   },
   {
     slug: "haushalt",
     icon: "household",
-    name: { de: "Haushalt", en: "Household" },
-    desc: { de: "Couch Bar & Accessoires", en: "Couch bar & accessories" },
+    name: "Haushalt",
+    desc: "Couch Bar & Accessoires",
   },
 ];
 
-/** Helper to get localized category name */
-export function getCategoryName(cat: Category, locale: string): string {
-  return cat.name[locale as "de" | "en"] || cat.name.de;
+/** Category name (German) */
+export function getCategoryName(cat: Category): string {
+  return cat.name;
 }
 
-/** Helper to get localized category description */
-export function getCategoryDesc(cat: Category, locale: string): string {
-  return cat.desc[locale as "de" | "en"] || cat.desc.de;
+/** Category description (German) */
+export function getCategoryDesc(cat: Category): string {
+  return cat.desc;
 }
 
 /** Render a category icon as SVG element */

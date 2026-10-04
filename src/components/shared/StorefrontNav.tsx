@@ -16,17 +16,15 @@ export default function StorefrontNav() {
   const { itemCount, cart } = useCart();
   const { likedCount, wishlistProducts } = useWishlist();
   const { user } = useAuth();
-  const { t, locale, switchLocale } = useLocale();
+  const { t } = useLocale();
   const [catOpen, setCatOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishOpen, setWishOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
   const catRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
   const wishRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
-  const langRef = useRef<HTMLDivElement>(null);
 
 
 
@@ -34,7 +32,7 @@ export default function StorefrontNav() {
   // Close ALL dropdowns on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      const targets = [catRef, cartRef, wishRef, accountRef, langRef];
+      const targets = [catRef, cartRef, wishRef, accountRef];
       for (const ref of targets) {
         if (ref.current && ref.current.contains(e.target as Node)) return;
       }
@@ -42,7 +40,6 @@ export default function StorefrontNav() {
       setCartOpen(false);
       setWishOpen(false);
       setAccountOpen(false);
-      setLangOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -54,7 +51,6 @@ export default function StorefrontNav() {
     if (except !== "cart") setCartOpen(false);
     if (except !== "wish") setWishOpen(false);
     if (except !== "account") setAccountOpen(false);
-    if (except !== "lang") setLangOpen(false);
   };
 
   const cartTotal = cart.items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
@@ -116,7 +112,7 @@ export default function StorefrontNav() {
                       <span className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center group-hover/item:bg-lime-50 group-hover/item:scale-110 transition-all">
                         <CategoryIconSvg icon={cat.icon} className="w-5 h-5 text-gray-700" />
                       </span>
-                      <div><p className="font-semibold text-gray-900 text-sm">{getCategoryName(cat, locale)}</p><p className="text-xs text-gray-400">{getCategoryDesc(cat, locale)}</p></div>
+                      <div><p className="font-semibold text-gray-900 text-sm">{getCategoryName(cat)}</p><p className="text-xs text-gray-400">{getCategoryDesc(cat)}</p></div>
                       <svg className="w-4 h-4 text-gray-300 ml-auto group-hover/item:text-lime-500 group-hover/item:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </Link>
                   ))}
@@ -140,47 +136,9 @@ export default function StorefrontNav() {
             </Link>
           </div>
 
-          {/* Right: Search + Language + Wishlist + Cart + Account */}
+          {/* Right: Search + Wishlist + Cart + Account */}
           <div className="flex items-center space-x-0.5 shrink-0 pr-2">
             <SearchBar compact />
-
-            {/* Language Globe Icon + Dropdown */}
-            <div className="relative" ref={langRef} onMouseEnter={() => { closeOthers("lang"); setLangOpen(true); }} onMouseLeave={() => setLangOpen(false)}>
-              <button
-                onClick={() => { closeOthers("lang"); setLangOpen(!langOpen); }}
-                className="p-2.5 text-gray-900 hover:text-lime-600 rounded-xl transition-all duration-200 hover:bg-gray-50"
-                aria-label="Sprache wechseln"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </button>
-              {langOpen && (
-                <div className="absolute top-full right-0 mt-0 pt-2 w-44 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50">
-                  <p className="px-4 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Sprache</p>
-                  <button
-                    onClick={() => { switchLocale("de"); setLangOpen(false); }}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all ${
-                      locale === "de" ? "bg-lime-50 text-lime-600" : "text-gray-900 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span className="text-lg">🇩🇪</span>
-                    <span>Deutsch</span>
-                    {locale === "de" && <svg className="w-4 h-4 ml-auto text-lime-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
-                  </button>
-                  <button
-                    onClick={() => { switchLocale("en"); setLangOpen(false); }}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all ${
-                      locale === "en" ? "bg-lime-50 text-lime-600" : "text-gray-900 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span className="text-lg">🇬🇧</span>
-                    <span>English</span>
-                    {locale === "en" && <svg className="w-4 h-4 ml-auto text-lime-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
-                  </button>
-                </div>
-              )}
-            </div>
 
             {/* Wishlist with hover toolbox */}
             <div className="relative hidden sm:block" ref={wishRef} onMouseEnter={() => { closeOthers("wish"); setWishOpen(true); }} onMouseLeave={() => setWishOpen(false)}>

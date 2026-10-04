@@ -45,13 +45,11 @@ export async function POST(request: NextRequest) {
       });
 
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const locale = request.cookies.get("hausku_locale")?.value;
 
       const sent = await sendPasswordResetEmail({
         email: customer.email,
         name: customer.name,
         resetUrl: `${appUrl}/reset-password?token=${rawToken}`,
-        locale,
       });
 
       if (!sent) {
