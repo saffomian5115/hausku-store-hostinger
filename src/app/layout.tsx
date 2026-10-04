@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { CartProvider } from "@/components/storefront/CartContext";
 import { WishlistProvider } from "@/components/storefront/WishlistContext";
 import { AuthProvider } from "@/components/storefront/AuthContext";
@@ -18,14 +19,8 @@ export const metadata: Metadata = {
   description:
     "Qualitätsprodukte für Haus und Küche. Kostenloser Versand ab 30 €.",
   keywords: [
-    "hausku",
-    "Brotdose",
-    "Edelstahl Brotdose",
-    "Snackbox",
-    "Lapdesk",
-    "Laptopkissen",
-    "Haushalt",
-    "Küche",
+    "hausku", "Brotdose", "Edelstahl Brotdose", "Snackbox", "Lapdesk",
+    "Laptopkissen", "Haushalt", "Küche",
   ],
   openGraph: {
     type: "website",
@@ -42,7 +37,7 @@ export const metadata: Metadata = {
     title: "hausku — Haus & Küche",
     description:
       "Qualitätsprodukte für Haus und Küche. Kostenloser Versand ab 30 €.",
-    images: ["/images/og-default.jpg"],
+    images: [{ url: "/images/og-default.jpg" }],
   },
   robots: {
     index: true,
@@ -52,20 +47,23 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  // Server-side locale used for metadata (og:locale, etc.).
+  const cookieStore = await cookies();
+  const locale =
+    cookieStore.get("hausku_locale")?.value === "en" ? "en" : "de";
+
   return (
-    <html lang="de">
+    <html lang={locale} suppressHydrationWarning>
       <body>
         <Analytics />
         <AuthProvider>
           <FlyProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <LocaleProvider>{children}</LocaleProvider>
-            </WishlistProvider>
-          </CartProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <LocaleProvider>{children}</LocaleProvider>
+              </WishlistProvider>
+            </CartProvider>
           </FlyProvider>
         </AuthProvider>
       </body>

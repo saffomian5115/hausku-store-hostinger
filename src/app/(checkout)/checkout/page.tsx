@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useCart } from "@/components/storefront/CartContext";
 import { formatPrice } from "@/lib/format";
 import { useStoreSettings } from "@/lib/useStoreSettings";
+import BackgroundGrid from "@/components/shared/BackgroundGrid";
+import StorefrontNav from "@/components/shared/StorefrontNav";
 
 type FormErrors = Record<string, string>;
 
@@ -69,7 +71,6 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      // Step 1: Create the order
       const orderRes = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,7 +111,6 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Step 2: For Stripe payments, create a checkout session and redirect
       if (form.paymentMethod === "stripe") {
         const paymentRes = await fetch("/api/payments", {
           method: "POST",
@@ -126,8 +126,7 @@ export default function CheckoutPage() {
           paymentData = await paymentRes.json();
         } catch {
           setErrors({
-            submit:
-              "Fehler bei der Zahlung. Bitte versuchen Sie es erneut.",
+            submit: "Fehler bei der Zahlung. Bitte versuchen Sie es erneut.",
           });
           setLoading(false);
           return;
@@ -143,14 +142,11 @@ export default function CheckoutPage() {
           return;
         }
 
-        // Redirect to Stripe Checkout
         clearCart();
         window.location.href = paymentData.url as string;
         return;
       }
 
-      // PayPal/Klarna intentionally not offered until real integrations exist —
-      // orders must never be confirmed without a captured payment.
       setErrors({
         submit:
           "Diese Zahlungsart ist derzeit nicht verfügbar. Bitte Kreditkarte wählen.",
@@ -164,51 +160,34 @@ export default function CheckoutPage() {
 
   if (cart.items.length === 0 && !loading) {
     return (
-      <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg font-medium text-gray-900 mb-4">
-            Ihr Warenkorb ist leer
-          </p>
-          <Link
-            href="/catalog"
-            className="inline-block bg-lime-500 hover:bg-lime-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
-            Weiter einkaufen
-          </Link>
+      <div className="relative min-h-screen z-10">
+        <BackgroundGrid />
+        <StorefrontNav />
+        <div className="bg-white min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-lg font-medium text-gray-900 mb-4">
+              Ihr Warenkorb ist leer
+            </p>
+            <Link
+              href="/catalog"
+              className="inline-block bg-lime-500 hover:bg-lime-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
+              Weiter einkaufen
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50">
-      {/* Minimal Checkout Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-gray-900">
-            hausku
-          </Link>
-          <div className="hidden md:flex items-center gap-2 text-sm text-gray-500">
-            <span className="font-medium text-gray-900">1. Kontakt</span>
-            <span>→</span>
-            <span>2. Versand</span>
-            <span>→</span>
-            <span>3. Zahlung</span>
-          </div>
-          <Link
-            href="/cart"
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            ← Zurück zum Warenkorb
-          </Link>
-        </div>
-      </header>
-
+    <div className="relative min-h-screen z-10">
+      <BackgroundGrid />
+      <StorefrontNav />
       <form
         onSubmit={handleSubmit}
-        className="max-w-5xl mx-auto px-4 py-12"
+        className="max-w-5xl mx-auto px-4 pb-12"
       >
-        {/* Submit Error */}
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 text-sm">
             {errors.submit}
@@ -216,11 +195,9 @@ export default function CheckoutPage() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-          {/* Checkout Form */}
           <div className="lg:col-span-3 space-y-6">
             <h1 className="text-2xl font-bold">Kasse</h1>
 
-            {/* Guest Contact */}
             <div className="bg-white rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold">Kontaktdaten</h2>
@@ -249,7 +226,9 @@ export default function CheckoutPage() {
                     placeholder="ihre@email.de"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.email}
+                    </p>
                   )}
                 </div>
                 <div className="md:col-span-2">
@@ -267,7 +246,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Shipping Address */}
             <div className="bg-white rounded-lg border p-6">
               <h2 className="text-lg font-bold mb-4">Lieferadresse</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -320,7 +298,9 @@ export default function CheckoutPage() {
                     }`}
                   />
                   {errors.street && (
-                    <p className="text-red-500 text-xs mt-1">{errors.street}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.street}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -330,7 +310,9 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     value={form.postalCode}
-                    onChange={(e) => updateField("postalCode", e.target.value)}
+                    onChange={(e) =>
+                      updateField("postalCode", e.target.value)
+                    }
                     className={`w-full border rounded-lg px-4 py-3 ${
                       errors.postalCode ? "border-red-500" : ""
                     }`}
@@ -355,13 +337,14 @@ export default function CheckoutPage() {
                     }`}
                   />
                   {errors.city && (
-                    <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.city}
+                    </p>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Payment Method */}
             <div className="bg-white rounded-lg border p-6">
               <h2 className="text-lg font-bold mb-4">Zahlungsart</h2>
               <div className="space-y-3">
@@ -397,7 +380,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Order Notes */}
             <div className="bg-white rounded-lg border p-6">
               <h2 className="text-lg font-bold mb-4">
                 Bestellhinweise (optional)
@@ -412,7 +394,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Order Summary Sidebar */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg border p-6 sticky top-24">
               <h2 className="text-lg font-bold mb-4">Bestellübersicht</h2>
