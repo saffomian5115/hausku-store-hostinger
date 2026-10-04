@@ -2,15 +2,27 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  LayoutDashboard,
+  Package,
+  Receipt,
+  Undo2,
+  Star,
+  Users,
+  Settings,
+  Store,
+  LogOut,
+  type LucideIcon,
+} from "lucide-react";
 
-const NAV_ITEMS = [
-  { href: "/admin", icon: "📊", label: "Dashboard" },
-  { href: "/admin/products", icon: "📦", label: "Produkte" },
-  { href: "/admin/orders", icon: "🧾", label: "Bestellungen" },
-  { href: "/admin/returns", icon: "↩️", label: "Retouren" },
-  { href: "/admin/reviews", icon: "⭐", label: "Bewertungen" },
-  { href: "/admin/customers", icon: "👥", label: "Kunden" },
-  { href: "/admin/settings", icon: "⚙️", label: "Einstellungen" },
+const NAV_ITEMS: { href: string; icon: LucideIcon; label: string }[] = [
+  { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/admin/products", icon: Package, label: "Produkte" },
+  { href: "/admin/orders", icon: Receipt, label: "Bestellungen" },
+  { href: "/admin/returns", icon: Undo2, label: "Retouren" },
+  { href: "/admin/reviews", icon: Star, label: "Bewertungen" },
+  { href: "/admin/customers", icon: Users, label: "Kunden" },
+  { href: "/admin/settings", icon: Settings, label: "Einstellungen" },
 ];
 
 export default function AdminLayout({
@@ -35,17 +47,17 @@ export default function AdminLayout({
           <div className="flex items-center gap-1">
             <Link
               href="/"
-              className="p-2 rounded-lg hover:bg-gray-800 transition-colors text-sm"
+              className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
               title="Store ansehen"
             >
-              🏪
+              <Store className="w-5 h-5 text-white" />
             </Link>
             <button
               onClick={handleLogout}
-              className="p-2 rounded-lg hover:bg-gray-800 transition-colors text-sm"
+              className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
               title="Abmelden"
             >
-              🚪
+              <LogOut className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
@@ -56,7 +68,7 @@ export default function AdminLayout({
               href={item.href}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg whitespace-nowrap text-sm text-gray-200 hover:bg-gray-800 hover:text-white transition-colors shrink-0"
             >
-              <span>{item.icon}</span> {item.label}
+              <item.icon className="w-4 h-4 text-white shrink-0" /> {item.label}
             </Link>
           ))}
         </nav>
@@ -64,35 +76,35 @@ export default function AdminLayout({
 
       <div className="flex">
         {/* Sidebar (desktop) */}
-        <aside className="hidden md:flex flex-col w-64 bg-gray-900 text-white min-h-screen shrink-0">
-          <div className="p-6 border-b border-gray-800">
+        <aside className="hidden md:flex flex-col w-64 bg-gray-900 text-white h-screen sticky top-0 shrink-0">
+          <div className="p-6 border-b border-gray-800 shrink-0">
             <Link href="/admin" className="text-xl font-bold">
               hausku <span className="text-gray-400 text-sm font-normal">Admin</span>
             </Link>
           </div>
-          <nav className="p-4 space-y-1 flex-1">
+          <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
               >
-                <span>{item.icon}</span> {item.label}
+                <item.icon className="w-5 h-5 text-white shrink-0" /> {item.label}
               </Link>
             ))}
           </nav>
-          <div className="p-4 border-t border-gray-800">
+          <div className="p-4 border-t border-gray-800 shrink-0">
             <Link
               href="/"
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors text-gray-400"
             >
-              <span>🏪</span> Store ansehen
+              <Store className="w-5 h-5 text-white shrink-0" /> Store ansehen
             </Link>
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors text-gray-400 w-full text-left"
             >
-              <span>🚪</span> Abmelden
+              <LogOut className="w-5 h-5 text-white shrink-0" /> Abmelden
             </button>
           </div>
         </aside>

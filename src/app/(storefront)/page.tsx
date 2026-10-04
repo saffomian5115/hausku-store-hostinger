@@ -32,7 +32,7 @@ import {
 export default async function HomePage() {
   const { t } = await getTranslations();
 
-  const [bestsellers, snackbox, laptopCushion, lunchBox1400, reviewAgg] =
+  const [bestsellers, snackbox, laptopCushion, lunchBox1400, reviewAgg, latestReviews] =
     await Promise.all([
       prisma.product.findMany({
         where: { active: true },
@@ -57,12 +57,27 @@ export default async function HomePage() {
         _avg: { rating: true },
         _count: true,
       }),
+      prisma.review.findMany({
+        where: { approved: true, rejected: false },
+        include: {
+          customer: { select: { name: true } },
+          product: { select: { name: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 12,
+      }),
     ]);
 
   const avgRating = reviewAgg._avg.rating
     ? Math.round(reviewAgg._avg.rating * 10) / 10
     : 0;
   const reviewCount = reviewAgg._count;
+
+  // Split the newest real reviews into two marquee rows (opposite directions).
+  const reviewRows = [
+    latestReviews.filter((_, i) => i % 2 === 0),
+    latestReviews.filter((_, i) => i % 2 === 1),
+  ].filter((row) => row.length > 0);
 
   const tickerItems = [
     "Kostenloser Versand ab 30 €",
@@ -493,41 +508,55 @@ export default async function HomePage() {
             <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900">
               {t("home.reviewsTitle")}
             </h2>
-            <p className="text-gray-500 mt-2">{t("home.reviewsAvg")}</p>
+            <p className="text-gray-500 mt-2">
+              {reviewCount > 0
+                ? `${avgRating} von 5 · ${reviewCount} Bewertung${reviewCount !== 1 ? "en" : ""}`
+                : t("home.reviewsAvg")}
+            </p>
           </div>
 
-          {[
-            [
-              { name: "Ludolph C.", title: "Super Qualität", text: "Super hochwertig. Sogar eine Ersatzdichtung dabei." },
-              { name: "Shakeel H.", title: "Sehr zufrieden!", text: "Mein Kind benutzt diese Edelstahl-Brotdose täglich." },
-              { name: "danescu a.", title: "Tip top", text: "Die Box hat einen einfachen und praktischen Deckelverschluss." },
-              { name: "Petra W.", title: "Absolute Empfehlung", text: "Endlich eine Marke, die hält was sie verspricht." },
-            ],
-            [
-              { name: "Jonas B.", title: "Top Verarbeitung", text: "Man merkt sofort die Liebe zum Detail." },
-              { name: "Meike S.", title: "Alltagstauglich", text: "Nutze die Snackbox jedes Wochenende." },
-              { name: "Dominik R.", title: "Schneller Versand", text: "Zwei Tage nach Bestellung war alles da." },
-              { name: "Aylin K.", title: "Schönes Design", text: "Sieht auf jedem Küchentisch gut aus." },
-            ],
-          ].map((row, rowIdx) => (
-            <Marquee key={rowIdx} speed={rowIdx === 0 ? 38 : 44} reverse={rowIdx === 1} className="mb-5 last:mb-0">
-              {row.map((review, i) => (
-                <div
-                  key={i}
-                  className="w-[300px] bg-white border border-stone-200 rounded-2xl p-6 shadow-sm shrink-0 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-out-quart"
-                >
-                  <div className="flex items-center gap-1 text-amber-400 mb-3">
-                    {Array.from({ length: 5 }).map((_, s) => (
-                      <Star key={s} className="w-3.5 h-3.5 fill-amber-400" />
-                    ))}
+          {reviewRows.length === 0 ? (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <p className="text-center text-gray-500 bg-white border border-stone-200 rounded-2xl p-8">
+                Noch keine Bewertungen.
+              </p>
+            </div>
+          ) : (
+            reviewRows.map((row, rowIdx) => (
+              <Marquee
+                key={rowIdx}
+                speed={rowIdx === 0 ? 38 : 44}
+                reverse={rowIdx === 1}
+                className="mb-5 last:mb-0"
+              >
+                {row.map((review) => (
+                  <div
+                    key={review.id}
+                    className="w-[300px] bg-white border border-stone-200 rounded-2xl p-6 shadow-sm shrink-0 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-out-quart"
+                  >
+                    <div className="flex items-center gap-1 text-amber-400 mb-3">
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <Star
+                          key={s}
+                          className={`w-3.5 h-3.5 ${s < review.rating ? "fill-amber-400 text-amber-400" : "text-stone-200"}`}
+                        />
+                      ))}
+                    </div>
+                    {review.title && (
+                      <h4 className="font-bold text-gray-900 mb-1.5 text-sm">{review.title}</h4>
+                    )}
+                    {review.body && (
+                      <p className="text-gray-600 text-sm leading-relaxed mb-4">{review.body}</p>
+                    )}
+                    <span className="text-xs font-medium text-gray-400">
+                      {review.customer?.name || "Verifizierter Kunde"}
+                      {review.product?.name ? ` · ${review.product.name}` : ""}
+                    </span>
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-1.5 text-sm">{review.title}</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{review.text}</p>
-                  <span className="text-xs font-medium text-gray-400">{review.name}</span>
-                </div>
-              ))}
-            </Marquee>
-          ))}
+                ))}
+              </Marquee>
+            ))
+          )}
         </section>
       </AnimatedSection>
 
