@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs";
-import path from "node:path";
 import { prisma } from "@/lib/db/prisma";
-import { createInvoiceForOrder } from "@/lib/invoices";
+import { createInvoiceForOrder, ensureInvoicePdf } from "@/lib/invoices";
 import { getSessionCustomer } from "@/lib/customerSession";
 
 // GET /api/orders/[orderNumber]/invoice?email=...
@@ -49,7 +48,7 @@ export async function GET(
       invoice = await createInvoiceForOrder(order.id);
     }
 
-    if (!invoice?.pdfPath) {
+    if (!invoice) {
       return NextResponse.json(
         {
           error: "Rechnung ist noch nicht verfügbar (Bestellung noch nicht bezahlt)",
@@ -58,8 +57,10 @@ export async function GET(
       );
     }
 
-    const filePath = path.join(process.cwd(), "public", invoice.pdfPath);
-    if (!fs.existsSync(filePath)) {
+    // Re-renders the document when its file was written by an older layout
+    // version (or is missing).
+    const filePath = await ensureInvoicePdf(invoice.id);
+    if (!filePath) {
       return NextResponse.json(
         { error: "PDF-Datei nicht gefunden" },
         { status: 404 }

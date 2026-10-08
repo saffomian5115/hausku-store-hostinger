@@ -279,10 +279,18 @@ export default function StorefrontNav() {
                     </>
                   ) : (
                     <>
-                      <Link href="/login" onClick={() => setAccountOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-900">
-                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg> {t("nav.signIn")}
+                      <div className="px-4 pb-3 border-b border-gray-100">
+                        <p className="font-bold text-gray-900 text-sm">{t("nav.accountTitle")}</p>
+                      </div>
+                      {/* Log in — the primary action, deliberately styled
+                          differently from the register entry below. */}
+                      <Link href="/login" onClick={() => setAccountOpen(false)} className="mx-2 my-1.5 flex items-center gap-3 px-3 py-2.5 rounded-xl bg-lime-50 hover:bg-lime-100 transition-colors text-sm font-semibold text-lime-700">
+                        <svg className="w-4 h-4 text-lime-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg> {t("nav.signIn")}
                       </Link>
-                      <Link href="/register" onClick={() => setAccountOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-900">
+                      <p className="px-4 pt-1 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-400">
+                        {t("auth.noAccount")}
+                      </p>
+                      <Link href="/register" onClick={() => setAccountOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
                         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg> {t("nav.signUp")}
                       </Link>
                     </>

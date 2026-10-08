@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/storefront/AuthContext";
 import GoogleSignInButton from "@/components/storefront/GoogleSignInButton";
 import AuthShell from "@/components/shared/AuthShell";
 import { useLocale } from "@/components/shared/LocaleContext";
-import { Mail, Lock, Eye, EyeOff, User, Leaf } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 
 export default function RegisterPage() {
   const { t } = useLocale();
@@ -38,13 +39,17 @@ export default function RegisterPage() {
     <AuthShell>
       {/* White card with lime accent border */}
       <div className="relative w-full bg-white rounded-3xl border border-lime-200 shadow-xl shadow-lime-900/5 p-8 md:p-10 auth-card-anim">
-        {/* Logo / Title */}
+        {/* Logo / Title — same brand logo as the header, scaled up */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center justify-center gap-2 text-gray-900">
-            <span className="w-10 h-10 rounded-2xl bg-lime-500 flex items-center justify-center shadow-lg shadow-lime-500/25">
-              <Leaf className="w-5 h-5 text-white" />
-            </span>
-            <span className="text-2xl font-bold tracking-tight">hausku</span>
+          <Link href="/" className="inline-flex items-center justify-center">
+            <Image
+              src="/mylogo.png"
+              alt="hausku"
+              width={260}
+              height={129}
+              priority
+              className="h-14 md:h-16 w-auto object-contain"
+            />
           </Link>
           <p className="text-gray-500 text-sm mt-3">{t("auth.registerTitle")}</p>
         </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ShieldCheck } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 type SettingsForm = {
   shopName: string;
@@ -48,6 +49,10 @@ export default function AdminSettingsPage() {
   const [twoFaSetup, setTwoFaSetup] = useState<TwoFaSetup | null>(null);
   const [twoFaCode, setTwoFaCode] = useState("");
   const [twoFaBusy, setTwoFaBusy] = useState(false);
+
+  // ── Rechnungs-PDFs neu erzeugen ──
+  const [rebuildBusy, setRebuildBusy] = useState(false);
+  const [rebuildStatus, setRebuildStatus] = useState<Status>(null);
 
   const load2faState = () => {
     fetch("/api/admin/auth/2fa")
@@ -105,6 +110,28 @@ export default function AdminSettingsPage() {
       setTwoFaCode("");
       load2faState();
     }
+  };
+
+  const rebuildInvoices = async () => {
+    setRebuildBusy(true);
+    setRebuildStatus(null);
+    try {
+      const res = await fetch("/api/admin/invoices/rebuild", { method: "POST" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error || "Fehler beim Neu-Erzeugen der Rechnungen.");
+      }
+      setRebuildStatus({
+        type: "success",
+        message: `${data.invoices} Rechnung(en) und ${data.creditNotes} Gutschrift(en) wurden neu erzeugt.`,
+      });
+    } catch (error) {
+      setRebuildStatus({
+        type: "error",
+        message: error instanceof Error ? error.message : "Netzwerkfehler.",
+      });
+    }
+    setRebuildBusy(false);
   };
 
   useEffect(() => {
@@ -461,17 +488,33 @@ export default function AdminSettingsPage() {
               ) : (
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium mb-1">Schritt 1: Schlüssel in der App eintragen</p>
-                    <p className="text-xs text-gray-500 mb-2">
-                      In der Authenticator-App „＋“ → „Schlüssel eingeben“ wählen und diesen
-                      Base32-Schlüssel übernehmen:
+                    <p className="text-sm font-medium mb-1">Schritt 1: QR-Code scannen</p>
+                    <p className="text-xs text-gray-500 mb-3">
+                      Öffnen Sie Ihre Authenticator-App, tippen Sie auf „＋“ → „QR-Code
+                      scannen“ und scannen Sie diesen Code:
                     </p>
-                    <code className="block bg-gray-50 border rounded-lg p-3 font-mono text-sm break-all select-all">
-                      {twoFaSetup.secret}
-                    </code>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Kontoname: hausku Admin · Algorithmus: SHA1 · 6 Ziffern · 30 s
-                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 items-start">
+                      <div className="bg-white border rounded-xl p-3 shrink-0">
+                        <QRCodeSVG
+                          value={twoFaSetup.otpauth}
+                          size={168}
+                          level="M"
+                          marginSize={2}
+                          title="2FA QR-Code für hausku Admin"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 mb-1">
+                          Kein Scanner? Base32-Schlüssel manuell eintragen:
+                        </p>
+                        <code className="block bg-gray-50 border rounded-lg p-3 font-mono text-sm break-all select-all">
+                          {twoFaSetup.secret}
+                        </code>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Kontoname: hausku Admin · Algorithmus: SHA1 · 6 Ziffern · 30 s
+                        </p>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <p className="text-sm font-medium mb-1">Schritt 2: Mit aktuellem Code bestätigen</p>
@@ -499,6 +542,35 @@ export default function AdminSettingsPage() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Rechnungen / Gutschriften neu erzeugen */}
+        <div className="bg-white rounded-lg border p-6">
+          <h2 className="text-lg font-bold mb-4">Rechnungen &amp; Gutschriften</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Jedes PDF wird einmal beim Erstellen der Rechnung gespeichert. Wurde das Layout
+            verbessert, haben bereits erzeugte Rechnungen weiterhin das alte Layout — hier
+            werden alle gespeicherten PDFs aus den Bestelldaten neu erzeugt.
+          </p>
+          {rebuildStatus && (
+            <div
+              className={`rounded-lg border p-4 text-sm mb-4 ${
+                rebuildStatus.type === "success"
+                  ? "bg-lime-50 border-lime-200 text-lime-700"
+                  : "bg-red-50 border-red-200 text-red-700"
+              }`}
+            >
+              {rebuildStatus.message}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={rebuildInvoices}
+            disabled={rebuildBusy}
+            className="bg-lime-500 hover:bg-lime-600 disabled:opacity-50 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
+          >
+            {rebuildBusy ? "Erzeuge neu…" : "Alle Rechnungs-PDFs neu erzeugen"}
+          </button>
         </div>
 
         <div className="flex justify-end">

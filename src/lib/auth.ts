@@ -1,38 +1,15 @@
 import { type NextRequest } from "next/server";
+import { getSessionCustomer, type SessionCustomer } from "@/lib/customerSession";
 
-type SessionUser = {
-  id: number;
-  email: string;
-  name: string | null;
-};
+export type SessionUser = SessionCustomer;
 
 /**
- * Extracts the current user from the session cookie.
- * Returns null if not logged in or session is expired.
+ * Extracts the current user from the signed `session` cookie.
+ * Returns null if not logged in or the session is expired/forged.
+ *
+ * Thin wrapper around the shared verifier in customerSession.ts so every
+ * consumer of the customer session uses one consistent implementation.
  */
 export function getSessionUser(request: NextRequest): SessionUser | null {
-  const sessionCookie = request.cookies.get("session");
-
-  if (!sessionCookie?.value) {
-    return null;
-  }
-
-  try {
-    const sessionData = JSON.parse(
-      Buffer.from(sessionCookie.value, "base64").toString()
-    );
-
-    // Check if session is expired
-    if (sessionData.expires < Date.now()) {
-      return null;
-    }
-
-    return {
-      id: sessionData.id,
-      email: sessionData.email,
-      name: sessionData.name,
-    };
-  } catch {
-    return null;
-  }
+  return getSessionCustomer(request);
 }

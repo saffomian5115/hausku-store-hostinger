@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/storefront/CartContext";
+import { useAuth } from "@/components/storefront/AuthContext";
 import { formatPrice } from "@/lib/format";
 import { useStoreSettings } from "@/lib/useStoreSettings";
 import BackgroundGrid from "@/components/shared/BackgroundGrid";
@@ -10,12 +11,32 @@ import StorefrontNav from "@/components/shared/StorefrontNav";
 
 type FormErrors = Record<string, string>;
 
+type SavedAddress = {
+  id: number;
+  label: string;
+  firstName: string;
+  lastName: string;
+  street: string;
+  street2: string | null;
+  city: string;
+  postalCode: string;
+  country: string;
+  isDefault: boolean;
+};
+
 export default function CheckoutPage() {
   const { cart, total, itemCount, clearCart } = useCart();
+  const { user } = useAuth();
   const { vatRate, freeShippingThreshold, shippingFlatRate } =
     useStoreSettings();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+
+  // Saved addresses of the logged-in customer (empty for guests).
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<
+    number | "new" | null
+  >(null);
 
   const [form, setForm] = useState({
     email: "",
@@ -46,6 +67,80 @@ export default function CheckoutPage() {
       });
     }
   };
+
+  // Fill the shipping form from one of the customer's saved account addresses.
+  const applyAddressToForm = useCallback((addr: SavedAddress) => {
+    setForm((prev) => ({
+      ...prev,
+      firstName: addr.firstName,
+      lastName: addr.lastName,
+      street: addr.street,
+      street2: addr.street2 || "",
+      city: addr.city,
+      postalCode: addr.postalCode,
+      country: addr.country || "DE",
+    }));
+    setSelectedAddressId(addr.id);
+    setErrors((prev) => {
+      const next = { ...prev };
+      for (const field of [
+        "firstName",
+        "lastName",
+        "street",
+        "city",
+        "postalCode",
+      ]) {
+        delete next[field];
+      }
+      return next;
+    });
+  }, []);
+
+  // Prefill contact + shipping details for logged-in customers from their
+  // profile and saved addresses, so they don't have to re-enter them.
+  useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const [profileRes, addressesRes] = await Promise.all([
+          fetch(`/api/customers/${user.id}/profile`),
+          fetch(`/api/customers/${user.id}/addresses`),
+        ]);
+        if (cancelled) return;
+
+        if (profileRes.ok) {
+          const { customer } = await profileRes.json();
+          if (customer) {
+            setForm((prev) => ({
+              ...prev,
+              email: prev.email || customer.email || "",
+              phone: prev.phone || customer.phone || "",
+            }));
+          }
+        }
+
+        if (addressesRes.ok) {
+          const { addresses } = await addressesRes.json();
+          const list: SavedAddress[] = Array.isArray(addresses)
+            ? addresses
+            : [];
+          if (!cancelled && list.length > 0) {
+            setSavedAddresses(list);
+            // Prefer the default address, otherwise the most recent one.
+            applyAddressToForm(list.find((a) => a.isDefault) ?? list[0]);
+          }
+        }
+      } catch {
+        // Prefill is a convenience — on failure the customer just fills it in.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, applyAddressToForm]);
 
   const validate = (): boolean => {
     const e: FormErrors = {};
@@ -163,7 +258,7 @@ export default function CheckoutPage() {
       <div className="relative min-h-screen z-10">
         <BackgroundGrid />
         <StorefrontNav />
-        <div className="bg-white min-h-screen flex items-center justify-center">
+        <div className="relative z-10 bg-white min-h-screen flex items-center justify-center">
           <div className="text-center">
             <p className="text-lg font-medium text-gray-900 mb-4">
               Ihr Warenkorb ist leer
@@ -186,7 +281,7 @@ export default function CheckoutPage() {
       <StorefrontNav />
       <form
         onSubmit={handleSubmit}
-        className="max-w-5xl mx-auto px-4 pb-12"
+        className="relative z-10 max-w-5xl mx-auto px-4 pb-12"
       >
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 text-sm">
@@ -248,6 +343,70 @@ export default function CheckoutPage() {
 
             <div className="bg-white rounded-lg border p-6">
               <h2 className="text-lg font-bold mb-4">Lieferadresse</h2>
+
+              {/* Saved account addresses — pick one instead of typing it again */}
+              {savedAddresses.length > 0 && (
+                <div className="mb-5">
+                  <p className="text-sm font-medium text-gray-700 mb-2">
+                    Gespeicherte Adresse verwenden
+                  </p>
+                  <div className="space-y-2">
+                    {savedAddresses.map((addr) => (
+                      <button
+                        type="button"
+                        key={addr.id}
+                        onClick={() => applyAddressToForm(addr)}
+                        className={`w-full text-left border rounded-lg p-3 transition-colors ${
+                          selectedAddressId === addr.id
+                            ? "border-lime-500 bg-lime-50"
+                            : "border-gray-200 hover:border-gray-400"
+                        }`}
+                      >
+                        <span className="text-sm font-medium text-gray-900">
+                          {addr.label && addr.label !== "default"
+                            ? `${addr.label} — `
+                            : ""}
+                          {addr.firstName} {addr.lastName}
+                          {addr.isDefault && (
+                            <span className="ml-2 text-xs font-medium text-lime-700">
+                              Standard
+                            </span>
+                          )}
+                        </span>
+                        <span className="block text-xs text-gray-500">
+                          {addr.street}
+                          {addr.street2 ? `, ${addr.street2}` : ""},{" "}
+                          {addr.postalCode} {addr.city}, {addr.country}
+                        </span>
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedAddressId("new");
+                        setForm((prev) => ({
+                          ...prev,
+                          firstName: "",
+                          lastName: "",
+                          street: "",
+                          street2: "",
+                          city: "",
+                          postalCode: "",
+                          country: "DE",
+                        }));
+                      }}
+                      className={`w-full text-left border rounded-lg p-3 text-sm transition-colors ${
+                        selectedAddressId === "new"
+                          ? "border-lime-500 bg-lime-50 text-gray-900"
+                          : "border-dashed border-gray-300 text-gray-600 hover:border-gray-400"
+                      }`}
+                    >
+                      + Neue Adresse eingeben
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
@@ -387,7 +546,7 @@ export default function CheckoutPage() {
               <textarea
                 value={form.notes}
                 onChange={(e) => updateField("notes", e.target.value)}
-                className="w-full border rounded-lg px-4 py-3"
+                className="w-full bg-white border rounded-lg px-4 py-3"
                 rows={3}
                 placeholder="Besondere Wünsche oder Hinweise..."
               />
@@ -400,7 +559,7 @@ export default function CheckoutPage() {
               <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
                 {cart.items.map((item) => (
                   <div key={item.variantId} className="flex gap-3">
-                    <div className="w-16 h-16 bg-gray-100 rounded shrink-0 flex items-center justify-center text-gray-400 text-xs">
+                    <div className="w-16 h-16 bg-white border border-gray-200 rounded shrink-0 flex items-center justify-center text-gray-400 text-xs">
                       Bild
                     </div>
                     <div className="flex-1 min-w-0">

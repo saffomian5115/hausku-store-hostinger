@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs";
-import path from "node:path";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionCustomer } from "@/lib/customerSession";
+import { ensureInvoicePdf } from "@/lib/invoices";
 
 // GET /api/customers/[id]/invoices/[invoiceId]/download
 // Downloads an invoice PDF, but only if the invoice belongs to an order of
@@ -39,15 +39,17 @@ export async function GET(
       },
     });
 
-    if (!invoice?.pdfPath) {
+    if (!invoice) {
       return NextResponse.json(
         { error: "Rechnung nicht gefunden" },
         { status: 404 }
       );
     }
 
-    const filePath = path.join(process.cwd(), "public", invoice.pdfPath);
-    if (!fs.existsSync(filePath)) {
+    // Re-renders the document when its file was written by an older layout
+    // version (or is missing), so customers always get the current layout.
+    const filePath = await ensureInvoicePdf(invoice.id);
+    if (!filePath) {
       return NextResponse.json(
         { error: "PDF-Datei nicht gefunden" },
         { status: 404 }

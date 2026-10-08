@@ -24,14 +24,20 @@ export async function GET(
 
     const customer = await prisma.customer.findUnique({
       where: { id: customerId },
-      select: { id: true, email: true, name: true, phone: true, createdAt: true },
+      select: { id: true, email: true, name: true, phone: true, createdAt: true, password: true },
     });
 
     if (!customer) {
       return NextResponse.json({ error: "Konto nicht gefunden" }, { status: 404 });
     }
 
-    return NextResponse.json({ customer });
+    // Never expose the hash — only tell the client whether a password exists,
+    // so it can show "set password" instead of "change password" for
+    // accounts created via Google (which have no password).
+    const { password, ...profile } = customer;
+    return NextResponse.json({
+      customer: { ...profile, hasPassword: Boolean(password) },
+    });
   } catch (error) {
     console.error("GET /api/customers/[id]/profile error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -117,9 +123,9 @@ export async function POST(
     const newPassword =
       typeof body?.newPassword === "string" ? body.newPassword : "";
 
-    if (!currentPassword || !newPassword) {
+    if (!newPassword) {
       return NextResponse.json(
-        { error: "Aktuelles und neues Passwort sind erforderlich" },
+        { error: "Neues Passwort ist erforderlich" },
         { status: 400 }
       );
     }
@@ -134,19 +140,32 @@ export async function POST(
       where: { id: customerId },
     });
 
-    if (!customer || !customer.password) {
+    if (!customer) {
       return NextResponse.json(
         { error: "Konto nicht gefunden" },
         { status: 404 }
       );
     }
 
-    const valid = await bcrypt.compare(currentPassword, customer.password);
-    if (!valid) {
-      return NextResponse.json(
-        { error: "Aktuelles Passwort ist nicht korrekt" },
-        { status: 401 }
-      );
+    // Accounts created via Google OAuth have no password. Since this request
+    // is already authenticated by the session cookie, such accounts may set a
+    // password directly — there is no existing password to confirm. Accounts
+    // that already have a password must confirm it as before.
+    const hadPassword = Boolean(customer.password);
+    if (customer.password) {
+      if (!currentPassword) {
+        return NextResponse.json(
+          { error: "Aktuelles Passwort ist erforderlich" },
+          { status: 400 }
+        );
+      }
+      const valid = await bcrypt.compare(currentPassword, customer.password);
+      if (!valid) {
+        return NextResponse.json(
+          { error: "Aktuelles Passwort ist nicht korrekt" },
+          { status: 401 }
+        );
+      }
     }
 
     const hashed = await bcrypt.hash(newPassword, 10);
@@ -155,7 +174,12 @@ export async function POST(
       data: { password: hashed },
     });
 
-    return NextResponse.json({ message: "Passwort erfolgreich geändert" });
+    return NextResponse.json({
+      message: hadPassword
+        ? "Passwort erfolgreich geändert"
+        : "Passwort erfolgreich gesetzt",
+      hasPassword: true,
+    });
   } catch (error) {
     console.error("POST /api/customers/[id]/profile error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

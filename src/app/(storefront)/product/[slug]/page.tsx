@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db/prisma";
+import { verifyCustomerToken } from "@/lib/customerSession";
 import { formatPrice } from "@/lib/format";
 import { getTranslations } from "@/lib/i18n";
 import { getStoreSettings } from "@/lib/settings";
@@ -122,17 +123,12 @@ export default async function ProductDetailPage({
   let myReview: { id: number } | null = null;
   try {
     const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("session")?.value;
-    if (sessionCookie) {
-      const sessionData = JSON.parse(
-        Buffer.from(sessionCookie, "base64").toString()
-      );
-      if (sessionData.expires > Date.now()) {
-        myReview = await prisma.review.findFirst({
-          where: { customerId: sessionData.id, productId: product.id },
-          select: { id: true },
-        });
-      }
+    const session = verifyCustomerToken(cookieStore.get("session")?.value);
+    if (session) {
+      myReview = await prisma.review.findFirst({
+        where: { customerId: session.id, productId: product.id },
+        select: { id: true },
+      });
     }
   } catch {
     // ignore malformed session

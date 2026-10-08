@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs";
-import path from "node:path";
 import { prisma } from "@/lib/db/prisma";
 import { requireAdmin } from "@/lib/adminAuth";
+import { ensureCreditNotePdf } from "@/lib/invoices";
 
 // GET /api/admin/credit-notes/[id]/download — download the credit note PDF
 export async function GET(
@@ -18,15 +18,17 @@ export async function GET(
       where: { id: parseInt(id, 10) },
     });
 
-    if (!creditNote?.pdfPath) {
+    if (!creditNote) {
       return NextResponse.json(
         { error: "Gutschrift nicht gefunden" },
         { status: 404 }
       );
     }
 
-    const filePath = path.join(process.cwd(), "public", creditNote.pdfPath);
-    if (!fs.existsSync(filePath)) {
+    // Re-renders the document when its file was written by an older layout
+    // version (or is missing).
+    const filePath = await ensureCreditNotePdf(creditNote.id);
+    if (!filePath) {
       return NextResponse.json(
         { error: "PDF-Datei nicht gefunden" },
         { status: 404 }

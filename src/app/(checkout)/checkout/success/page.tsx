@@ -88,15 +88,17 @@ function SuccessContent() {
         </svg>
       </div>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-4">
-        Vielen Dank für Ihre Bestellung!
-      </h1>
-      <p className="text-gray-600 mb-2">
-        Ihre Bestellung wurde erfolgreich aufgegeben.
-      </p>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm px-6 py-6 mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          Vielen Dank für Ihre Bestellung!
+        </h1>
+        <p className="text-gray-600">
+          Ihre Bestellung wurde erfolgreich aufgegeben.
+        </p>
+      </div>
 
       {!verified ? (
-        <div className="bg-white rounded-lg p-6 my-8">
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-6">
           <div className="animate-pulse flex space-x-4">
             <div className="flex-1 space-y-4 py-1">
               <div className="h-4 bg-gray-200 rounded w-3/4" />
@@ -105,7 +107,7 @@ function SuccessContent() {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg p-6 my-8 text-left">
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-6 text-left">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-gray-500">Bestellnummer</p>
@@ -121,18 +123,41 @@ function SuccessContent() {
         </div>
       )}
 
-      <p className="text-gray-600 mb-8">
-        Sie erhalten in Kürze eine Bestätigungs-E-Mail mit den Details Ihrer
-        Bestellung.
-      </p>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm px-6 py-5 mb-6">
+        <p className="text-gray-600">
+          Sie erhalten in Kürze eine Bestätigungs-E-Mail mit den Details Ihrer
+          Bestellung.
+        </p>
+      </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-        {orderData?.guestEmail && displayOrderNumber !== "Unbekannt" && (
-          <a
-            href={`/api/orders/${displayOrderNumber}/invoice?email=${encodeURIComponent(
-              orderData.guestEmail,
-            )}`}
-            className="inline-flex items-center justify-center gap-2 border border-lime-500 text-lime-600 hover:bg-lime-50 font-semibold px-8 py-3 rounded-lg transition-colors"
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm px-6 py-5 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          {orderData?.guestEmail && displayOrderNumber !== "Unbekannt" && (
+            <a
+              href={`/api/orders/${displayOrderNumber}/invoice?email=${encodeURIComponent(
+                orderData.guestEmail,
+              )}`}
+              className="inline-flex items-center justify-center gap-2 border border-lime-500 text-lime-600 hover:bg-lime-50 font-semibold px-8 py-3 rounded-lg transition-colors"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              Rechnung (PDF) herunterladen
+            </a>
+          )}
+          <Link
+            href="/order-lookup"
+            className="inline-flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors"
           >
             <svg
               className="w-4 h-4"
@@ -144,46 +169,29 @@ function SuccessContent() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
               />
             </svg>
-            Rechnung (PDF) herunterladen
-          </a>
-        )}
-        <Link
-          href="/order-lookup"
-          className="inline-flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-            />
-          </svg>
-          Bestellung verfolgen
-        </Link>
+            Bestellung verfolgen
+          </Link>
+        </div>
       </div>
 
-      <div className="flex gap-4 justify-center">
-        <Link
-          href="/catalog"
-          className="bg-lime-500 hover:bg-lime-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
-        >
-          Weiter einkaufen
-        </Link>
-        <Link
-          href="/"
-          className="border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors"
-        >
-          Zur Startseite
-        </Link>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm px-6 py-5">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/catalog"
+            className="bg-lime-500 hover:bg-lime-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+          >
+            Weiter einkaufen
+          </Link>
+          <Link
+            href="/"
+            className="border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors"
+          >
+            Zur Startseite
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -191,24 +199,24 @@ function SuccessContent() {
 
 export default function CheckoutSuccessPage() {
   return (
-    <div className="relative min-h-screen z-10">
+    <>
+      {/* Fixed animated background sits behind the content (a sibling of the
+          z-10 wrapper), so the hexagons can never paint over the text. */}
       <BackgroundGrid />
-      <StorefrontNav />
-      <Suspense
-        fallback={
-          <div className="relative min-h-screen z-10">
-            <BackgroundGrid />
-            <StorefrontNav />
+      <div className="relative min-h-screen z-10">
+        <StorefrontNav />
+        <Suspense
+          fallback={
             <div className="max-w-2xl mx-auto px-4 py-16 text-center">
               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse" />
               <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4 animate-pulse" />
               <div className="h-4 bg-gray-200 rounded w-96 mx-auto animate-pulse" />
             </div>
-          </div>
-        }
-      >
-        <SuccessContent />
-      </Suspense>
-    </div>
+          }
+        >
+          <SuccessContent />
+        </Suspense>
+      </div>
+    </>
   );
 }

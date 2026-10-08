@@ -92,5 +92,9 @@ export function otpauthUrl(
     digits: "6",
     period: String(TOTP_PERIOD),
   });
-  return `otpauth://totp/${label}?${params.toString()}`;
+  // URLSearchParams encodes spaces as "+", but otpauth expects RFC 3986
+  // percent-encoding — some authenticator apps would otherwise show
+  // "hausku+Admin" as the issuer. Normalise to %20.
+  const query = params.toString().replace(/\+/g, "%20");
+  return `otpauth://totp/${label}?${query}`;
 }

@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/storefront/AuthContext";
 import { LocaleProvider } from "@/components/shared/LocaleContext";
 import { FlyProvider } from "@/components/shared/FlyAnimationProvider";
 import Analytics from "@/components/shared/Analytics";
+import DomResilience from "@/components/shared/DomResilience";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hausku.com";
@@ -56,6 +57,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
+        <DomResilience />
         <Analytics />
         <AuthProvider>
           <FlyProvider>

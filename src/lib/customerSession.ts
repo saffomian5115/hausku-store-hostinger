@@ -71,15 +71,16 @@ export function setSessionCookie(response: NextResponse, token: string): void {
   });
 }
 
-/** Reads and verifies the customer session from the request cookie. */
-export function getSessionCustomer(request: NextRequest): SessionCustomer | null {
-  const sessionCookie = request.cookies.get("session");
+/**
+ * Verifies a raw signed session token (`payload.signature`) and returns the
+ * customer it encodes, or null when the token is missing/forged/expired.
+ *
+ * Use this anywhere a raw token string is available (e.g. server components
+ * reading `cookies()`); use `getSessionCustomer` inside route handlers.
+ */
+export function verifyCustomerToken(token: string | null | undefined): SessionCustomer | null {
+  if (!token) return null;
 
-  if (!sessionCookie?.value) {
-    return null;
-  }
-
-  const token = sessionCookie.value;
   const dot = token.lastIndexOf(".");
   if (dot <= 0) return null;
 
@@ -116,4 +117,9 @@ export function getSessionCustomer(request: NextRequest): SessionCustomer | null
   } catch {
     return null;
   }
+}
+
+/** Reads and verifies the customer session from the request cookie. */
+export function getSessionCustomer(request: NextRequest): SessionCustomer | null {
+  return verifyCustomerToken(request.cookies.get("session")?.value);
 }

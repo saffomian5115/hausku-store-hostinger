@@ -85,7 +85,7 @@ export default function CartPage() {
             )}
 
             {/* Items */}
-            <div className="border rounded-2xl divide-y overflow-hidden">
+            <div className="bg-white border rounded-2xl divide-y overflow-hidden">
               {cart.items.map((item) => (
                 <CartItemRow key={item.variantId} item={item} />
               ))}
@@ -101,7 +101,7 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="border rounded-2xl p-6 sticky top-24">
+            <div className="bg-white border rounded-2xl p-6 sticky top-24">
               <h2 className="text-lg font-bold mb-4">{t("cart.orderSummary")}</h2>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
